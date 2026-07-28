@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -42,8 +43,21 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     <>
       <header className="site-nav">
         <div className="site-nav__inner">
-          <Link className="brand focus-ring" href="/" aria-label="Rohan Kandra home">
-            Rohan.Kandra
+          <Link
+            aria-label={`${contact.name} home`}
+            className="brand focus-ring"
+            href="/"
+          >
+            <Image
+              alt=""
+              className="brand__logo"
+              height={36}
+              priority
+              src="/images/branding/rohan-logo.png"
+              unoptimized
+              width={31}
+            />
+            <span className="brand__name">{contact.name}</span>
           </Link>
 
           <nav className="desktop-nav" aria-label="Primary navigation">

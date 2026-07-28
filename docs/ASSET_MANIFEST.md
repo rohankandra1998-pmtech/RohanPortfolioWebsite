@@ -3,6 +3,9 @@
 | Public asset | Source | Use | Notes |
 | --- | --- | --- | --- |
 | `images/rohan-graduation.jpeg` | Supplied by Rohan | Home and About portrait | Original 2340×4160 photograph; presentation crop is CSS-only |
+| `images/branding/rohan-logo.png` | Supplied by Rohan | Global header brand | Exact supplied mark; tightly cropped with a transparent background |
+| `../app/icon.png` | Supplied by Rohan | Browser favicon | Square 512×512 web variant of the same mark; tightly cropped, centered, and transparent |
+| `../app/apple-icon.png` | Supplied by Rohan | Apple touch icon | Square 180×180 web variant of the same mark; tightly cropped, centered, and transparent |
 | `og.png` | Original AI-generated graphic | Open Graph and social sharing | 1730×909; contains only Rohan's name and positioning |
 | `images/projects/launchguard-golden-dataset.png` | Verified LaunchGuard repository/live-product capture | LaunchGuard card, cover, and review workflow | No credentials or private data |
 | `images/projects/launchguard-overview.webp` | Verified LaunchGuard repository asset | Case-study product overview | Public project imagery |

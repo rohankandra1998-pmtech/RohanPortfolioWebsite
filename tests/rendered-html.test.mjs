@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
@@ -47,4 +47,19 @@ test("metadata, accessibility, and privacy safeguards are present", async () => 
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /:focus-visible/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
+});
+
+test("global branding uses the supplied logo and canonical contact name", async () => {
+  const [layout, shell] = await Promise.all([
+    source("app/layout.tsx"),
+    source("components/site-shell.tsx"),
+    access(new URL("public/images/branding/rohan-logo.png", root)),
+    access(new URL("app/icon.png", root)),
+    access(new URL("app/apple-icon.png", root)),
+  ]);
+
+  assert.match(shell, /\{contact\.name\}/);
+  assert.match(shell, /\/images\/branding\/rohan-logo\.png/);
+  assert.doesNotMatch(shell, /Rohan\.Kandra/);
+  assert.doesNotMatch(layout, /rohan-graduation\.jpeg/);
 });
