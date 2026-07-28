@@ -84,3 +84,30 @@ test("header social links use accessible official icon marks", async () => {
   assert.doesNotMatch(shell, /\n\s*\{link\.label\}\n\s*<\/a>/);
   assert.doesNotMatch(packageJson, /octicons|react-icons|lucide/);
 });
+
+test("sticky header exposes a semantic active route and subtle visual boundary", async () => {
+  const [shell, css] = await Promise.all([
+    source("components/site-shell.tsx"),
+    source("app/globals.css"),
+  ]);
+  const activeDotRule = css.match(/\.nav-link::after\s*\{([^}]*)\}/)?.[1] ?? "";
+
+  assert.match(shell, /pathname === item\.href \? "nav-link--active" : ""/);
+  assert.match(
+    shell,
+    /aria-current=\{pathname === item\.href \? "page" : undefined\}/,
+  );
+  assert.match(
+    css,
+    /\.site-nav\s*\{[\s\S]*?border-bottom:\s*1px solid var\(--line\)/,
+  );
+  assert.match(
+    activeDotRule,
+    /background:\s*var\(--accent\)/,
+  );
+  assert.match(activeDotRule, /border-radius:\s*50%/);
+  assert.match(css, /\.nav-link--active::after\s*\{[\s\S]*?opacity:\s*1/);
+  assert.doesNotMatch(css, /\.nav-link:hover::after/);
+  assert.doesNotMatch(activeDotRule, /background:\s*var\(--ink\)/);
+  assert.doesNotMatch(activeDotRule, /scaleX\(/);
+});

@@ -106,6 +106,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <nav className="desktop-nav" aria-label="Primary navigation">
             {navigation.map((item) => (
               <Link
+                aria-current={pathname === item.href ? "page" : undefined}
                 className={`nav-link focus-ring ${
                   pathname === item.href ? "nav-link--active" : ""
                 }`}
