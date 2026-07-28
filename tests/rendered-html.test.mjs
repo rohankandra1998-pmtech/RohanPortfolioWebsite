@@ -282,3 +282,45 @@ test("experience highlights use verbatim master-resume wording and preserve skil
     assert.match(content, new RegExp(`"${existingSkill}"`));
   }
 });
+
+test("experience periods render as responsive soft-orange date pills", async () => {
+  const [experience, css] = await Promise.all([
+    source("app/experience/page.tsx"),
+    source("app/globals.css"),
+  ]);
+  const periodRule =
+    css.match(/\.experience-entry__period\s*\{([^}]*)\}/)?.[1] ?? "";
+  const responsivePeriodRule =
+    css.match(
+      /@media \(max-width: 820px\)[\s\S]*?\.experience-entry__period\s*\{([^}]*)\}/,
+    )?.[1] ?? "";
+
+  assert.match(
+    experience,
+    /<p className="experience-entry__period">\{experience\.period\}<\/p>/,
+  );
+  assert.doesNotMatch(
+    experience,
+    /Jun 2025|Oct 2022|Aug 2021|Sep 2020/,
+  );
+  assert.doesNotMatch(
+    experience,
+    /<(?:button|a)[^>]*className="experience-entry__period"/,
+  );
+
+  assert.match(periodRule, /background:\s*var\(--accent-soft\)/);
+  assert.match(periodRule, /color:\s*var\(--accent-dark\)/);
+  assert.match(periodRule, /display:\s*inline-flex/);
+  assert.match(periodRule, /font-weight:\s*600/);
+  assert.match(periodRule, /justify-self:\s*end/);
+  assert.match(periodRule, /border-radius:\s*(?:1[0-2]|0\.\d+)px/);
+  assert.match(periodRule, /padding:\s*\d+px \d+px/);
+  assert.match(periodRule, /white-space:\s*nowrap/);
+
+  assert.match(responsivePeriodRule, /justify-self:\s*start/);
+  assert.match(responsivePeriodRule, /white-space:\s*nowrap/);
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="experience"\]\s*\{[\s\S]*?--accent:\s*#E25E2C;[\s\S]*?--accent-dark:\s*#B0431A;[\s\S]*?--accent-soft:\s*#FBE7DC;/,
+  );
+});
