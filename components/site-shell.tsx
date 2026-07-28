@@ -52,6 +52,7 @@ function SocialIcon({ label }: { label: string }) {
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const pageTheme = pathname === "/experience" ? "experience" : "default";
 
   useEffect(() => {
     const nodes = Array.from(
@@ -83,7 +84,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   return (
-    <>
+    <div className="site-shell" data-page-theme={pageTheme}>
       <header className="site-nav">
         <div className="site-nav__inner">
           <Link
@@ -91,15 +92,18 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             className="brand focus-ring"
             href="/"
           >
-            <Image
-              alt=""
-              className="brand__logo"
-              height={36}
-              priority
-              src="/images/branding/rohan-logo.png"
-              unoptimized
-              width={31}
-            />
+            <span aria-hidden="true" className="brand__mark">
+              <Image
+                alt=""
+                className="brand__logo"
+                height={36}
+                priority
+                src="/images/branding/rohan-logo.png"
+                unoptimized
+                width={31}
+              />
+              <span className="brand__logo-mask" />
+            </span>
             <span className="brand__name">{contact.name}</span>
           </Link>
 
@@ -175,6 +179,6 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           <span>© 2026 {contact.name}</span>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

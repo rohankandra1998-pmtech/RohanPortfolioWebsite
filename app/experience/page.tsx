@@ -38,9 +38,9 @@ const impactStories = [
 export default function ExperiencePage() {
   return (
     <>
-      <section className="page-head">
+      <section className="page-head page-head--experience">
         <div className="wrap" data-reveal>
-          <p className="eyebrow">The path so far</p>
+          <p className="eyebrow eyebrow--dot">The path so far</p>
           <h1>Experience</h1>
           <p className="page-head__lead">
             Product discovery, AI workflows, enterprise analytics, stakeholder
@@ -50,20 +50,40 @@ export default function ExperiencePage() {
       </section>
 
       <section className="section section--tight">
-        <div className="wrap timeline">
+        <div className="wrap experience-timeline">
           {experiences.map((experience) => (
-            <article className="timeline-row" data-reveal key={experience.company}>
-              <div className="timeline-row__meta">
-                <strong>{experience.period}</strong>
-                <span>{experience.location}</span>
-              </div>
-              <div className="timeline-row__content">
-                <p className="eyebrow">{experience.company}</p>
-                <h2>{experience.role}</h2>
-                <p className="timeline-row__summary">{experience.summary}</p>
-                <ul>
+            <article
+              className="experience-entry"
+              data-reveal
+              key={experience.company}
+            >
+              <span
+                aria-hidden="true"
+                className="experience-entry__marker"
+              />
+              <div className="experience-entry__content">
+                <div className="experience-entry__heading">
+                  <h2>{experience.role}</h2>
+                  <p className="experience-entry__period">{experience.period}</p>
+                </div>
+                <p className="experience-entry__company">
+                  {experience.company} <span aria-hidden="true">·</span>{" "}
+                  {experience.location}
+                </p>
+                <p className="experience-entry__summary">
+                  {experience.summary}
+                </p>
+                <ul className="experience-entry__highlights">
                   {experience.highlights.map((highlight) => (
                     <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+                <ul
+                  aria-label={`${experience.company} capabilities`}
+                  className="experience-entry__skills"
+                >
+                  {experience.skills.map((skill) => (
+                    <li key={skill}>{skill}</li>
                   ))}
                 </ul>
               </div>

@@ -111,3 +111,56 @@ test("sticky header exposes a semantic active route and subtle visual boundary",
   assert.doesNotMatch(activeDotRule, /background:\s*var\(--ink\)/);
   assert.doesNotMatch(activeDotRule, /scaleX\(/);
 });
+
+test("experience uses a route-scoped orange theme and masked logo treatment", async () => {
+  const [shell, css] = await Promise.all([
+    source("components/site-shell.tsx"),
+    source("app/globals.css"),
+  ]);
+
+  assert.match(shell, /pathname === "\/experience" \? "experience" : "default"/);
+  assert.match(shell, /data-page-theme=\{pageTheme\}/);
+  assert.match(shell, /className="brand__mark"/);
+  assert.match(shell, /className="brand__logo-mask"/);
+  assert.match(shell, /src="\/images\/branding\/rohan-logo\.png"/);
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="experience"\]\s*\{[\s\S]*?--accent:\s*#e25e2c;[\s\S]*?--accent-dark:\s*#b0431a;[\s\S]*?--accent-soft:\s*#fbe7dc;/i,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="experience"\] \.brand__logo-mask\s*\{[\s\S]*?background-color:\s*var\(--accent\)/,
+  );
+  assert.match(
+    css,
+    /mask:\s*url\("\/images\/branding\/rohan-logo\.png"\)/,
+  );
+  assert.doesNotMatch(css, /\.brand__logo\s*\{[^}]*filter:/);
+});
+
+test("experience renders the editorial timeline with semantic accomplishments and skills", async () => {
+  const [experience, content] = await Promise.all([
+    source("app/experience/page.tsx"),
+    source("content/site.ts"),
+  ]);
+
+  assert.match(experience, /className="page-head page-head--experience"/);
+  assert.match(experience, /className="eyebrow eyebrow--dot"/);
+  assert.match(experience, /className="wrap experience-timeline"/);
+  assert.match(experience, /experiences\.map\(\(experience\) =>/);
+  assert.match(experience, /className="experience-entry__marker"/);
+  assert.doesNotMatch(experience, /timeline-row__meta/);
+  assert.match(
+    experience,
+    /<ul className="experience-entry__highlights">[\s\S]*?experience\.highlights\.map[\s\S]*?<li key=\{highlight\}>/,
+  );
+  assert.match(
+    experience,
+    /<ul[\s\S]*?className="experience-entry__skills"[\s\S]*?experience\.skills\.map[\s\S]*?<li key=\{skill\}>/,
+  );
+  assert.match(content, /export type Experience = \{[\s\S]*?skills: string\[\];/);
+  assert.equal(content.match(/\n    skills: \[/g)?.length, 4);
+  assert.match(experience, /Selected impact/);
+  assert.match(experience, /Education/);
+  assert.match(experience, /Recognition/);
+});

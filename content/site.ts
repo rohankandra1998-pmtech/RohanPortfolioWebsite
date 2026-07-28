@@ -10,6 +10,7 @@ export type Experience = {
   location: string;
   summary: string;
   highlights: string[];
+  skills: string[];
 };
 
 export type ProjectMedia = {
@@ -91,6 +92,14 @@ export const experiences: Experience[] = [
       "Led discovery for a women’s wellness and productivity concept through 25+ interviews, 500+ survey responses, segmentation, market sizing, prioritization, and Figma concepts.",
       "Designed an AI-powered Google Workspace standup workflow that improved internal productivity by approximately 15%.",
     ],
+    skills: [
+      "Product discovery",
+      "User stories",
+      "Acceptance criteria",
+      "Market research",
+      "Figma",
+      "AI workflow automation",
+    ],
   },
   {
     company: "PwC",
@@ -103,6 +112,14 @@ export const experiences: Experience[] = [
       "Managed the lifecycle of 7 supply-chain reports with 10+ stakeholders, contributing to a reported 21% improvement in operating efficiency.",
       "Built 50+ automated KPI alerts that accelerated mitigation by 55% and reduced response time by 14 days.",
       "Deployed an internal conversational RAG assistant that reduced manual document search time by 70% and answer retrieval from 10+ minutes to under 30 seconds.",
+    ],
+    skills: [
+      "Product analytics",
+      "Stakeholder management",
+      "Power BI",
+      "Power Automate",
+      "RAG",
+      "Supply-chain analytics",
     ],
   },
   {
@@ -117,6 +134,14 @@ export const experiences: Experience[] = [
       "Led six embedded dashboards over 150M MySQL rows for the eSanjeevani OPD program and coordinated 150+ cross-functional action items.",
       "Migrated 15 Oracle BI operational reports to Power BI while preserving business logic and improving the underlying data models.",
     ],
+    skills: [
+      "Business intelligence",
+      "Row-level security",
+      "Embedded analytics",
+      "Power BI",
+      "MySQL",
+      "Data modelling",
+    ],
   },
   {
     company: "DXC Technology",
@@ -128,6 +153,13 @@ export const experiences: Experience[] = [
     highlights: [
       "Built two Power BI dashboards for Marsh Inc. that reduced manual KPI reporting work by 90%.",
       "Created a manager-dashboard proof of concept for monthly work, learning, quality, and performance tracking across 500+ employees.",
+    ],
+    skills: [
+      "Dashboard automation",
+      "Power BI",
+      "KPI reporting",
+      "Data analytics",
+      "Proof of concept",
     ],
   },
 ];
