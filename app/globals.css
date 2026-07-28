@@ -233,6 +233,27 @@ textarea:focus-visible {
   justify-self: end;
 }
 
+.social-links {
+  align-items: center;
+  display: flex;
+  gap: 2px;
+  justify-content: flex-end;
+  min-width: 118px;
+}
+
+.social-link {
+  align-items: center;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+}
+
+.social-icon {
+  display: block;
+  height: 21px;
+  width: 21px;
+}
+
 .menu-button {
   align-items: center;
   background: transparent;
@@ -1451,6 +1472,10 @@ a.writing-row:hover {
     gap: 17px;
   }
 
+  .social-links {
+    min-width: 0;
+  }
+
   .nav-actions .social-link {
     display: none;
   }
@@ -1515,6 +1540,10 @@ a.writing-row:hover {
 
   .desktop-nav {
     display: none;
+  }
+
+  .social-links {
+    min-width: 118px;
   }
 
   .nav-actions .social-link {
@@ -1660,6 +1689,10 @@ a.writing-row:hover {
 
   .brand__logo {
     height: 30px;
+  }
+
+  .social-links {
+    min-width: 0;
   }
 
   .site-nav__inner {

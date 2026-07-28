@@ -63,3 +63,24 @@ test("global branding uses the supplied logo and canonical contact name", async 
   assert.doesNotMatch(shell, /Rohan\.Kandra/);
   assert.doesNotMatch(layout, /rohan-graduation\.jpeg/);
 });
+
+test("header social links use accessible official icon marks", async () => {
+  const [shell, socialData, packageJson] = await Promise.all([
+    source("components/site-shell.tsx"),
+    source("content/site.ts"),
+    source("package.json"),
+  ]);
+
+  assert.match(shell, /socials\.slice\(0,\s*2\)\.map/);
+  assert.match(socialData, /label: "LinkedIn"/);
+  assert.match(socialData, /label: "GitHub"/);
+  assert.match(shell, /aria-label=\{`\$\{link\.label\} profile`\}/);
+  assert.match(shell, /<SocialIcon label=\{link\.label\} \/>/);
+  assert.equal(shell.match(/<svg/g)?.length, 2);
+  assert.equal(shell.match(/<svg[\s\S]*?aria-hidden="true"/g)?.length, 2);
+  assert.equal(shell.match(/focusable="false"/g)?.length, 2);
+  assert.match(shell, /target="_blank"/);
+  assert.match(shell, /rel="noreferrer"/);
+  assert.doesNotMatch(shell, /\n\s*\{link\.label\}\n\s*<\/a>/);
+  assert.doesNotMatch(packageJson, /octicons|react-icons|lucide/);
+});
