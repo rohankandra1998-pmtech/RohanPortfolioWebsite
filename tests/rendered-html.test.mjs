@@ -164,3 +164,121 @@ test("experience renders the editorial timeline with semantic accomplishments an
   assert.match(experience, /Education/);
   assert.match(experience, /Recognition/);
 });
+
+test("experience content expands each role with source-backed resume details", async () => {
+  const [content, experiencePage] = await Promise.all([
+    source("content/site.ts"),
+    source("app/experience/page.tsx"),
+  ]);
+  const experienceData =
+    content.match(
+      /export const experiences: Experience\[\] = \[([\s\S]*?)\n\];/,
+    )?.[1] ?? "";
+
+  assert.equal(experienceData.match(/\n    company: "/g)?.length, 4);
+  assert.equal(experienceData.match(/\n    highlights: \[/g)?.length, 4);
+  assert.equal(experienceData.match(/\n    skills: \[/g)?.length, 4);
+  assert.doesNotMatch(experienceData, /company: "Unicloud"/i);
+
+  assert.match(content, /6 MVP product features/);
+  assert.match(content, /5K\+ weekly active users/);
+  assert.match(content, /4\.5 parent CSAT/);
+  assert.match(content, /62% lesson completion/);
+  assert.match(content, /6-stage user journey/);
+  assert.match(content, /1,000\+ survey responses/);
+  assert.match(content, /9M target market/);
+  assert.match(content, /20\+ questions and blockers/);
+  assert.match(content, /15\+ Jira tickets/);
+
+  assert.match(content, /40\+ monthly BI troubleshooting tasks/);
+  assert.match(content, /10\+ weekly bugs or logic modifications/);
+  assert.match(content, /30\+ technical documents/);
+  assert.match(content, /500\+ end users/);
+  assert.match(content, /Coached and guided 30\+/);
+
+  assert.match(content, /1,500 UGI employees/);
+  assert.match(content, /Paginated Reports/);
+  assert.match(content, /learning the technology within 5 days/);
+  assert.match(content, /Power BI Embedded API/);
+  assert.match(content, /300M patients/);
+  assert.match(content, /Star Schema/);
+  assert.match(content, /Snowflake Schema/);
+
+  assert.match(content, /build 2 data-driven Power BI dashboards/);
+  assert.match(content, /cutting manual tasks by 90%/);
+  assert.match(content, /500\+ employees/);
+
+  assert.match(
+    experiencePage,
+    /experiences\.map\(\(experience\) =>[\s\S]*?experience\.highlights\.map[\s\S]*?experience\.skills\.map/,
+  );
+  const timelineSource =
+    experiencePage.match(
+      /<div className="wrap experience-timeline">([\s\S]*?)<\/section>/,
+    )?.[1] ?? "";
+  assert.doesNotMatch(
+    timelineSource,
+    /Vivify Solutions Inc|PwC|VNB Consulting Services|DXC Technology/,
+  );
+});
+
+test("experience highlights use verbatim master-resume wording and preserve skills", async () => {
+  const content = await source("content/site.ts");
+
+  for (const resumeWording of [
+    "Drove MVP delivery for an entrepreneurship app by defining 3 epics, 50+ user stories, and 150+ acceptance criteria in Jira",
+    "Authored a Product Requirements Document (PRD) for an entrepreneurship app redesign",
+    "Shipped a 0-1 financial literacy app for children",
+    "Led end-to-end product discovery for a women's wellness and productivity app within 7 weeks",
+    "Designed an AI-powered workflow to automate daily standups and follow-up reminders",
+    "Developed and managed the end-to-end product lifecycle of 7 reports for Unilever's business unit",
+    "Accelerated mitigation efforts by 55% by building 50+ automated email alerts using Power Automate",
+    "Deployed a Generative AI conversational RAG assistant for PwC's internal team",
+    "Directed a significant upgrade in data security for 1,500 UGI employees",
+    "Led creation of 6 reports / dashboards and collaborated with the integration team",
+    "Executed 150+ action items as the key liaison",
+    "Automated key performance indicator (KPI) reporting by collaborating with a cross-functional global team",
+    "Created and managed a Manager Dashboard / Proof of Concept using Power BI",
+  ]) {
+    assert.ok(content.includes(resumeWording), `Missing: ${resumeWording}`);
+  }
+
+  assert.doesNotMatch(
+    content,
+    /the source materials report 30% faster time-to-market/,
+  );
+  assert.doesNotMatch(
+    content,
+    /Managed the lifecycle of 7 supply-chain reports/,
+  );
+  assert.doesNotMatch(
+    content,
+    /Built two Power BI dashboards for Marsh Inc\./,
+  );
+
+  for (const existingSkill of [
+    "Product discovery",
+    "User stories",
+    "Acceptance criteria",
+    "Market research",
+    "Figma",
+    "AI workflow automation",
+    "Product analytics",
+    "Stakeholder management",
+    "Power BI",
+    "Power Automate",
+    "RAG",
+    "Supply-chain analytics",
+    "Business intelligence",
+    "Row-level security",
+    "Embedded analytics",
+    "MySQL",
+    "Data modelling",
+    "Dashboard automation",
+    "KPI reporting",
+    "Data analytics",
+    "Proof of concept",
+  ]) {
+    assert.match(content, new RegExp(`"${existingSkill}"`));
+  }
+});
