@@ -242,6 +242,106 @@ test("experience timeline uses four local, accessible logo medallions", async ()
   );
 });
 
+test("education and certifications use supplied logos and exact leadership content", async () => {
+  const [experience, css] = await Promise.all([
+    source("app/experience/page.tsx"),
+    source("app/globals.css"),
+    access(
+      new URL(
+        "public/images/education/university-of-rochester-logo.png",
+        root,
+      ),
+    ),
+    access(
+      new URL(
+        "public/images/education/vellore-institute-of-technology-logo.svg",
+        root,
+      ),
+    ),
+  ]);
+  const leadershipData =
+    experience.match(
+      /const simonLeadershipHighlights = \[([\s\S]*?)\] as const;/,
+    )?.[1] ?? "";
+  const logoMedallionRule =
+    css.match(/\.education-degree__logo-medallion\s*\{([^}]*)\}/)?.[1] ?? "";
+  const exactLeadershipHighlights = [
+    "Led product discovery and strategy for an AI-powered learning assistant serving 12,000+ students by conducting primary market research, user interviews, product-market-fit analysis, and Jobs-to-Be-Done research, increasing student engagement and professor adoption by 40%.",
+    "Identified and prioritized high-value product opportunities by developing student and faculty personas, analyzing customer pain points, conducting competitive research, and creating opportunity maps, enabling the team to focus feature development on the most important user needs and workflows.",
+    "Drove continuous product improvement by translating user feedback and research insights into actionable feature recommendations and collaborating with engineering and university stakeholders to evaluate feasibility, align customer needs with technical constraints, and guide roadmap decisions throughout the product lifecycle.",
+  ];
+
+  assert.match(experience, /<h2>Education & certifications<\/h2>/);
+  assert.match(
+    experience,
+    /<p className="eyebrow eyebrow--dot">Education<\/p>/,
+  );
+  assert.match(
+    experience,
+    /<Image[\s\S]*?alt=""[\s\S]*?src="\/images\/education\/university-of-rochester-logo\.png"/,
+  );
+  assert.match(
+    experience,
+    /education-degree__logo-medallion--simon/,
+  );
+  assert.match(
+    experience,
+    /<Image[\s\S]*?alt=""[\s\S]*?src="\/images\/education\/vellore-institute-of-technology-logo\.svg"/,
+  );
+  assert.equal(leadershipData.match(/\n  "/g)?.length, 3);
+  assert.match(
+    experience,
+    /<ul className="education-degree__leadership">[\s\S]*?simonLeadershipHighlights\.map[\s\S]*?<li key=\{highlight\}>\{highlight\}<\/li>/,
+  );
+  for (const highlight of exactLeadershipHighlights) {
+    assert.ok(experience.includes(highlight), `Missing exact bullet: ${highlight}`);
+  }
+
+  for (const requiredContent of [
+    "Merit Scholarship (45%)",
+    "Simon Pride Alliance",
+    "U&I NGO",
+    "Novice Title",
+    "British Parliamentary",
+    "Riviera 2018",
+    "Asian Parliamentary",
+    "Power BI Data Analyst Associate",
+    "DA-100",
+    "Microsoft Azure Fundamentals",
+    "AZ-900",
+  ]) {
+    assert.ok(experience.includes(requiredContent), `Missing: ${requiredContent}`);
+  }
+
+  assert.doesNotMatch(experience, /className="education-grid"/);
+  assert.doesNotMatch(css, /\.education-grid/);
+  assert.match(
+    css,
+    /\.education-panel\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,\s*1\.15fr\) minmax\(0,\s*1fr\)/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 820px\)[\s\S]*?\.education-panel\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 560px\)[\s\S]*?\.certifications-grid\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(
+    css,
+    /(?:^|\n)\.education-degree__logo\s*\{[\s\S]*?object-fit:\s*contain/,
+  );
+  assert.match(logoMedallionRule, /background:\s*transparent/);
+  assert.match(
+    logoMedallionRule,
+    /border:\s*1px solid rgba\(226,\s*94,\s*44,\s*0\.2\)/,
+  );
+  assert.match(
+    css,
+    /\.education-degree__logo-medallion--simon\s*\{[\s\S]*?padding:\s*0/,
+  );
+});
+
 test("experience content expands each role with source-backed resume details", async () => {
   const [content, experiencePage] = await Promise.all([
     source("content/site.ts"),

@@ -36,6 +36,12 @@ const impactStories = [
   },
 ];
 
+const simonLeadershipHighlights = [
+  "Led product discovery and strategy for an AI-powered learning assistant serving 12,000+ students by conducting primary market research, user interviews, product-market-fit analysis, and Jobs-to-Be-Done research, increasing student engagement and professor adoption by 40%.",
+  "Identified and prioritized high-value product opportunities by developing student and faculty personas, analyzing customer pain points, conducting competitive research, and creating opportunity maps, enabling the team to focus feature development on the most important user needs and workflows.",
+  "Drove continuous product improvement by translating user feedback and research insights into actionable feature recommendations and collaborating with engineering and university stakeholders to evaluate feasibility, align customer needs with technical constraints, and guide roadmap decisions throughout the product lifecycle.",
+] as const;
+
 export default function ExperiencePage() {
   return (
     <>
@@ -121,27 +127,184 @@ export default function ExperiencePage() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="education">
         <div className="wrap">
-          <p className="eyebrow">Education</p>
-          <h2>Degrees & certificates</h2>
-          <div className="education-grid">
-            <article data-reveal>
-              <h3>Master of Business Administration</h3>
-              <p>STEM-designated program</p>
-              <p>Simon Business School · University of Rochester · 2024–2026</p>
-              <span>Merit scholarship</span>
+          <p className="eyebrow eyebrow--dot">Education</p>
+          <h2>Education & certifications</h2>
+
+          <div className="education-panel" data-reveal>
+            <article className="education-degree education-degree--mba">
+              <header className="education-degree__header">
+                <span
+                  aria-hidden="true"
+                  className="education-degree__logo-medallion education-degree__logo-medallion--simon"
+                >
+                  <Image
+                    alt=""
+                    className="education-degree__logo"
+                    height={72}
+                    sizes="(max-width: 560px) 52px, 64px"
+                    src="/images/education/university-of-rochester-logo.png"
+                    unoptimized
+                    width={72}
+                  />
+                </span>
+                <div>
+                  <h3>Master of Business Administration</h3>
+                  <p>STEM-designated program · June 2024 – May 2026</p>
+                  <p>
+                    Simon Business School · University of Rochester ·
+                    Rochester, New York
+                  </p>
+                  <p className="education-degree__accent">
+                    Merit Scholarship (45%)
+                  </p>
+                </div>
+              </header>
+
+              <div className="education-degree__section">
+                <p className="education-degree__label">Leadership</p>
+                <p className="education-degree__role">
+                  <strong>Associate Product Manager</strong> · Simon Product
+                  Management Club (SPMC)
+                </p>
+                <ul className="education-degree__leadership">
+                  {simonLeadershipHighlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="education-degree__section">
+                <p className="education-degree__label">Campus involvement</p>
+                <p>
+                  Simon Product Management Club · Simon Marketing Association ·
+                  Simon Volunteers · Simon Pride Alliance
+                </p>
+              </div>
             </article>
-            <article data-reveal>
-              <h3>B.Tech. Electronics & Communication Engineering</h3>
-              <p>Vellore Institute of Technology · 2016–2020</p>
-              <span>Debate Society · Toastmasters · U&I</span>
+
+            <article className="education-degree">
+              <header className="education-degree__header">
+                <span
+                  aria-hidden="true"
+                  className="education-degree__logo-medallion"
+                >
+                  <Image
+                    alt=""
+                    className="education-degree__logo"
+                    height={72}
+                    sizes="(max-width: 560px) 52px, 64px"
+                    src="/images/education/vellore-institute-of-technology-logo.svg"
+                    unoptimized
+                    width={72}
+                  />
+                </span>
+                <div>
+                  <h3>Bachelor of Technology</h3>
+                  <p className="education-degree__specialization">
+                    Electronics & Communication Engineering
+                  </p>
+                  <p>July 2016 – June 2020</p>
+                  <p>Vellore Institute of Technology · Vellore, India</p>
+                </div>
+              </header>
+
+              <div className="education-degree__section">
+                <p className="education-degree__label">Activities</p>
+                <p>
+                  Debate Society of VIT · Toastmasters International VIT · U&I NGO
+                </p>
+                <p>
+                  Volunteered with U&I, an NGO providing educational support to
+                  children from underprivileged backgrounds.
+                </p>
+                <p>
+                  Contributed content to Toastmasters International VIT’s annual
+                  magazine while developing public-speaking and communication
+                  skills.
+                </p>
+              </div>
+
+              <div className="education-degree__section">
+                <p className="education-degree__label">Accolades</p>
+                <div className="education-accolade">
+                  <svg
+                    aria-hidden="true"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8 4h8v5a4 4 0 0 1-8 0V4Zm0 2H5v1a4 4 0 0 0 4 4m7-5h3v1a4 4 0 0 1-4 4m-3 2v4m-4 0h8"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.7"
+                    />
+                  </svg>
+                  <p>
+                    Novice Title — MS Ramaiah College of Law, 2017 (British Parliamentary)
+                  </p>
+                </div>
+                <div className="education-accolade">
+                  <svg
+                    aria-hidden="true"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.5 18.5C5.8 16.5 4.2 13.1 5 9.8m10.5 8.7c2.7-2 4.3-5.4 3.5-8.7M7.2 8.2 5.4 6.4m1.4 5.3-2.3-.8m3.9 3.7-2.1.5m10.5-6.9 1.8-1.8m-1.4 5.3 2.3-.8m-3.9 3.7 2.1.5M9 20h6"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.7"
+                    />
+                  </svg>
+                  <p>Riviera 2018 — Asian Parliamentary</p>
+                </div>
+              </div>
             </article>
-            <article data-reveal>
-              <h3>Microsoft credentials</h3>
-              <p>Power BI Data Analyst · Azure Fundamentals</p>
-              <span>DA-100 · AZ-900</span>
-            </article>
+          </div>
+
+          <div className="certifications-panel" data-reveal>
+            <p className="education-degree__label">
+              Microsoft certifications
+            </p>
+            <div className="certifications-grid">
+              <article className="certification">
+                <span aria-hidden="true" className="certification__icon">
+                  <svg fill="none" viewBox="0 0 32 32">
+                    <path
+                      d="M5 24h6V13H5v11Zm8 0h6V8h-6v16Zm8 0h6V4h-6v20Z"
+                      stroke="currentColor"
+                      strokeLinejoin="round"
+                      strokeWidth="1.8"
+                    />
+                  </svg>
+                </span>
+                <div>
+                  <h3>Power BI Data Analyst Associate</h3>
+                  <p>DA-100</p>
+                </div>
+              </article>
+              <article className="certification">
+                <span aria-hidden="true" className="certification__icon">
+                  <svg fill="none" viewBox="0 0 32 32">
+                    <path
+                      d="M9.5 24.5h14a5.5 5.5 0 0 0 .5-11 8 8 0 0 0-15.3-1.7 6.4 6.4 0 0 0 .8 12.7Z"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.8"
+                    />
+                  </svg>
+                </span>
+                <div>
+                  <h3>Microsoft Azure Fundamentals</h3>
+                  <p>AZ-900</p>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </section>
