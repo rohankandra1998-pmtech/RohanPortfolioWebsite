@@ -1181,35 +1181,6 @@ textarea:focus-visible {
   margin: 0 9px;
 }
 
-.research-list {
-  border-top: 1px solid var(--line);
-}
-
-.research-row {
-  border-bottom: 1px solid var(--line);
-  display: grid;
-  gap: 32px;
-  grid-template-columns: 54px 1fr;
-  padding: 34px 0;
-}
-
-.research-row > span {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.research-row h3 {
-  font-family: var(--font-serif);
-  font-size: 2rem;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-
-.research-row p {
-  margin-bottom: 0;
-  max-width: 800px;
-}
-
 .education-panel {
   background: var(--card);
   border: 1px solid var(--line);
@@ -2400,14 +2371,12 @@ a.writing-row:hover {
     font-size: 2.35rem;
   }
 
-  .principle,
-  .research-row {
+  .principle {
     gap: 18px;
     grid-template-columns: 38px 1fr;
   }
 
-  .principle h3,
-  .research-row h3 {
+  .principle h3 {
     font-size: 1.65rem;
   }
 

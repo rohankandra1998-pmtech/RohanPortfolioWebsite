@@ -9,33 +9,6 @@ export const metadata: Metadata = {
     "Rohan Kandra’s experience across product management, AI, analytics, consulting, and workflow automation.",
 };
 
-const impactStories = [
-  {
-    number: "01",
-    title: "From broad idea to funded next step",
-    body:
-      "Led discovery for a women’s wellness and productivity app through 25+ interviews, 500+ survey responses, competitive analysis, market sizing, personas, and MVP prioritization. The client signed a roughly $40K development SOW after a $4K discovery engagement.",
-  },
-  {
-    number: "02",
-    title: "A national-scale cross-functional build",
-    body:
-      "Coordinated database, consulting, management, design, and integration partners while leading six embedded dashboards across 150M rows for eSanjeevani OPD. The work included more than 150 tracked action items.",
-  },
-  {
-    number: "03",
-    title: "An alert before the dashboard",
-    body:
-      "After a stakeholder explained that KPI problems were discovered too late, proposed and implemented 50+ automated alerts. The source materials report 55% faster mitigation and 14 days less response time.",
-  },
-  {
-    number: "04",
-    title: "Leadership through capability",
-    body:
-      "Built learning roadmaps, used meeting shadowing and reverse knowledge transfer, and coached interns and client resources so they could own technical work and explain it independently.",
-  },
-];
-
 const simonLeadershipHighlights = [
   "Led product discovery and strategy for an AI-powered learning assistant serving 12,000+ students by conducting primary market research, user interviews, product-market-fit analysis, and Jobs-to-Be-Done research, increasing student engagement and professor adoption by 40%.",
   "Identified and prioritized high-value product opportunities by developing student and faculty personas, analyzing customer pain points, conducting competitive research, and creating opportunity maps, enabling the team to focus feature development on the most important user needs and workflows.",
@@ -151,24 +124,6 @@ export default function ExperiencePage() {
               </div>
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap">
-          <p className="eyebrow">Stories behind the roles</p>
-          <h2>Selected impact</h2>
-          <div className="research-list">
-            {impactStories.map((story) => (
-              <article className="research-row" data-reveal key={story.number}>
-                <span>{story.number}</span>
-                <div>
-                  <h3>{story.title}</h3>
-                  <p>{story.body}</p>
-                </div>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -399,7 +354,7 @@ export default function ExperiencePage() {
 
       <section className="section" id="recognition">
         <div className="wrap">
-          <p className="eyebrow">Recognition</p>
+          <p className="eyebrow eyebrow--dot">Recognition</p>
           <h2>A wall of small wins</h2>
           <div className="recognition-grid" data-reveal>
             <div className="recognition-awards">

@@ -22,7 +22,7 @@ test("portfolio includes every public route and project case study", async () =>
 
   assert.match(home, /A few favorites/);
   assert.match(about, /Curiosity is how I move from ambiguity to action/);
-  assert.match(experience, /Stories behind the roles/);
+  assert.match(experience, /Education & Certifications/);
   assert.match(work, /Products shaped through evidence/);
   assert.match(thoughts, /Notes to self/);
   assert.match(contact, /Say hi/);
@@ -139,10 +139,25 @@ test("experience uses a route-scoped orange theme and masked logo treatment", as
 });
 
 test("experience renders the editorial timeline with semantic accomplishments and skills", async () => {
-  const [experience, content] = await Promise.all([
+  const [experience, content, css] = await Promise.all([
     source("app/experience/page.tsx"),
     source("content/site.ts"),
+    source("app/globals.css"),
   ]);
+  const timelineIndex = experience.indexOf(
+    '<div className="wrap experience-timeline">',
+  );
+  const timelineSectionEnd = experience.indexOf("</section>", timelineIndex);
+  const educationIndex = experience.indexOf(
+    '<section className="section" id="education">',
+  );
+  const recognitionIndex = experience.indexOf(
+    '<section className="section" id="recognition">',
+  );
+  const timelineToEducation = experience.slice(
+    timelineSectionEnd,
+    educationIndex,
+  );
 
   assert.match(experience, /className="page-head page-head--experience"/);
   assert.match(experience, /className="eyebrow eyebrow--dot"/);
@@ -163,7 +178,24 @@ test("experience renders the editorial timeline with semantic accomplishments an
   );
   assert.match(content, /export type Experience = \{[\s\S]*?skills: string\[\];/);
   assert.equal(content.match(/\n    skills: \[/g)?.length, 4);
-  assert.match(experience, /Selected impact/);
+  assert.doesNotMatch(experience, /Stories behind the roles/);
+  assert.doesNotMatch(experience, /Selected impact/);
+  assert.doesNotMatch(experience, /impactStories/);
+  assert.doesNotMatch(experience, /const impactStories/);
+  assert.doesNotMatch(experience, /className="research-list"/);
+  assert.doesNotMatch(experience, /className="research-row"/);
+  assert.doesNotMatch(css, /\.research-list/);
+  assert.doesNotMatch(css, /\.research-row/);
+  assert.ok(
+    timelineIndex < timelineSectionEnd &&
+      timelineSectionEnd < educationIndex &&
+      educationIndex < recognitionIndex,
+    "Expected Experience timeline, Education, then Recognition",
+  );
+  assert.doesNotMatch(
+    timelineToEducation,
+    /Stories behind the roles|Selected impact/,
+  );
   assert.match(experience, /Education/);
   assert.match(experience, /Recognition/);
 });
@@ -440,7 +472,7 @@ test("recognition uses an asymmetric professional awards showcase", async () => 
   ]);
   const recognitionSection =
     experience.match(
-      /<section className="section" id="recognition">\s*<div className="wrap">\s*<p className="eyebrow">Recognition<\/p>[\s\S]*?<\/section>/,
+      /<section className="section" id="recognition">\s*<div className="wrap">\s*<p className="eyebrow eyebrow--dot">Recognition<\/p>[\s\S]*?<\/section>/,
     )?.[0] ?? "";
   const awardsData =
     experience.match(
@@ -466,6 +498,10 @@ test("recognition uses an asymmetric professional awards showcase", async () => 
   );
 
   assert.match(recognitionSection, /A wall of small wins/);
+  assert.match(
+    recognitionSection,
+    /<p className="eyebrow eyebrow--dot">Recognition<\/p>/,
+  );
   assert.match(recognitionSection, /Professional recognition/);
   assert.match(
     recognitionSection,
