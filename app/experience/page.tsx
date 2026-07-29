@@ -130,7 +130,7 @@ export default function ExperiencePage() {
       <section className="section" id="education">
         <div className="wrap">
           <p className="eyebrow eyebrow--dot">Education</p>
-          <h2>Education & certifications</h2>
+          <h2>Education & Certifications</h2>
 
           <div className="education-panel" data-reveal>
             <article className="education-degree education-degree--mba">
@@ -151,11 +151,14 @@ export default function ExperiencePage() {
                 </span>
                 <div>
                   <h3>Master of Business Administration</h3>
-                  <p>STEM-designated program · June 2024 – May 2026</p>
-                  <p>
-                    Simon Business School · University of Rochester ·
-                    Rochester, New York
+                  <p className="education-degree__specialization">
+                    STEM-designated program
                   </p>
+                  <p className="education-degree__date">
+                    June 2024 – May 2026
+                  </p>
+                  <p>Simon Business School · University of Rochester</p>
+                  <p>Rochester, New York</p>
                   <p className="education-degree__accent">
                     Merit Scholarship (45%)
                   </p>
@@ -205,8 +208,11 @@ export default function ExperiencePage() {
                   <p className="education-degree__specialization">
                     Electronics & Communication Engineering
                   </p>
-                  <p>July 2016 – June 2020</p>
-                  <p>Vellore Institute of Technology · Vellore, India</p>
+                  <p className="education-degree__date">
+                    July 2016 – June 2020
+                  </p>
+                  <p>Vellore Institute of Technology</p>
+                  <p>Vellore, India</p>
                 </div>
               </header>
 
@@ -268,39 +274,76 @@ export default function ExperiencePage() {
 
           <div className="certifications-panel" data-reveal>
             <p className="education-degree__label">
-              Microsoft certifications
+              Microsoft Certifications
             </p>
             <div className="certifications-grid">
               <article className="certification">
-                <span aria-hidden="true" className="certification__icon">
-                  <svg fill="none" viewBox="0 0 32 32">
-                    <path
-                      d="M5 24h6V13H5v11Zm8 0h6V8h-6v16Zm8 0h6V4h-6v20Z"
-                      stroke="currentColor"
-                      strokeLinejoin="round"
-                      strokeWidth="1.8"
-                    />
-                  </svg>
+                <span className="certification__logo-wrap">
+                  <Image
+                    alt=""
+                    className="certification__logo"
+                    height={600}
+                    sizes="(max-width: 360px) 60px, (max-width: 560px) 68px, 76px"
+                    src="/images/certifications/power-bi-data-analyst-associate-logo.png"
+                    unoptimized
+                    width={600}
+                  />
                 </span>
                 <div>
-                  <h3>Power BI Data Analyst Associate</h3>
+                  <h3>
+                    <a
+                      aria-label="Power BI Data Analyst Associate credential on Credly (opens in a new tab)"
+                      className="certification__link"
+                      href="https://www.credly.com/badges/2ec73ddb-8e09-49e8-a0d6-6c6cc0936443/public_url"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <span className="certification__link-label">
+                        Power BI Data Analyst Associate
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="certification__link-arrow"
+                      >
+                        ↗︎
+                      </span>
+                    </a>
+                  </h3>
                   <p>DA-100</p>
                 </div>
               </article>
               <article className="certification">
-                <span aria-hidden="true" className="certification__icon">
-                  <svg fill="none" viewBox="0 0 32 32">
-                    <path
-                      d="M9.5 24.5h14a5.5 5.5 0 0 0 .5-11 8 8 0 0 0-15.3-1.7 6.4 6.4 0 0 0 .8 12.7Z"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.8"
-                    />
-                  </svg>
+                <span className="certification__logo-wrap">
+                  <Image
+                    alt=""
+                    className="certification__logo"
+                    height={600}
+                    sizes="(max-width: 360px) 60px, (max-width: 560px) 68px, 76px"
+                    src="/images/certifications/microsoft-azure-fundamentals-logo.png"
+                    unoptimized
+                    width={600}
+                  />
                 </span>
                 <div>
-                  <h3>Microsoft Azure Fundamentals</h3>
+                  <h3>
+                    <a
+                      aria-label="Microsoft Azure Fundamentals credential on Credly (opens in a new tab)"
+                      className="certification__link"
+                      href="https://www.credly.com/badges/5ce48d65-119d-433c-992d-352763ed8857?source=linked_in_profile"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <span className="certification__link-label">
+                        Microsoft Azure Fundamentals
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="certification__link-arrow"
+                      >
+                        ↗︎
+                      </span>
+                    </a>
+                  </h3>
                   <p>AZ-900</p>
                 </div>
               </article>

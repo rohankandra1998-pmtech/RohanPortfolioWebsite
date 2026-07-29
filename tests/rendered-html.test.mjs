@@ -242,7 +242,7 @@ test("experience timeline uses four local, accessible logo medallions", async ()
   );
 });
 
-test("education and certifications use supplied logos and exact leadership content", async () => {
+test("education and certifications use verifiable credentials, supplied logos, and exact leadership content", async () => {
   const [experience, css] = await Promise.all([
     source("app/experience/page.tsx"),
     source("app/globals.css"),
@@ -255,6 +255,18 @@ test("education and certifications use supplied logos and exact leadership conte
     access(
       new URL(
         "public/images/education/vellore-institute-of-technology-logo.svg",
+        root,
+      ),
+    ),
+    access(
+      new URL(
+        "public/images/certifications/power-bi-data-analyst-associate-logo.png",
+        root,
+      ),
+    ),
+    access(
+      new URL(
+        "public/images/certifications/microsoft-azure-fundamentals-logo.png",
         root,
       ),
     ),
@@ -271,7 +283,8 @@ test("education and certifications use supplied logos and exact leadership conte
     "Drove continuous product improvement by translating user feedback and research insights into actionable feature recommendations and collaborating with engineering and university stakeholders to evaluate feasibility, align customer needs with technical constraints, and guide roadmap decisions throughout the product lifecycle.",
   ];
 
-  assert.match(experience, /<h2>Education & certifications<\/h2>/);
+  assert.match(experience, /<h2>Education & Certifications<\/h2>/);
+  assert.match(experience, />\s*Microsoft Certifications\s*</);
   assert.match(
     experience,
     /<p className="eyebrow eyebrow--dot">Education<\/p>/,
@@ -287,6 +300,58 @@ test("education and certifications use supplied logos and exact leadership conte
   assert.match(
     experience,
     /<Image[\s\S]*?alt=""[\s\S]*?src="\/images\/education\/vellore-institute-of-technology-logo\.svg"/,
+  );
+  assert.match(
+    experience,
+    /<p className="education-degree__date">\s*June 2024 – May 2026\s*<\/p>/,
+  );
+  assert.match(
+    experience,
+    /<p className="education-degree__date">\s*July 2016 – June 2020\s*<\/p>/,
+  );
+  assert.match(
+    experience,
+    /<p>Simon Business School · University of Rochester<\/p>\s*<p>Rochester, New York<\/p>/,
+  );
+  assert.match(
+    experience,
+    /<p>Vellore Institute of Technology<\/p>\s*<p>Vellore, India<\/p>/,
+  );
+  assert.match(
+    experience,
+    /href="https:\/\/www\.credly\.com\/badges\/2ec73ddb-8e09-49e8-a0d6-6c6cc0936443\/public_url"/,
+  );
+  assert.match(
+    experience,
+    /href="https:\/\/www\.credly\.com\/badges\/5ce48d65-119d-433c-992d-352763ed8857\?source=linked_in_profile"/,
+  );
+  assert.equal(
+    experience.match(/rel="noopener noreferrer"\s*target="_blank"/g)?.length,
+    2,
+  );
+  assert.equal(
+    experience.match(/aria-label="[^"]*credential on Credly \(opens in a new tab\)"/g)?.length,
+    2,
+  );
+  assert.match(
+    experience,
+    /src="\/images\/certifications\/power-bi-data-analyst-associate-logo\.png"/,
+  );
+  assert.match(
+    experience,
+    /src="\/images\/certifications\/microsoft-azure-fundamentals-logo\.png"/,
+  );
+  assert.equal(
+    experience.match(/className="certification__logo"/g)?.length,
+    2,
+  );
+  assert.equal(
+    experience.match(/className="certification__logo-wrap"/g)?.length,
+    2,
+  );
+  assert.doesNotMatch(
+    experience,
+    /className="certification__icon"|<article className="certification">[\s\S]*?<svg/,
   );
   assert.equal(leadershipData.match(/\n  "/g)?.length, 3);
   assert.match(
@@ -326,6 +391,26 @@ test("education and certifications use supplied logos and exact leadership conte
   assert.match(
     css,
     /@media \(max-width: 560px\)[\s\S]*?\.certifications-grid\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(
+    css,
+    /\.education-degree__date[\s\S]*?font-weight:\s*500/,
+  );
+  assert.match(
+    css,
+    /\.certification__logo\s*\{[\s\S]*?object-fit:\s*contain/,
+  );
+  assert.match(
+    css,
+    /\.certification__link:focus-visible\s*\{[\s\S]*?outline:\s*2px solid var\(--accent\)/,
+  );
+  assert.match(
+    css,
+    /\.certification__link-label\s*\{[\s\S]*?border-bottom:\s*1px solid/,
+  );
+  assert.match(
+    css,
+    /\.certification__link-arrow\s*\{[\s\S]*?transition:\s*transform 0\.3s var\(--ease\)/,
   );
   assert.match(
     css,
