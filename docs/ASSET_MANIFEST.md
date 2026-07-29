@@ -8,6 +8,7 @@
 | `images/experience/pwc-logo.svg` | Supplied by Rohan | PwC experience medallion | Original SVG; proportions and brand colors preserved |
 | `images/experience/vnb-consulting-logo.png` | Supplied by Rohan | VNB Consulting Services experience medallion | Original transparent PNG; proportions and brand colors preserved |
 | `images/experience/dxc-technology-logo.svg` | Supplied by Rohan | DXC Technology experience medallion | Original SVG; proportions and brand colors preserved |
+| `images/recognition/vivify-team-page-feature.png` | Supplied by Rohan / Vivify Solutions website capture | Recognition company-feature evidence | Rohan's official Product Manager team profile; stored locally because the source page may change |
 | `images/education/university-of-rochester-logo.png` | Supplied by Rohan | Simon Business School / University of Rochester education medallion | Original PNG; proportions and colors preserved |
 | `images/education/vellore-institute-of-technology-logo.svg` | Supplied by Rohan | Vellore Institute of Technology education medallion | Original SVG; proportions and colors preserved |
 | `images/certifications/power-bi-data-analyst-associate-logo.png` | Supplied by Rohan | Power BI Data Analyst Associate certification | Official DA-100 badge PNG; proportions and colors preserved |

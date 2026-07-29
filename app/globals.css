@@ -1572,6 +1572,84 @@ textarea:focus-visible {
   font-size: 2.12rem;
 }
 
+.company-feature {
+  border: 1px solid rgba(226, 94, 44, 0.2);
+  border-radius: 12px;
+  display: grid;
+  gap: clamp(28px, 4vw, 52px);
+  grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
+  margin-top: 32px;
+  padding: clamp(26px, 3vw, 40px);
+}
+
+.company-feature__content {
+  align-self: start;
+  min-width: 0;
+}
+
+.company-feature__eyebrow {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  margin: 0 0 14px;
+  text-transform: uppercase;
+}
+
+.company-feature__title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.35rem, 2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+
+.company-feature__body {
+  max-width: 520px;
+}
+
+.company-feature__body p {
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.company-feature__body p + p {
+  margin-top: 20px;
+}
+
+.company-feature__media {
+  margin: 0;
+  min-width: 0;
+}
+
+.company-feature__image-frame {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.company-feature__image {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  width: 100%;
+}
+
+.company-feature__caption {
+  color: var(--faint);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  margin-top: 9px;
+}
+
+.company-feature + .section-link {
+  margin-top: 36px;
+}
+
 .recognition-stat dd {
   margin: 0;
 }
@@ -2180,6 +2258,10 @@ a.writing-row:hover {
     padding: 0;
   }
 
+  .company-feature {
+    grid-template-columns: 1fr;
+  }
+
   .recognition-stat {
     padding: 28px 22px 28px 0;
   }
@@ -2496,6 +2578,28 @@ a.writing-row:hover {
 
   .recognition-stat + .recognition-stat {
     border-top: 1px solid var(--line);
+  }
+
+  .company-feature {
+    gap: 24px;
+    margin-top: 28px;
+    padding: 22px;
+  }
+
+  .company-feature__title {
+    margin-bottom: 16px;
+  }
+
+  .company-feature__body p {
+    font-size: 0.9rem;
+  }
+
+  .company-feature__body p + p {
+    margin-top: 16px;
+  }
+
+  .company-feature + .section-link {
+    margin-top: 30px;
   }
 
   .case-hero {

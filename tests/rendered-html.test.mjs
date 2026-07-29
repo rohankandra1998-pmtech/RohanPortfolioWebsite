@@ -431,6 +431,12 @@ test("recognition uses an asymmetric professional awards showcase", async () => 
   const [experience, css] = await Promise.all([
     source("app/experience/page.tsx"),
     source("app/globals.css"),
+    access(
+      new URL(
+        "public/images/recognition/vivify-team-page-feature.png",
+        root,
+      ),
+    ),
   ]);
   const recognitionSection =
     experience.match(
@@ -444,6 +450,20 @@ test("recognition uses an asymmetric professional awards showcase", async () => 
     experience.match(
       /const recognitionStats = \[([\s\S]*?)\] as const;/,
     )?.[1] ?? "";
+  const companyFeature =
+    recognitionSection.match(
+      /<article className="company-feature"[\s\S]*?<\/article>/,
+    )?.[0] ?? "";
+  const normalizedCompanyFeature = companyFeature.replace(/\s+/g, " ");
+  const recognitionGridIndex = recognitionSection.indexOf(
+    '<div className="recognition-grid"',
+  );
+  const companyFeatureIndex = recognitionSection.indexOf(
+    '<article className="company-feature"',
+  );
+  const sectionLinkIndex = recognitionSection.indexOf(
+    '<p className="section-link">',
+  );
 
   assert.match(recognitionSection, /A wall of small wins/);
   assert.match(recognitionSection, /Professional recognition/);
@@ -453,6 +473,37 @@ test("recognition uses an asymmetric professional awards showcase", async () => 
   );
   assert.match(recognitionSection, /recognitionStats\.map\(\(stat\) =>/);
   assert.match(recognitionSection, /<dl className="recognition-stats">/);
+  assert.equal(awardsData.match(/\n    company: "/g)?.length, 3);
+  assert.ok(
+    recognitionGridIndex < companyFeatureIndex &&
+      companyFeatureIndex < sectionLinkIndex,
+    "Expected recognition-grid, company-feature, then section-link",
+  );
+
+  for (const requiredFeatureContent of [
+    "Company feature",
+    "Featured on Vivify Solutions’ team page",
+    "Product Manager",
+    "product discovery",
+    "product vision and roadmap",
+    "backlog prioritization",
+    "sprint planning",
+    "cross-functional execution",
+    "4+ years",
+    "Simon Business School",
+  ]) {
+    assert.ok(
+      normalizedCompanyFeature.includes(requiredFeatureContent),
+      `Missing company feature content: ${requiredFeatureContent}`,
+    );
+  }
+
+  assert.match(companyFeature, /^<article className="company-feature"/);
+  assert.match(
+    companyFeature,
+    /<Image[\s\S]*?alt="Vivify Solutions team page featuring Rohan Singh Kandra as Product Manager"[\s\S]*?src="\/images\/recognition\/vivify-team-page-feature\.png"/,
+  );
+  assert.doesNotMatch(companyFeature, /https?:\/\/|<a\b/);
 
   for (const requiredContent of [
     "PwC Customer Recognition Award",
@@ -534,6 +585,18 @@ test("recognition uses an asymmetric professional awards showcase", async () => 
   assert.match(
     css,
     /@media \(max-width: 560px\)[\s\S]*?\.recognition-stats\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(
+    css,
+    /\.company-feature\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,\s*0\.68fr\) minmax\(0,\s*1fr\)/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 820px\)[\s\S]*?\.company-feature\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(
+    css,
+    /\.company-feature__image\s*\{[\s\S]*?object-fit:\s*contain/,
   );
 });
 

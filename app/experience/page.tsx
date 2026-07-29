@@ -461,6 +461,45 @@ export default function ExperiencePage() {
               ))}
             </dl>
           </div>
+          <article className="company-feature" data-reveal>
+            <div className="company-feature__content">
+              <p className="company-feature__eyebrow">Company feature</p>
+              <h3 className="company-feature__title">
+                Featured on Vivify Solutions’ team page
+              </h3>
+              <div className="company-feature__body">
+                <p>
+                  Featured on Vivify Solutions’ official team page as a Product
+                  Manager, highlighting my work across product discovery,
+                  product vision and roadmap, backlog prioritization, sprint
+                  planning, and cross-functional execution.
+                </p>
+                <p>
+                  The profile also recognizes my 4+ years of experience across
+                  product development, data analytics, and consulting, alongside
+                  my MBA studies at Simon Business School focused on Product
+                  Management and Strategy.
+                </p>
+              </div>
+            </div>
+
+            <figure className="company-feature__media">
+              <div className="company-feature__image-frame">
+                <Image
+                  alt="Vivify Solutions team page featuring Rohan Singh Kandra as Product Manager"
+                  className="company-feature__image"
+                  height={874}
+                  sizes="(max-width: 820px) calc(100vw - 80px), (max-width: 560px) calc(100vw - 56px), 60vw"
+                  src="/images/recognition/vivify-team-page-feature.png"
+                  unoptimized
+                  width={888}
+                />
+              </div>
+              <figcaption className="company-feature__caption">
+                Snapshot of Vivify Solutions’ official team page.
+              </figcaption>
+            </figure>
+          </article>
           <p className="section-link">
             <Link className="arrow-link focus-ring" href="/work">
               See selected product work <span aria-hidden="true">→</span>
