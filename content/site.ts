@@ -3,6 +3,8 @@ export type SocialLink = {
   href: string;
 };
 
+export type ExperienceLogoVariant = "standard" | "wide" | "compact";
+
 export type Experience = {
   company: string;
   role: string;
@@ -11,6 +13,8 @@ export type Experience = {
   summary: string;
   highlights: string[];
   skills: string[];
+  logoSrc: string;
+  logoVariant: ExperienceLogoVariant;
 };
 
 export type ProjectMedia = {
@@ -121,6 +125,8 @@ export const experiences: Experience[] = [
       "Confluence",
       "Cross-functional collaboration",
     ],
+    logoSrc: "/images/experience/vivify-solutions-logo.png",
+    logoVariant: "compact",
   },
   {
     company: "PwC",
@@ -161,6 +167,8 @@ export const experiences: Experience[] = [
       "Agile delivery",
       "OKRs",
     ],
+    logoSrc: "/images/experience/pwc-logo.svg",
+    logoVariant: "standard",
   },
   {
     company: "VNB Consulting Services",
@@ -199,6 +207,8 @@ export const experiences: Experience[] = [
       "Product strategy",
       "Go-to-market strategy",
     ],
+    logoSrc: "/images/experience/vnb-consulting-logo.png",
+    logoVariant: "wide",
   },
   {
     company: "DXC Technology",
@@ -224,6 +234,8 @@ export const experiences: Experience[] = [
       "Employee performance tracking",
       "Business strategy",
     ],
+    logoSrc: "/images/experience/dxc-technology-logo.svg",
+    logoVariant: "wide",
   },
 ];
 

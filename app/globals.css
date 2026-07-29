@@ -1024,14 +1024,14 @@ textarea:focus-visible {
   background: var(--line);
   bottom: 24px;
   content: "";
-  left: 7px;
+  left: 28px;
   position: absolute;
   top: 24px;
   width: 1px;
 }
 
 .experience-entry {
-  padding: 24px 0 74px 50px;
+  padding: 24px 0 74px 82px;
   position: relative;
 }
 
@@ -1040,14 +1040,40 @@ textarea:focus-visible {
 }
 
 .experience-entry__marker {
-  background: var(--canvas);
+  align-items: center;
+  background: var(--card);
   border: 2px solid var(--accent);
   border-radius: 50%;
-  height: 15px;
+  display: flex;
+  height: 56px;
+  justify-content: center;
   left: 0;
+  overflow: hidden;
+  padding: 8px;
   position: absolute;
-  top: 34px;
-  width: 15px;
+  top: 22px;
+  width: 56px;
+  z-index: 1;
+}
+
+.experience-entry__marker--wide {
+  padding: 10px 5px;
+}
+
+.experience-entry__marker--compact {
+  padding: 4px;
+}
+
+.experience-entry__marker--compact .experience-entry__logo {
+  background: var(--ink);
+  border-radius: 50%;
+}
+
+.experience-entry__logo {
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  width: 100%;
 }
 
 .experience-entry__content {
@@ -1642,7 +1668,17 @@ a.writing-row:hover {
   }
 
   .experience-entry {
-    padding-left: 42px;
+    padding-left: 72px;
+  }
+
+  .experience-timeline::before {
+    left: 24px;
+  }
+
+  .experience-entry__marker {
+    height: 48px;
+    top: 24px;
+    width: 48px;
   }
 
   .case-meta {
@@ -1986,11 +2022,11 @@ a.writing-row:hover {
   }
 
   .experience-timeline::before {
-    left: 6px;
+    left: 21px;
   }
 
   .experience-entry {
-    padding: 20px 0 60px 34px;
+    padding: 20px 0 60px 60px;
   }
 
   .experience-entry:last-child {
@@ -1998,9 +2034,9 @@ a.writing-row:hover {
   }
 
   .experience-entry__marker {
-    height: 13px;
-    top: 30px;
-    width: 13px;
+    height: 42px;
+    top: 22px;
+    width: 42px;
   }
 
   .experience-entry__heading h2 {

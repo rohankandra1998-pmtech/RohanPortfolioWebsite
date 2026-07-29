@@ -148,7 +148,10 @@ test("experience renders the editorial timeline with semantic accomplishments an
   assert.match(experience, /className="eyebrow eyebrow--dot"/);
   assert.match(experience, /className="wrap experience-timeline"/);
   assert.match(experience, /experiences\.map\(\(experience\) =>/);
-  assert.match(experience, /className="experience-entry__marker"/);
+  assert.match(
+    experience,
+    /className=\{`experience-entry__marker experience-entry__marker--\$\{experience\.logoVariant\}`\}/,
+  );
   assert.doesNotMatch(experience, /timeline-row__meta/);
   assert.match(
     experience,
@@ -163,6 +166,80 @@ test("experience renders the editorial timeline with semantic accomplishments an
   assert.match(experience, /Selected impact/);
   assert.match(experience, /Education/);
   assert.match(experience, /Recognition/);
+});
+
+test("experience timeline uses four local, accessible logo medallions", async () => {
+  const [experience, content, css] = await Promise.all([
+    source("app/experience/page.tsx"),
+    source("content/site.ts"),
+    source("app/globals.css"),
+  ]);
+  const experienceType =
+    content.match(/export type Experience = \{([\s\S]*?)\n\};/)?.[1] ?? "";
+  const experienceData =
+    content.match(
+      /export const experiences: Experience\[\] = \[([\s\S]*?)\n\];/,
+    )?.[1] ?? "";
+  const logoPaths = [
+    ...experienceData.matchAll(/logoSrc: "([^"]+)"/g),
+  ].map((match) => match[1]);
+  const markerRule =
+    css.match(/\.experience-entry__marker\s*\{([^}]*)\}/)?.[1] ?? "";
+  const logoRule =
+    css.match(/(?:^|\n)\.experience-entry__logo\s*\{([^}]*)\}/)?.[1] ?? "";
+  const timelineRule =
+    css.match(/\.experience-timeline::before\s*\{([^}]*)\}/)?.[1] ?? "";
+  const entryRule =
+    css.match(/\.experience-entry\s*\{([^}]*)\}/)?.[1] ?? "";
+  const markerMarkup =
+    experience.match(
+      /<span[\s\S]*?className=\{`experience-entry__marker[\s\S]*?<\/span>/,
+    )?.[0] ?? "";
+
+  assert.match(experienceType, /logoSrc: string;/);
+  assert.match(experienceType, /logoVariant: ExperienceLogoVariant;/);
+  assert.match(
+    content,
+    /export type ExperienceLogoVariant = "standard" \| "wide" \| "compact";/,
+  );
+  assert.equal(experienceData.match(/\n    company: "/g)?.length, 4);
+  assert.equal(logoPaths.length, 4);
+  assert.equal(new Set(logoPaths).size, 4);
+
+  for (const logoPath of logoPaths) {
+    assert.match(logoPath, /^\/images\/experience\//);
+    assert.doesNotMatch(logoPath, /https?:|data:|base64/i);
+    await access(new URL(`public${logoPath}`, root));
+  }
+
+  assert.match(experience, /import Image from "next\/image";/);
+  assert.match(experience, /src=\{experience\.logoSrc\}/);
+  assert.match(
+    experience,
+    /experience-entry__marker--\$\{experience\.logoVariant\}/,
+  );
+  assert.match(experience, /experiences\.map\(\(experience\) =>/);
+  assert.doesNotMatch(experience, /switch\s*\(\s*experience\.company/);
+  assert.match(markerMarkup, /aria-hidden="true"/);
+  assert.match(markerMarkup, /<Image[\s\S]*?alt=""/);
+  assert.doesNotMatch(markerMarkup, /<(?:a|button)\b/);
+
+  assert.match(logoRule, /object-fit:\s*contain/);
+  assert.match(markerRule, /background:\s*var\(--card\)/);
+  assert.match(markerRule, /border:\s*2px solid var\(--accent\)/);
+  assert.match(markerRule, /border-radius:\s*50%/);
+  assert.match(markerRule, /height:\s*(?:5[2-9]|[6-9]\d)px/);
+  assert.match(markerRule, /overflow:\s*hidden/);
+  assert.match(timelineRule, /left:\s*28px/);
+  assert.match(entryRule, /padding:\s*24px 0 74px 82px/);
+  assert.match(
+    css,
+    /@media \(max-width: 1024px\)[\s\S]*?\.experience-timeline::before\s*\{[\s\S]*?left:\s*24px[\s\S]*?\.experience-entry__marker\s*\{[\s\S]*?height:\s*48px[\s\S]*?width:\s*48px/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 560px\)[\s\S]*?\.experience-timeline::before\s*\{[\s\S]*?left:\s*21px[\s\S]*?\.experience-entry\s*\{[\s\S]*?padding:\s*20px 0 60px 60px[\s\S]*?\.experience-entry__marker\s*\{[\s\S]*?height:\s*42px[\s\S]*?width:\s*42px/,
+  );
 });
 
 test("experience content expands each role with source-backed resume details", async () => {

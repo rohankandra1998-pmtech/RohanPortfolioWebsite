@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { experiences } from "@/content/site";
 
@@ -59,8 +60,18 @@ export default function ExperiencePage() {
             >
               <span
                 aria-hidden="true"
-                className="experience-entry__marker"
-              />
+                className={`experience-entry__marker experience-entry__marker--${experience.logoVariant}`}
+              >
+                <Image
+                  alt=""
+                  className="experience-entry__logo"
+                  height={80}
+                  sizes="(max-width: 560px) 42px, (max-width: 1024px) 48px, 56px"
+                  src={experience.logoSrc}
+                  unoptimized
+                  width={80}
+                />
+              </span>
               <div className="experience-entry__content">
                 <div className="experience-entry__heading">
                   <h2>{experience.role}</h2>
