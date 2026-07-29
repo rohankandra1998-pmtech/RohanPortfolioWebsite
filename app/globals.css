@@ -1440,30 +1440,157 @@ textarea:focus-visible {
   margin: 0;
 }
 
-.wins-grid {
+.recognition-grid {
   border-bottom: 1px solid var(--line);
   border-top: 1px solid var(--line);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: minmax(0, 2.05fr) minmax(240px, 0.95fr);
 }
 
-.wins-grid > div {
-  padding: 30px 0;
+.recognition-awards {
+  min-width: 0;
+  padding: 36px 48px 36px 0;
 }
 
-.wins-grid > div + div {
-  border-left: 1px solid var(--line);
-  padding-left: 44px;
+.recognition-awards__intro {
+  max-width: 510px;
 }
 
-.wins-grid h3 {
-  font-family: var(--font-serif);
-  font-size: 1.6rem;
-  font-weight: 500;
-}
-
-.wins-grid p {
+.recognition-awards__intro h3 {
+  font-family: var(--font-sans);
+  font-size: 1.65rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
   margin-bottom: 8px;
+}
+
+.recognition-awards__intro p {
+  line-height: 1.5;
+  margin-bottom: 0;
+  max-width: 410px;
+}
+
+.recognition-award-list {
+  list-style: none;
+  margin: 26px 0 0;
+  padding: 0;
+}
+
+.recognition-award {
+  align-items: center;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 72px 1px minmax(0, 1fr);
+  min-width: 0;
+  padding: 20px 0;
+}
+
+.recognition-award + .recognition-award {
+  border-top: 1px solid var(--line);
+}
+
+.recognition-award__logo-wrap {
+  align-items: center;
+  background: rgba(22, 24, 28, 0.035);
+  border-radius: 8px;
+  display: flex;
+  height: 72px;
+  justify-content: center;
+  overflow: hidden;
+  padding: 13px;
+  width: 72px;
+}
+
+.recognition-award__logo-wrap--wide {
+  padding: 17px 11px;
+}
+
+.recognition-award__logo {
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  width: 100%;
+}
+
+.recognition-award__accent {
+  align-self: stretch;
+  background: var(--accent);
+  min-height: 58px;
+  width: 1px;
+}
+
+.recognition-award__content {
+  min-width: 0;
+}
+
+.recognition-award__heading {
+  font-family: var(--font-sans);
+  font-size: 1.04rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  margin: 0 0 6px;
+}
+
+.recognition-award__year {
+  color: var(--muted);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.recognition-award__content p {
+  font-size: 0.87rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.recognition-stats {
+  border-left: 1px solid var(--line);
+  margin: 0;
+  padding: 26px 0 26px 44px;
+}
+
+.recognition-stat {
+  padding: 25px 0;
+}
+
+.recognition-stat + .recognition-stat {
+  border-top: 1px solid var(--line);
+}
+
+.recognition-stat__value {
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.recognition-stat:last-child .recognition-stat__value {
+  font-size: 2.12rem;
+}
+
+.recognition-stat dd {
+  margin: 0;
+}
+
+.recognition-stat__label,
+.recognition-stat__detail {
+  display: block;
+}
+
+.recognition-stat__label {
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.recognition-stat__detail {
+  color: var(--muted);
+  font-size: 0.79rem;
+  margin-top: 1px;
 }
 
 .case-hero {
@@ -1883,6 +2010,14 @@ a.writing-row:hover {
     padding: 30px;
   }
 
+  .recognition-awards {
+    padding-right: 34px;
+  }
+
+  .recognition-stats {
+    padding-left: 30px;
+  }
+
   .case-meta {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2027,6 +2162,32 @@ a.writing-row:hover {
   .education-degree + .education-degree {
     border-left: 0;
     border-top: 1px solid var(--line);
+  }
+
+  .recognition-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recognition-awards {
+    padding: 34px 0;
+  }
+
+  .recognition-stats {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0;
+  }
+
+  .recognition-stat {
+    padding: 28px 22px 28px 0;
+  }
+
+  .recognition-stat + .recognition-stat {
+    border-left: 1px solid var(--line);
+    border-top: 0;
+    padding-left: 22px;
   }
 
   .case-section__grid {
@@ -2295,14 +2456,46 @@ a.writing-row:hover {
     width: 68px;
   }
 
-  .wins-grid {
+  .recognition-awards__intro h3 {
+    font-size: 1.5rem;
+  }
+
+  .recognition-award {
+    gap: 14px;
+    grid-template-columns: 54px 1px minmax(0, 1fr);
+    padding: 18px 0;
+  }
+
+  .recognition-award__logo-wrap {
+    height: 54px;
+    padding: 10px;
+    width: 54px;
+  }
+
+  .recognition-award__logo-wrap--wide {
+    padding: 13px 8px;
+  }
+
+  .recognition-award__accent {
+    min-height: 52px;
+  }
+
+  .recognition-award__heading {
+    font-size: 0.98rem;
+  }
+
+  .recognition-stats {
     grid-template-columns: 1fr;
   }
 
-  .wins-grid > div + div {
+  .recognition-stat,
+  .recognition-stat + .recognition-stat {
     border-left: 0;
+    padding: 22px 0;
+  }
+
+  .recognition-stat + .recognition-stat {
     border-top: 1px solid var(--line);
-    padding-left: 0;
   }
 
   .case-hero {

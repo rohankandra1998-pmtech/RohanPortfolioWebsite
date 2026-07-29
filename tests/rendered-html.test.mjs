@@ -427,6 +427,116 @@ test("education and certifications use verifiable credentials, supplied logos, a
   );
 });
 
+test("recognition uses an asymmetric professional awards showcase", async () => {
+  const [experience, css] = await Promise.all([
+    source("app/experience/page.tsx"),
+    source("app/globals.css"),
+  ]);
+  const recognitionSection =
+    experience.match(
+      /<section className="section" id="recognition">\s*<div className="wrap">\s*<p className="eyebrow">Recognition<\/p>[\s\S]*?<\/section>/,
+    )?.[0] ?? "";
+  const awardsData =
+    experience.match(
+      /const professionalAwards = \[([\s\S]*?)\] as const;/,
+    )?.[1] ?? "";
+  const statsData =
+    experience.match(
+      /const recognitionStats = \[([\s\S]*?)\] as const;/,
+    )?.[1] ?? "";
+
+  assert.match(recognitionSection, /A wall of small wins/);
+  assert.match(recognitionSection, /Professional recognition/);
+  assert.match(
+    recognitionSection,
+    /professionalAwards\.map\(\(award\) =>/,
+  );
+  assert.match(recognitionSection, /recognitionStats\.map\(\(stat\) =>/);
+  assert.match(recognitionSection, /<dl className="recognition-stats">/);
+
+  for (const requiredContent of [
+    "PwC Customer Recognition Award",
+    "2024",
+    "Recognized for delivering impact and driving client value.",
+    "VNB Spot Award",
+    "2023",
+    "Awarded for going above and beyond in key initiatives.",
+    "DXC Champs Award",
+    "2022",
+    "Recognized for outstanding performance and teamwork.",
+  ]) {
+    assert.ok(awardsData.includes(requiredContent), `Missing: ${requiredContent}`);
+  }
+
+  for (const requiredContent of [
+    "3",
+    "Awards",
+    "Earned",
+    "Organizations",
+    "Recognized",
+    "2022–2024",
+    "Award spans",
+    "Three consecutive years",
+  ]) {
+    assert.ok(statsData.includes(requiredContent), `Missing: ${requiredContent}`);
+  }
+
+  for (const logoPath of [
+    "/images/experience/pwc-logo.svg",
+    "/images/experience/vnb-consulting-logo.png",
+    "/images/experience/dxc-technology-logo.svg",
+  ]) {
+    assert.ok(awardsData.includes(logoPath), `Missing logo: ${logoPath}`);
+    await access(new URL(`public${logoPath}`, root));
+  }
+
+  assert.match(recognitionSection, /src=\{award\.logoSrc\}/);
+  assert.match(
+    recognitionSection,
+    /<Image[\s\S]*?alt=""[\s\S]*?className="recognition-award__logo"/,
+  );
+  assert.match(
+    recognitionSection,
+    /className="arrow-link focus-ring" href="\/work"/,
+  );
+  assert.doesNotMatch(recognitionSection, /Leadership & service/);
+  assert.doesNotMatch(
+    recognitionSection,
+    /Associate Product Manager · Simon PM Labs/,
+  );
+  assert.doesNotMatch(
+    recognitionSection,
+    /Debate Society of VIT · novice and parliamentary wins/,
+  );
+  assert.doesNotMatch(
+    recognitionSection,
+    /Toastmasters International VIT · U&I volunteer/,
+  );
+  assert.doesNotMatch(experience, /className="wins-grid"/);
+  assert.doesNotMatch(css, /\.wins-grid/);
+
+  assert.match(
+    css,
+    /\.recognition-grid\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,\s*2\.05fr\) minmax\(240px,\s*0\.95fr\)/,
+  );
+  assert.match(
+    css,
+    /\.recognition-award__logo\s*\{[\s\S]*?object-fit:\s*contain/,
+  );
+  assert.match(
+    css,
+    /\.recognition-award__accent\s*\{[\s\S]*?background:\s*var\(--accent\)/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 820px\)[\s\S]*?\.recognition-grid\s*\{[\s\S]*?grid-template-columns:\s*1fr[\s\S]*?\.recognition-stats\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 560px\)[\s\S]*?\.recognition-stats\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+});
+
 test("experience content expands each role with source-backed resume details", async () => {
   const [content, experiencePage] = await Promise.all([
     source("content/site.ts"),
