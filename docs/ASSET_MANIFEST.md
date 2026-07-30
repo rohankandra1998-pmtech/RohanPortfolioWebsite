@@ -3,6 +3,18 @@
 | Public asset | Source | Use | Notes |
 | --- | --- | --- | --- |
 | `images/rohan-graduation.jpeg` | Supplied by Rohan | Home and About portrait | Original 2340×4160 photograph; presentation crop is CSS-only |
+| `images/branding/rohan-logo.png` | Supplied by Rohan | Global header brand | Exact supplied mark; tightly cropped with a transparent background |
+| `images/experience/vivify-solutions-logo.png` | Supplied by Rohan | Vivify Solutions experience medallion | Original transparent PNG; proportions and colors preserved |
+| `images/experience/pwc-logo.svg` | Supplied by Rohan | PwC experience medallion | Original SVG; proportions and brand colors preserved |
+| `images/experience/vnb-consulting-logo.png` | Supplied by Rohan | VNB Consulting Services experience medallion | Original transparent PNG; proportions and brand colors preserved |
+| `images/experience/dxc-technology-logo.svg` | Supplied by Rohan | DXC Technology experience medallion | Original SVG; proportions and brand colors preserved |
+| `images/recognition/vivify-team-page-feature.png` | Supplied by Rohan / Vivify Solutions website capture | Recognition company-feature evidence | Rohan's official Product Manager team profile; stored locally because the source page may change |
+| `images/education/university-of-rochester-logo.png` | Supplied by Rohan | Simon Business School / University of Rochester education medallion | Original PNG; proportions and colors preserved |
+| `images/education/vellore-institute-of-technology-logo.svg` | Supplied by Rohan | Vellore Institute of Technology education medallion | Original SVG; proportions and colors preserved |
+| `images/certifications/power-bi-data-analyst-associate-logo.png` | Supplied by Rohan | Power BI Data Analyst Associate certification | Official DA-100 badge PNG; proportions and colors preserved |
+| `images/certifications/microsoft-azure-fundamentals-logo.png` | Supplied by Rohan | Microsoft Azure Fundamentals certification | Official AZ-900 badge PNG; proportions and colors preserved |
+| `../app/icon.png` | Supplied by Rohan | Browser favicon | Square 512×512 web variant of the same mark; tightly cropped, centered, and transparent |
+| `../app/apple-icon.png` | Supplied by Rohan | Apple touch icon | Square 180×180 web variant of the same mark; tightly cropped, centered, and transparent |
 | `og.png` | Original AI-generated graphic | Open Graph and social sharing | 1730×909; contains only Rohan's name and positioning |
 | `images/projects/launchguard-golden-dataset.png` | Verified LaunchGuard repository/live-product capture | LaunchGuard card, cover, and review workflow | No credentials or private data |
 | `images/projects/launchguard-overview.webp` | Verified LaunchGuard repository asset | Case-study product overview | Public project imagery |

@@ -53,10 +53,6 @@ export async function generateMetadata(): Promise<Metadata> {
       description: contact.statement,
       images: [image],
     },
-    icons: {
-      icon: "/images/rohan-graduation.jpeg",
-      shortcut: "/images/rohan-graduation.jpeg",
-    },
   };
 }
 
