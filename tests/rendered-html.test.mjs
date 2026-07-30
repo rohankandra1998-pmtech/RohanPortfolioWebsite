@@ -118,7 +118,7 @@ test("experience uses a route-scoped orange theme and masked logo treatment", as
     source("app/globals.css"),
   ]);
 
-  assert.match(shell, /pathname === "\/experience" \? "experience" : "default"/);
+  assert.match(shell, /pathname === "\/experience"/);
   assert.match(shell, /data-page-theme=\{pageTheme\}/);
   assert.match(shell, /className="brand__mark"/);
   assert.match(shell, /className="brand__logo-mask"/);
@@ -129,13 +129,44 @@ test("experience uses a route-scoped orange theme and masked logo treatment", as
   );
   assert.match(
     css,
-    /\.site-shell\[data-page-theme="experience"\] \.brand__logo-mask\s*\{[\s\S]*?background-color:\s*var\(--accent\)/,
+    /\.site-shell\[data-page-theme="experience"\] \.brand__logo-mask,[\s\S]*?\.site-shell\[data-page-theme="work"\] \.brand__logo-mask\s*\{[\s\S]*?background-color:\s*var\(--accent\)/,
   );
   assert.match(
     css,
     /mask:\s*url\("\/images\/branding\/rohan-logo\.png"\)/,
   );
   assert.doesNotMatch(css, /\.brand__logo\s*\{[^}]*filter:/);
+});
+
+test("work uses a route-scoped raspberry theme across index and case-study routes", async () => {
+  const [shell, css, work] = await Promise.all([
+    source("components/site-shell.tsx"),
+    source("app/globals.css"),
+    source("app/work/page.tsx"),
+  ]);
+  const hoverBorderRule =
+    css.match(/\.project-card__image:hover::after\s*\{([^}]*)\}/)?.[1] ?? "";
+
+  assert.match(
+    shell,
+    /pathname === "\/work" \|\| pathname\.startsWith\("\/work\/"\)/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="work"\]\s*\{[\s\S]*?--accent:\s*#DD4F86;[\s\S]*?--accent-dark:\s*#B63A69;[\s\S]*?--accent-soft:\s*#FBE7EF;/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="experience"\] \.brand__logo,[\s\S]*?\.site-shell\[data-page-theme="work"\] \.brand__logo\s*\{[\s\S]*?visibility:\s*hidden/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="experience"\] \.brand__logo-mask,[\s\S]*?\.site-shell\[data-page-theme="work"\] \.brand__logo-mask\s*\{[\s\S]*?background-color:\s*var\(--accent\)/,
+  );
+  assert.match(work, /className="page-head page-head--work"/);
+  assert.match(work, /className="eyebrow eyebrow--dot"/);
+  assert.doesNotMatch(css, /rgba\(63,\s*125,\s*104,\s*0\.4\)/);
+  assert.match(hoverBorderRule, /var\(--accent\)/);
 });
 
 test("experience renders the editorial timeline with semantic accomplishments and skills", async () => {

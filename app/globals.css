@@ -28,6 +28,12 @@
   --accent-soft: #FBE7DC;
 }
 
+.site-shell[data-page-theme="work"] {
+  --accent: #DD4F86;
+  --accent-dark: #B63A69;
+  --accent-soft: #FBE7EF;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -199,11 +205,13 @@ textarea:focus-visible {
   position: absolute;
 }
 
-.site-shell[data-page-theme="experience"] .brand__logo {
+.site-shell[data-page-theme="experience"] .brand__logo,
+.site-shell[data-page-theme="work"] .brand__logo {
   visibility: hidden;
 }
 
-.site-shell[data-page-theme="experience"] .brand__logo-mask {
+.site-shell[data-page-theme="experience"] .brand__logo-mask,
+.site-shell[data-page-theme="work"] .brand__logo-mask {
   background-color: var(--accent);
   display: block;
   mask: url("/images/branding/rohan-logo.png") center / contain no-repeat;
@@ -789,7 +797,7 @@ textarea:focus-visible {
 }
 
 .project-card__image:hover::after {
-  border-color: rgba(63, 125, 104, 0.4);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .project-card > p {

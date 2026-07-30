@@ -52,7 +52,12 @@ function SocialIcon({ label }: { label: string }) {
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const pageTheme = pathname === "/experience" ? "experience" : "default";
+  const pageTheme =
+    pathname === "/experience"
+      ? "experience"
+      : pathname === "/work" || pathname.startsWith("/work/")
+        ? "work"
+        : "default";
 
   useEffect(() => {
     const nodes = Array.from(
