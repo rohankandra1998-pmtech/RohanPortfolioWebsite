@@ -651,7 +651,7 @@ test("experience content expands each role with source-backed resume details", a
   assert.equal(experienceData.match(/\n    skills: \[/g)?.length, 4);
   assert.doesNotMatch(experienceData, /company: "Unicloud"/i);
 
-  assert.match(content, /6 MVP product features/);
+  assert.match(content, /6 MVP features/);
   assert.match(content, /5K\+ weekly active users/);
   assert.match(content, /4\.5 parent CSAT/);
   assert.match(content, /62% lesson completion/);
@@ -662,21 +662,20 @@ test("experience content expands each role with source-backed resume details", a
   assert.match(content, /15\+ Jira tickets/);
 
   assert.match(content, /40\+ monthly BI troubleshooting tasks/);
-  assert.match(content, /10\+ weekly bugs or logic modifications/);
+  assert.match(content, /10\+ weekly bugs and logic modifications/);
   assert.match(content, /30\+ technical documents/);
-  assert.match(content, /500\+ end users/);
+  assert.match(content, /500\+ end business users/);
   assert.match(content, /Coached and guided 30\+/);
 
   assert.match(content, /1,500 UGI employees/);
   assert.match(content, /Paginated Reports/);
-  assert.match(content, /learning the technology within 5 days/);
+  assert.match(content, /mastering the technology in five days/);
   assert.match(content, /Power BI Embedded API/);
   assert.match(content, /300M patients/);
-  assert.match(content, /Star Schema/);
-  assert.match(content, /Snowflake Schema/);
+  assert.match(content, /Star and Snowflake schemas/);
 
-  assert.match(content, /build 2 data-driven Power BI dashboards/);
-  assert.match(content, /cutting manual tasks by 90%/);
+  assert.match(content, /design and implement 2 data-driven Power BI dashboards/);
+  assert.match(content, /reducing time spent on manual Excel reporting by 90%/);
   assert.match(content, /500\+ employees/);
 
   assert.match(
@@ -697,19 +696,19 @@ test("experience highlights use verbatim master-resume wording and preserve skil
   const content = await source("content/site.ts");
 
   for (const resumeWording of [
-    "Drove MVP delivery for an entrepreneurship app by defining 3 epics, 50+ user stories, and 150+ acceptance criteria in Jira",
-    "Authored a Product Requirements Document (PRD) for an entrepreneurship app redesign",
+    "Drove MVP delivery for Business Builderz, a mobile-first entrepreneurship learning app, by defining 3 epics, 50+ user stories, and 150+ acceptance criteria in Jira",
+    "Authored a Product Requirements Document (PRD) for the Business Builderz entrepreneurship mobile app redesign",
     "Shipped a 0-1 financial literacy app for children",
     "Led end-to-end product discovery for a women's wellness and productivity app within 7 weeks",
     "Designed an AI-powered workflow to automate daily standups and follow-up reminders",
-    "Developed and managed the end-to-end product lifecycle of 7 reports for Unilever's business unit",
-    "Accelerated mitigation efforts by 55% by building 50+ automated email alerts using Power Automate",
+    "Developed and managed the end-to-end product lifecycle of 7 Power BI reports for Hindustan Unilever’s South Warehousing Division",
+    "Built 50+ automated email alerts using Power Automate (Robotic Process Automation tool)",
     "Deployed a Generative AI conversational RAG assistant for PwC's internal team",
     "Directed a significant upgrade in data security for 1,500 UGI employees",
-    "Led creation of 6 reports / dashboards and collaborated with the integration team",
-    "Executed 150+ action items as the key liaison",
-    "Automated key performance indicator (KPI) reporting by collaborating with a cross-functional global team",
-    "Created and managed a Manager Dashboard / Proof of Concept using Power BI",
+    "Spearheaded the end-to-end development of six Power BI dashboards from scratch",
+    "Led the successful execution of 150+ action items by serving as the key liaison",
+    "Modernized and automated key performance indicator (KPI) reporting for Marsh Inc.",
+    "Created and managed a Manager Dashboard as a proof of concept (PoC) using Power BI",
   ]) {
     assert.ok(content.includes(resumeWording), `Missing: ${resumeWording}`);
   }
