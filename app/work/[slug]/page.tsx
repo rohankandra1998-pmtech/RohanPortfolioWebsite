@@ -3,7 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CaseStudyArticle } from "@/components/case-study-article";
-import { ragCaseStudyBlocks } from "@/content/rag-knowledge-assistant";
+import { CaseStudyOutline } from "@/components/case-study-outline";
+import {
+  ragCaseStudyBlocks,
+  ragCaseStudyOutline,
+} from "@/content/rag-knowledge-assistant";
 import { getProject, projects } from "@/content/site";
 
 export function generateStaticParams() {
@@ -104,7 +108,8 @@ export default async function ProjectPage({
 
       {isRichArticle ? (
         <section className="section section--longform-case">
-          <div className="wrap">
+          <div className="wrap rag-case-layout">
+            <CaseStudyOutline entries={ragCaseStudyOutline} />
             <CaseStudyArticle blocks={ragCaseStudyBlocks} />
           </div>
         </section>

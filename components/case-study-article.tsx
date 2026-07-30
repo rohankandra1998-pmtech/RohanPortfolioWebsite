@@ -3,6 +3,7 @@ import type {
   RagCaseStudyBlock,
   RichTextSegment,
 } from "@/content/rag-knowledge-assistant";
+import { createRagCaseStudyHeadingId } from "@/content/rag-knowledge-assistant";
 
 function RichText({ content }: { content: RichTextSegment[] }) {
   return content.map((segment, index) => {
@@ -25,22 +26,48 @@ export function CaseStudyArticle({
   blocks: RagCaseStudyBlock[];
 }) {
   return (
-    <article className="longform-case" data-testid="rag-rich-article">
+    <article
+      className="longform-case"
+      data-testid="rag-rich-article"
+      id="overview"
+      tabIndex={-1}
+    >
       {blocks.map((block) => {
         const key = `${block.type}-${block.sourceIndexes.join("-")}`;
 
         if (block.type === "heading") {
           if (block.level === 2) {
             return (
-              <h2 className="longform-case__major-heading" key={key}>
+              <h2
+                className="longform-case__major-heading"
+                id={createRagCaseStudyHeadingId(block.text)}
+                key={key}
+                tabIndex={-1}
+              >
                 {block.text}
               </h2>
             );
           }
           if (block.level === 3) {
-            return <h3 key={key}>{block.text}</h3>;
+            return (
+              <h3
+                id={createRagCaseStudyHeadingId(block.text)}
+                key={key}
+                tabIndex={-1}
+              >
+                {block.text}
+              </h3>
+            );
           }
-          return <h4 key={key}>{block.text}</h4>;
+          return (
+            <h4
+              id={createRagCaseStudyHeadingId(block.text)}
+              key={key}
+              tabIndex={-1}
+            >
+              {block.text}
+            </h4>
+          );
         }
 
         if (block.type === "paragraph") {

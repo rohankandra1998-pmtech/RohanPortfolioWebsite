@@ -257,7 +257,7 @@ test("RAG case study preserves the complete DOCX article, figures, and dedicated
   assert.match(route, /<CaseStudyArticle blocks=\{ragCaseStudyBlocks\} \/>/);
   assert.match(route, /\{!isRichArticle \? \(/);
   assert.match(route, /\{isRichArticle \? \([\s\S]*section--longform-case/);
-  assert.match(renderer, /<article className="longform-case"/);
+  assert.match(renderer, /<article[\s\S]*?className="longform-case"/);
   assert.match(renderer, /<figure[\s\S]*?<figcaption>/);
   assert.match(renderer, /height=\{image\.height\}/);
   assert.match(renderer, /width=\{image\.width\}/);
@@ -334,6 +334,112 @@ test("RAG case study preserves the complete DOCX article, figures, and dedicated
     assert.ok(projects.includes(oldSection));
     assert.ok(!article.includes(oldSection));
   }
+});
+
+test("RAG case study renders a complete responsive scroll-aware outline", async () => {
+  const [article, route, renderer, outline, projects, css] = await Promise.all([
+    source("content/rag-knowledge-assistant.ts"),
+    source("app/work/[slug]/page.tsx"),
+    source("components/case-study-article.tsx"),
+    source("components/case-study-outline.tsx"),
+    source("content/site.ts"),
+    source("app/globals.css"),
+  ]);
+  const headingBlocks = [
+    ...article.matchAll(
+      /"type": "heading",\s*"level": ([234]),\s*"text": ("(?:\\.|[^"\\])*")/g,
+    ),
+  ].map((match) => ({
+    level: Number(match[1]),
+    text: JSON.parse(match[2]),
+  }));
+  const slugify = (text) =>
+    text
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/['’]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  const headingIds = headingBlocks.map(({ text }) => slugify(text));
+  const outlineStyles =
+    css.match(/\.rag-case-layout\s*\{[\s\S]*?(?=\.longform-case\s*\{)/)?.[0] ??
+    "";
+  const activeRule =
+    css.match(/\.rag-outline__link--active\s*\{([^}]*)\}/)?.[1] ?? "";
+  const outlineRouteIndex = route.indexOf(
+    "<CaseStudyOutline entries={ragCaseStudyOutline} />",
+  );
+  const heroEndIndex = route.indexOf("</section>", route.indexOf("case-hero"));
+
+  assert.equal(headingBlocks.length, 41);
+  assert.equal(headingIds.length + 1, 42);
+  assert.equal(new Set(headingIds).size, 41);
+  assert.ok(headingIds.every((id) => id.length > 0));
+  assert.match(article, /id: "overview"/);
+  assert.match(article, /label: "Overview"/);
+  assert.match(
+    article,
+    /for \(const block of ragCaseStudyBlocks\)[\s\S]*block\.type !== "heading"[\s\S]*createRagCaseStudyHeadingId\(block\.text\)/,
+  );
+  assert.match(
+    article,
+    /export function createRagCaseStudyHeadingId\(text: string\)/,
+  );
+  assert.match(
+    renderer,
+    /id=\{createRagCaseStudyHeadingId\(block\.text\)\}/,
+  );
+  assert.match(renderer, /id="overview"/);
+  assert.match(route, /<CaseStudyOutline entries=\{ragCaseStudyOutline\} \/>/);
+  assert.ok(
+    outlineRouteIndex > heroEndIndex,
+    "Expected the outline after the complete project hero",
+  );
+  assert.equal(projects.match(/richArticle: "rag-knowledge-assistant"/g)?.length, 1);
+  assert.match(
+    outline,
+    /<nav aria-label="RAG case study outline">/,
+  );
+  assert.match(outline, /<ol className="rag-outline__list">/);
+  assert.match(outline, /href=\{`#\$\{node\.id\}`\}/);
+  assert.match(outline, /aria-current=\{isActive \? "location" : undefined\}/);
+  assert.match(outline, /ancestorIds\.has\(node\.id\)/);
+  assert.match(outline, /new IntersectionObserver\(selectActiveSection/);
+  assert.match(outline, /rootMargin: `-\$\{READING_LINE\}px 0px -70% 0px`/);
+  assert.match(outline, /viewport\.scrollTop [+-]=/);
+  assert.match(outline, /window\.history\.pushState\(null, "", `#\$\{id\}`\)/);
+  assert.match(outline, /target\.focus\(\{ preventScroll: true \}\)/);
+  assert.match(outline, /prefers-reduced-motion: reduce/);
+  assert.match(outline, /detailsRef\.current\.open = false/);
+  assert.match(outline, /<details[\s\S]*className="rag-outline-mobile"/);
+  assert.match(outline, /<summary className="rag-outline-mobile__summary">/);
+
+  assert.match(outlineStyles, /\.rag-outline\s*\{[\s\S]*position:\s*sticky/);
+  assert.match(
+    outlineStyles,
+    /\.rag-outline__viewport\s*\{[\s\S]*max-height:\s*calc\(100vh - 116px\)[\s\S]*overflow-y:\s*auto/,
+  );
+  assert.match(
+    outlineStyles,
+    /\.rag-outline__link--active\s*\{[\s\S]*color:\s*var\(--accent-dark\)/,
+  );
+  assert.match(
+    outlineStyles,
+    /\.rag-outline__link--active \.rag-outline__tick\s*\{[\s\S]*background:\s*var\(--accent\)/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 1024px\)[\s\S]*?\.rag-outline-mobile__summary\s*\{[\s\S]*?display:\s*grid/,
+  );
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+
+  assert.doesNotMatch(activeRule, /background:\s*(?:white|#fff)/i);
+  assert.doesNotMatch(activeRule, /box-shadow/i);
+  assert.doesNotMatch(activeRule, /border-radius/i);
+  assert.doesNotMatch(outlineStyles, /text-overflow:\s*ellipsis/i);
+  assert.doesNotMatch(outlineStyles, /white-space:\s*nowrap/i);
 });
 
 test("experience renders the editorial timeline with semantic accomplishments and skills", async () => {

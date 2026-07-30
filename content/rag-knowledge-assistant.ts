@@ -51,6 +51,24 @@ export type RagCaseStudyBlock =
       sourceIndexes: number[];
     };
 
+export type RagCaseStudyOutlineEntry = {
+  id: string;
+  label: string;
+  level: 1 | 2 | 3;
+  ancestorIds: string[];
+};
+
+export function createRagCaseStudyHeadingId(text: string) {
+  return text
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export const ragCaseStudyTitle =
   "Building a Conversational RAG Knowledge Assistant";
 
@@ -3617,3 +3635,39 @@ export const ragCaseStudyBlocks: RagCaseStudyBlock[] = [
     ]
   }
 ];
+
+export const ragCaseStudyOutline: RagCaseStudyOutlineEntry[] = (() => {
+  const entries: RagCaseStudyOutlineEntry[] = [
+    {
+      id: "overview",
+      label: "Overview",
+      level: 1,
+      ancestorIds: [],
+    },
+  ];
+  const ancestors = new Map<number, string>();
+
+  for (const block of ragCaseStudyBlocks) {
+    if (block.type !== "heading") continue;
+
+    const level = (block.level - 1) as 1 | 2 | 3;
+    const id = createRagCaseStudyHeadingId(block.text);
+    const ancestorIds = Array.from({ length: level - 1 }, (_, index) =>
+      ancestors.get(index + 1),
+    ).filter((ancestorId): ancestorId is string => Boolean(ancestorId));
+
+    entries.push({
+      id,
+      label: block.text,
+      level,
+      ancestorIds,
+    });
+    ancestors.set(level, id);
+
+    for (const ancestorLevel of [...ancestors.keys()]) {
+      if (ancestorLevel > level) ancestors.delete(ancestorLevel);
+    }
+  }
+
+  return entries;
+})();

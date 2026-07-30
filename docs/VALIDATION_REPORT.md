@@ -88,3 +88,33 @@ The long-form layout intentionally translates the Word document into the
 portfolio's editorial raspberry Work theme rather than reproducing printed
 page dimensions or Word typography. Desktop opening, paired Figure 4, mobile
 opening, and mobile Figure 4 evidence is stored under `artifacts/screenshots/`.
+
+## RAG case-study outline
+
+Validated July 30, 2026.
+
+- Confirmed 42 outline links: one Overview target and all 41 exact article
+  headings.
+- Confirmed deterministic, unique heading IDs and one-to-one outline href
+  coverage for every rendered anchor.
+- Confirmed one `aria-current="location"` state, exact active highlighting,
+  restrained ancestor emphasis, and no white active card, pill, or shadow.
+- Confirmed automatic active-section updates while scrolling downward and
+  upward, final-section behavior, direct hash alignment, and internal outline
+  scrolling that keeps the active item visible.
+- Confirmed the permanent desktop ruler begins below the hero beside the
+  opening paragraph; 1024px, 768px, and 390px layouts use the compact native
+  disclosure.
+- Confirmed no horizontal overflow at 1440, 1280, 1024, 768, or 390 pixels.
+  The 390px check also covers the browser's minimum narrow viewport used for
+  the requested approximately 375px pass.
+- Confirmed Figure 4 still stacks at 768px and 390px, and the existing wide
+  diagrams retain their 1036px desktop breakout without overflow.
+- Confirmed LaunchGuard and UR CourseBot render no RAG outline.
+- Confirmed no browser console errors or warnings.
+
+Automated validation passed with `npm install`, `npm run lint`,
+`npx tsc --noEmit`, `npm run build`, and `npm test` (16 of 16 tests).
+Design comparison and responsive evidence are stored under
+`artifacts/screenshots/rag-outline-*`; the complete QA record is in
+`design-qa.md`.
