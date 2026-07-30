@@ -64,3 +64,27 @@ left-edge/container position, large editorial type, body measure, open
 whitespace, data-inspired supporting objects, restrained controls, and warm
 background. Remaining differences are intentional content/asset adaptations
 listed in `docs/SCREENSHOT_GUIDE.md`.
+
+## Complete RAG case study
+
+Validated July 30, 2026.
+
+- Rendered all 24 pages of the supplied DOCX through Microsoft Word and
+  visually inspected every page before migration.
+- Audited 388 source paragraphs, including 361 non-empty text blocks, 11
+  embedded PNGs, and 10 figure captions.
+- Confirmed every non-empty source paragraph, heading, list item, quotation,
+  code example, caption, and image occurrence is represented in source order.
+- Confirmed Figure 4 contains two images and one caption; all other figures
+  contain one image.
+- Confirmed one semantic `h1`, no skipped heading levels, 10 semantic figures,
+  10 `figcaption` elements, 11 descriptive image alternatives, and both
+  external action links with `target="_blank"` and `rel="noreferrer"`.
+- Confirmed no horizontal overflow at 1440, 1024, 768, or 390 pixels. Figure 4
+  renders in two columns at 1024 pixels and stacks at 768 and 390 pixels.
+- Confirmed no browser console errors or warnings during the responsive pass.
+
+The long-form layout intentionally translates the Word document into the
+portfolio's editorial raspberry Work theme rather than reproducing printed
+page dimensions or Word typography. Desktop opening, paired Figure 4, mobile
+opening, and mobile Figure 4 evidence is stored under `artifacts/screenshots/`.

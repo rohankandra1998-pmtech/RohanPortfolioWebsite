@@ -169,6 +169,173 @@ test("work uses a route-scoped raspberry theme across index and case-study route
   assert.match(hoverBorderRule, /var\(--accent\)/);
 });
 
+test("RAG case study preserves the complete DOCX article, figures, and dedicated rendering path", async () => {
+  const [article, route, renderer, projects, css] = await Promise.all([
+    source("content/rag-knowledge-assistant.ts"),
+    source("app/work/[slug]/page.tsx"),
+    source("components/case-study-article.tsx"),
+    source("content/site.ts"),
+    source("app/globals.css"),
+  ]);
+  const imagePaths = [
+    "figure-01-grounded-response-interface.png",
+    "figure-02-document-ingestion-workspace.png",
+    "figure-03-source-grounded-response.png",
+    "figure-04a-evidence-passage-modal.png",
+    "figure-04b-original-pdf-page-preview.png",
+    "figure-05-conversational-query-handling.png",
+    "figure-06-observability-panel.png",
+    "figure-07-overall-rag-system-architecture.png",
+    "figure-08-document-ingestion-pipeline.png",
+    "figure-09-question-answering-pipeline.png",
+    "figure-10-two-stage-retrieval-reranking.png",
+  ];
+  const headings = [
+    "1. What Does the RAG Knowledge Assistant Do?",
+    "It turns a collection of PDFs into a conversational knowledge base",
+    "It produces answers grounded in uploaded documents",
+    "It provides traceable source citations",
+    "It supports follow-up questions",
+    "It offers document-management capabilities",
+    "It exposes what happens behind the answer",
+    "2. How Does the RAG Knowledge Assistant Work?",
+    "Pipeline A: Document ingestion",
+    "Step 1: The user uploads PDF documents",
+    "Step 2: Text is extracted page by page",
+    "Step 3: Adjacent-page context is added",
+    "Step 4: The document is divided using semantic chunking",
+    "Step 5: A fallback splitter protects the ingestion process",
+    "Step 6: Each chunk is converted into an embedding",
+    "Step 7: Chunks and metadata are stored in ChromaDB",
+    "Step 8: SHA-256 hashing prevents duplicates",
+    "Pipeline B: Question answering",
+    "Stage 1: Rewrite the question",
+    "Stage 2: Retrieve the ten most similar chunks",
+    "Stage 3: Rerank the retrieved chunks",
+    "Stage 4: Generate the grounded answer",
+    "Observability and evaluation support",
+    "Technology stack",
+    "3. What Problem Does It Solve, and What Is Its Purpose?",
+    "The core problem: important information is trapped inside documents",
+    "It reduces manual document search",
+    "It addresses the weaknesses of traditional keyword search",
+    "It reduces ungrounded AI answers",
+    "It supports conversational knowledge discovery",
+    "It improves trust through transparency",
+    "Its broader purpose",
+    "Potential organizational use cases",
+    "Human resources",
+    "Employee onboarding",
+    "Operations and standard procedures",
+    "Compliance and governance",
+    "Customer or technical support",
+    "Project and consulting knowledge",
+    "Purpose statement",
+    "One-paragraph project summary",
+  ];
+  const articleText = [...article.matchAll(/"text": ("(?:\\.|[^"\\])*")/g)]
+    .map((match) => JSON.parse(match[1]))
+    .join("");
+
+  assert.match(
+    projects,
+    /caseStudyTitle: "Building a Conversational RAG Knowledge Assistant"/,
+  );
+  assert.match(projects, /richArticle: "rag-knowledge-assistant"/);
+  assert.match(
+    projects,
+    /https:\/\/ragknowledgeassistant\.streamlit\.app\//,
+  );
+  assert.match(
+    projects,
+    /https:\/\/github\.com\/rohankandra1998-pmtech\/rag-knowledge-assistant/,
+  );
+  assert.match(
+    route,
+    /project\.richArticle === "rag-knowledge-assistant"/,
+  );
+  assert.match(route, /<CaseStudyArticle blocks=\{ragCaseStudyBlocks\} \/>/);
+  assert.match(route, /\{!isRichArticle \? \(/);
+  assert.match(route, /\{isRichArticle \? \([\s\S]*section--longform-case/);
+  assert.match(renderer, /<article className="longform-case"/);
+  assert.match(renderer, /<figure[\s\S]*?<figcaption>/);
+  assert.match(renderer, /height=\{image\.height\}/);
+  assert.match(renderer, /width=\{image\.width\}/);
+  assert.match(css, /\.longform-figure__image img\s*\{[\s\S]*?height:\s*auto/);
+  assert.match(css, /\.longform-figure__image img\s*\{[\s\S]*?object-fit:\s*contain/);
+  assert.match(
+    css,
+    /@media \(max-width: 820px\)[\s\S]*?\.longform-figure--paired \.longform-figure__images\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+
+  let previousHeadingIndex = -1;
+  for (const heading of headings) {
+    const headingIndex = article.indexOf(heading);
+    assert.ok(headingIndex > previousHeadingIndex, `Heading out of order: ${heading}`);
+    previousHeadingIndex = headingIndex;
+  }
+
+  for (const imagePath of imagePaths) {
+    await access(
+      new URL(
+        `public/images/projects/rag-knowledge-assistant/${imagePath}`,
+        root,
+      ),
+    );
+    assert.equal(
+      article.split(imagePath).length - 1,
+      1,
+      `Expected one article reference for ${imagePath}`,
+    );
+  }
+
+  assert.match(article, /imageCount:\s*11/);
+  assert.match(article, /figureCount:\s*10/);
+  assert.equal(article.match(/"type": "figure"/g)?.length, 10);
+  assert.equal(article.match(/"caption": "Figure/g)?.length, 10);
+
+  const figureFour =
+    article.match(
+      /"number": 4,[\s\S]*?"caption": "Figure 4 Evidence verification flow:[\s\S]*?"sourceIndexes": \[[\s\S]*?\]/,
+    )?.[0] ?? "";
+  assert.equal(figureFour.match(/"src":/g)?.length, 2);
+  assert.equal(figureFour.match(/"caption":/g)?.length, 1);
+
+  for (const exactSourceText of [
+    "Organizations do not usually suffer from a lack of information.",
+    "I don’t know based on the uploaded documents.",
+    "runtime_sessions/<session_id>/",
+    "The system retains up to 4,000 characters of adjacent-page context on either side.",
+    "a target chunk size of 1,400 characters",
+    "a 180-character overlap",
+    "text-embedding-3-large",
+    "The application uses a persistent ChromaDB collection called rag_docs.",
+    "similarity = 1 - distance",
+    "Top-10 vector retrieval",
+    "Top-5 context selection",
+    "The underlying problem is not information availability. The problem is information accessibility.",
+    "Its purpose is to make document-based answers more grounded, explainable, and auditable.",
+    "The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence.",
+    "The RAG Knowledge Assistant is a full-stack conversational Retrieval-Augmented Generation application built with Python, Streamlit, OpenAI, LangChain, and ChromaDB.",
+    "traceability and trustworthiness of AI-generated answers.",
+  ]) {
+    assert.ok(
+      articleText.includes(exactSourceText) || article.includes(exactSourceText),
+      `Missing exact source text: ${exactSourceText}`,
+    );
+  }
+
+  for (const oldSection of [
+    "A useful answer needs visible evidence.",
+    "From PDF pages to grounded conversation",
+    "Sources are inspectable, not decorative.",
+    "A demo that is honest about persistence.",
+  ]) {
+    assert.ok(projects.includes(oldSection));
+    assert.ok(!article.includes(oldSection));
+  }
+});
+
 test("experience renders the editorial timeline with semantic accomplishments and skills", async () => {
   const [experience, content, css] = await Promise.all([
     source("app/experience/page.tsx"),

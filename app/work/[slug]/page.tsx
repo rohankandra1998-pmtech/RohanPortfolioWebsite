@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CaseStudyArticle } from "@/components/case-study-article";
+import { ragCaseStudyBlocks } from "@/content/rag-knowledge-assistant";
 import { getProject, projects } from "@/content/site";
 
 export function generateStaticParams() {
@@ -16,11 +18,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
+  const pageTitle = project.caseStudyTitle ?? project.title;
+
   return {
-    title: project.title,
+    title: pageTitle,
     description: project.summary,
     openGraph: {
-      title: `${project.title} — Rohan Singh Kandra`,
+      title: `${pageTitle} — Rohan Singh Kandra`,
       description: project.summary,
       images: [project.image],
     },
@@ -35,18 +39,23 @@ export default async function ProjectPage({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
+  const isRichArticle = project.richArticle === "rag-knowledge-assistant";
 
   return (
     <>
-      <section className="case-hero">
+      <section
+        className={`case-hero ${isRichArticle ? "case-hero--longform" : ""}`}
+      >
         <div className="wrap">
           <p className="eyebrow" data-reveal>
             {project.kicker}
           </p>
-          <h1 data-reveal>{project.title}</h1>
-          <p className="case-hero__summary" data-reveal>
-            {project.summary}
-          </p>
+          <h1 data-reveal>{project.caseStudyTitle ?? project.title}</h1>
+          {!isRichArticle ? (
+            <p className="case-hero__summary" data-reveal>
+              {project.summary}
+            </p>
+          ) : null}
           <div className="case-meta" data-reveal>
             <div>
               <span>Timeframe</span>
@@ -73,7 +82,9 @@ export default async function ProjectPage({
                 rel="noreferrer"
                 target="_blank"
               >
-                {project.slug === "ur-coursebot" ? "Read the post" : "Open live product"}{" "}
+                {project.slug === "ur-coursebot"
+                  ? "Read the post"
+                  : "Open live product"}{" "}
                 <span aria-hidden="true">→</span>
               </a>
             ) : null}
@@ -91,85 +102,95 @@ export default async function ProjectPage({
         </div>
       </section>
 
-      <section className="case-cover">
-        <div className="wrap">
-          <figure data-reveal>
-            <Image
-              alt={project.imageAlt}
-              fill
-              priority
-              sizes="100vw"
-              src={project.image}
-              unoptimized
-            />
-          </figure>
-        </div>
-      </section>
-
-      <section className="section section--case-metrics">
-        <div className="wrap metric-grid">
-          {project.metrics.map((metric) => (
-            <div data-reveal key={metric.label}>
-              <strong>{metric.value}</strong>
-              <span>{metric.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {project.sections.map((section, index) => (
-        <section
-          className={`section case-section ${
-            index % 2 === 1 ? "case-section--tinted" : ""
-          }`}
-          key={section.title}
-        >
-          <div className="wrap case-section__grid">
-            <div data-reveal>
-              <p className="eyebrow">{section.eyebrow}</p>
-              <h2>{section.title}</h2>
-            </div>
-            <div className="case-section__body" data-reveal>
-              {section.paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-              {section.bullets ? (
-                <ul>
-                  {section.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
+      {isRichArticle ? (
+        <section className="section section--longform-case">
+          <div className="wrap">
+            <CaseStudyArticle blocks={ragCaseStudyBlocks} />
           </div>
-          {section.media?.length ? (
-            <div
-              className={`wrap case-media ${
-                section.media.length > 1 ? "case-media--grid" : ""
-              }`}
-            >
-              {section.media.map((media) => (
-                <figure data-reveal key={media.src}>
-                  <div className="case-media__image">
-                    <Image
-                      alt={media.alt}
-                      fill
-                      sizes={
-                        section.media && section.media.length > 1
-                          ? "(max-width: 768px) 100vw, 50vw"
-                          : "100vw"
-                      }
-                      src={media.src}
-                      unoptimized
-                    />
-                  </div>
-                  <figcaption>{media.caption}</figcaption>
-                </figure>
+        </section>
+      ) : (
+        <>
+          <section className="case-cover">
+            <div className="wrap">
+              <figure data-reveal>
+                <Image
+                  alt={project.imageAlt}
+                  fill
+                  priority
+                  sizes="100vw"
+                  src={project.image}
+                  unoptimized
+                />
+              </figure>
+            </div>
+          </section>
+
+          <section className="section section--case-metrics">
+            <div className="wrap metric-grid">
+              {project.metrics.map((metric) => (
+                <div data-reveal key={metric.label}>
+                  <strong>{metric.value}</strong>
+                  <span>{metric.label}</span>
+                </div>
               ))}
             </div>
-          ) : null}
-        </section>
-      ))}
+          </section>
+
+          {project.sections.map((section, index) => (
+            <section
+              className={`section case-section ${
+                index % 2 === 1 ? "case-section--tinted" : ""
+              }`}
+              key={section.title}
+            >
+              <div className="wrap case-section__grid">
+                <div data-reveal>
+                  <p className="eyebrow">{section.eyebrow}</p>
+                  <h2>{section.title}</h2>
+                </div>
+                <div className="case-section__body" data-reveal>
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                  {section.bullets ? (
+                    <ul>
+                      {section.bullets.map((bullet) => (
+                        <li key={bullet}>{bullet}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              </div>
+              {section.media?.length ? (
+                <div
+                  className={`wrap case-media ${
+                    section.media.length > 1 ? "case-media--grid" : ""
+                  }`}
+                >
+                  {section.media.map((media) => (
+                    <figure data-reveal key={media.src}>
+                      <div className="case-media__image">
+                        <Image
+                          alt={media.alt}
+                          fill
+                          sizes={
+                            section.media && section.media.length > 1
+                              ? "(max-width: 768px) 100vw, 50vw"
+                              : "100vw"
+                          }
+                          src={media.src}
+                          unoptimized
+                        />
+                      </div>
+                      <figcaption>{media.caption}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              ) : null}
+            </section>
+          ))}
+        </>
+      )}
 
       <section className="section case-next">
         <div className="wrap">

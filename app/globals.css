@@ -1805,6 +1805,172 @@ textarea:focus-visible {
   margin-top: 12px;
 }
 
+.case-hero--longform h1 {
+  font-size: clamp(4.4rem, 8vw, 7.65rem);
+  max-width: 1000px;
+}
+
+.section--longform-case {
+  border-top: 1px solid var(--line);
+  padding-bottom: 132px;
+  padding-top: 96px;
+}
+
+.longform-case {
+  margin-inline: auto;
+  max-width: 720px;
+}
+
+.longform-case > p {
+  color: var(--muted);
+  font-size: 1.04rem;
+  line-height: 1.78;
+  margin-bottom: 22px;
+}
+
+.longform-case > p:first-child {
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+  line-height: 1.48;
+  margin-bottom: 30px;
+}
+
+.longform-case h2,
+.longform-case h3,
+.longform-case h4 {
+  scroll-margin-top: 96px;
+}
+
+.longform-case__major-heading {
+  border-top: 1px solid var(--line);
+  font-size: clamp(3.1rem, 5.8vw, 5.25rem);
+  line-height: 0.98;
+  margin: 124px 0 52px;
+  padding-top: 30px;
+}
+
+.longform-case h3 {
+  color: var(--accent-dark);
+  font-size: clamp(2.1rem, 3.8vw, 3rem);
+  line-height: 1.08;
+  margin: 78px 0 25px;
+}
+
+.longform-case h4 {
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 54px 0 19px;
+}
+
+.longform-case ol,
+.longform-case ul {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 9px 0 30px;
+  padding-left: 25px;
+}
+
+.longform-case li {
+  padding-left: 8px;
+}
+
+.longform-case li + li {
+  margin-top: 7px;
+}
+
+.longform-case li::marker {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.longform-case blockquote {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.22rem;
+  line-height: 1.55;
+  margin: 26px 0;
+  padding: 20px 24px;
+}
+
+.longform-case__code,
+.longform-case__sequence {
+  background: var(--ink);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  margin: 28px 0;
+  overflow-x: auto;
+}
+
+.longform-case__code {
+  padding: 18px 20px;
+  white-space: pre-wrap;
+}
+
+.longform-case__sequence {
+  display: grid;
+  gap: 5px;
+  padding: 22px;
+}
+
+.longform-case__sequence code {
+  white-space: normal;
+}
+
+.longform-figure {
+  margin: 62px 50%;
+  transform: translateX(-50%);
+  width: min(900px, calc(100vw - 44px));
+}
+
+.longform-figure--wide {
+  width: min(1036px, calc(100vw - 44px));
+}
+
+.longform-figure--portrait {
+  width: min(470px, calc(100vw - 44px));
+}
+
+.longform-figure__images {
+  display: grid;
+  gap: 18px;
+}
+
+.longform-figure--paired .longform-figure__images {
+  align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.longform-figure__image {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.longform-figure__image img {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  width: 100%;
+}
+
+.longform-figure figcaption {
+  color: var(--faint);
+  font-size: 0.79rem;
+  line-height: 1.55;
+  margin-top: 13px;
+}
+
 .case-next {
   background: var(--accent-soft);
 }
@@ -2260,6 +2426,10 @@ a.writing-row:hover {
     grid-template-columns: 1fr;
   }
 
+  .longform-figure--paired .longform-figure__images {
+    grid-template-columns: 1fr;
+  }
+
   .metric-grid {
     grid-template-columns: 1fr;
   }
@@ -2588,6 +2758,10 @@ a.writing-row:hover {
     overflow-wrap: anywhere;
   }
 
+  .case-hero--longform h1 {
+    font-size: clamp(3rem, 13vw, 3.45rem);
+  }
+
   .case-meta {
     grid-template-columns: 1fr;
   }
@@ -2623,6 +2797,45 @@ a.writing-row:hover {
 
   .case-media {
     margin-top: 42px;
+  }
+
+  .section--longform-case {
+    padding-bottom: 88px;
+    padding-top: 64px;
+  }
+
+  .longform-case > p {
+    font-size: 0.98rem;
+    line-height: 1.72;
+  }
+
+  .longform-case__major-heading {
+    font-size: clamp(2.75rem, 13vw, 3.45rem);
+    margin-top: 94px;
+  }
+
+  .longform-case h3 {
+    font-size: 2rem;
+    margin-top: 64px;
+  }
+
+  .longform-case h4 {
+    font-size: 1.35rem;
+    margin-top: 46px;
+  }
+
+  .longform-case blockquote {
+    font-size: 1.08rem;
+    padding: 18px 19px;
+  }
+
+  .longform-figure {
+    margin-bottom: 52px;
+    margin-top: 52px;
+  }
+
+  .longform-figure__image {
+    border-radius: 6px;
   }
 
   .case-next__link strong {

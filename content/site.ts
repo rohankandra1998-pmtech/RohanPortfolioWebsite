@@ -34,6 +34,8 @@ export type ProjectSection = {
 export type Project = {
   slug: string;
   title: string;
+  caseStudyTitle?: string;
+  richArticle?: "rag-knowledge-assistant";
   kicker: string;
   summary: string;
   timeframe: string;
@@ -450,6 +452,8 @@ export const projects: Project[] = [
   {
     slug: "rag-knowledge-assistant",
     title: "RAG Knowledge Assistant",
+    caseStudyTitle: "Building a Conversational RAG Knowledge Assistant",
+    richArticle: "rag-knowledge-assistant",
     kicker: "Retrieval · AI UX · Observability",
     summary:
       "A conversational document assistant that ingests PDFs, retrieves and reranks relevant evidence, and answers with inline citations and transparent retrieval details.",

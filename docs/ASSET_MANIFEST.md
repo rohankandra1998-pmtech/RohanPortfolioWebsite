@@ -22,6 +22,17 @@
 | `images/projects/rag-live-app.png` | Live Streamlit application capture | RAG card and cover | Empty public session |
 | `images/projects/rag-sources.png` | Verified RAG repository asset | Citation/source walkthrough | Public project imagery |
 | `images/projects/rag-observability.png` | Verified RAG repository asset | Retrieval observability walkthrough | Public project imagery |
+| `images/projects/rag-knowledge-assistant/figure-01-grounded-response-interface.png` | Supplied RAG case-study DOCX | Figure 1 grounded response interface | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-02-document-ingestion-workspace.png` | Supplied RAG case-study DOCX | Figure 2 document ingestion workspace | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-03-source-grounded-response.png` | Supplied RAG case-study DOCX | Figure 3 source-grounded response | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-04a-evidence-passage-modal.png` | Supplied RAG case-study DOCX | First image in Figure 4 evidence-verification group | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-04b-original-pdf-page-preview.png` | Supplied RAG case-study DOCX | Second image in Figure 4 evidence-verification group | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-05-conversational-query-handling.png` | Supplied RAG case-study DOCX | Figure 5 conversational query handling | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-06-observability-panel.png` | Supplied RAG case-study DOCX | Figure 6 observability panel | Original embedded portrait PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-07-overall-rag-system-architecture.png` | Supplied RAG case-study DOCX | Figure 7 overall architecture | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-08-document-ingestion-pipeline.png` | Supplied RAG case-study DOCX | Figure 8 ingestion pipeline | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-09-question-answering-pipeline.png` | Supplied RAG case-study DOCX | Figure 9 question-answering pipeline | Original embedded PNG; uncropped |
+| `images/projects/rag-knowledge-assistant/figure-10-two-stage-retrieval-reranking.png` | Supplied RAG case-study DOCX | Figure 10 retrieval and reranking | Original embedded PNG; uncropped |
 | `images/projects/coursebot-jtbd.png` | Supplied CourseBot deck excerpt | Research/JTBD evidence | Cropped from project presentation |
 | `images/projects/coursebot-prioritization.png` | Supplied CourseBot deck excerpt | Prioritization evidence | Cropped from project presentation |
 | `images/projects/coursebot-prototype.png` | Supplied CourseBot deck excerpt | CourseBot card, cover, and prototype | Cropped from project presentation |
