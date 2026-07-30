@@ -1700,6 +1700,70 @@ textarea:focus-visible {
   line-height: 1.45;
 }
 
+.rag-technology-stack {
+  margin-bottom: 30px;
+}
+
+.rag-technology-stack__heading {
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.rag-technology-stack__grid {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  overflow: hidden;
+}
+
+.rag-technology-stack__item {
+  align-items: center;
+  display: grid;
+  gap: 17px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  min-width: 0;
+  padding: 25px 20px;
+}
+
+.rag-technology-stack__item + .rag-technology-stack__item {
+  border-left: 1px solid var(--line);
+}
+
+.rag-technology-stack__icon {
+  color: var(--accent);
+  height: 36px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  width: 36px;
+}
+
+.rag-technology-stack dt {
+  color: var(--faint);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.065em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.rag-technology-stack dd {
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+}
+
 .case-cover {
   background: var(--ink);
   padding: 56px 0;
@@ -2444,6 +2508,18 @@ a.writing-row:hover {
     border-top: 1px solid var(--line);
   }
 
+  .rag-technology-stack__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rag-technology-stack__item:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .rag-technology-stack__item:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+
   .rag-case-layout {
     display: grid;
     gap: 34px;
@@ -3053,6 +3129,19 @@ a.writing-row:hover {
 
   .case-meta div:first-child {
     border-top: 0;
+  }
+
+  .rag-technology-stack__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rag-technology-stack__item {
+    padding: 21px 18px;
+  }
+
+  .rag-technology-stack__item + .rag-technology-stack__item {
+    border-left: 0;
+    border-top: 1px solid var(--line);
   }
 
   .case-links {

@@ -58,6 +58,12 @@ export type RagCaseStudyOutlineEntry = {
   ancestorIds: string[];
 };
 
+export type RagTechnologyStackItem = {
+  category: string;
+  technologies: string;
+  icon: "application" | "ai" | "storage" | "document";
+};
+
 export function createRagCaseStudyHeadingId(text: string) {
   return text
     .normalize("NFKD")
@@ -71,6 +77,29 @@ export function createRagCaseStudyHeadingId(text: string) {
 
 export const ragCaseStudyTitle =
   "Building a Conversational RAG Knowledge Assistant";
+
+export const ragTechnologyStack = [
+  {
+    category: "Application",
+    technologies: "Python, Streamlit",
+    icon: "application",
+  },
+  {
+    category: "AI Models",
+    technologies: "OpenAI GPT-4.1 mini, text-embedding-3-large",
+    icon: "ai",
+  },
+  {
+    category: "Retrieval & Storage",
+    technologies: "ChromaDB, LangChain SemanticChunker",
+    icon: "storage",
+  },
+  {
+    category: "Document Processing & Observability",
+    technologies: "pypdf, PyMuPDF, Pillow, tiktoken, API usage metadata",
+    icon: "document",
+  },
+] as const satisfies readonly RagTechnologyStackItem[];
 
 export const ragCaseStudySourceStats = {
   paragraphCount: 388,
@@ -2515,168 +2544,6 @@ export const ragCaseStudyBlocks: RagCaseStudyBlock[] = [
     ],
     "sourceIndexes": [
       264
-    ]
-  },
-  {
-    "type": "heading",
-    "level": 3,
-    "text": "Technology stack",
-    "sourceIndexes": [
-      266
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "The application is primarily built with:"
-      }
-    ],
-    "sourceIndexes": [
-      267
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "Python",
-        "strong": true
-      },
-      {
-        "text": " for backend processing and orchestration."
-      }
-    ],
-    "sourceIndexes": [
-      268
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "Streamlit",
-        "strong": true
-      },
-      {
-        "text": " for the interactive web interface."
-      }
-    ],
-    "sourceIndexes": [
-      269
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "OpenAI ",
-        "strong": true
-      },
-      {
-        "text": "gpt-4.1-mini",
-        "strong": true
-      },
-      {
-        "text": " for query rewriting, reranking, and final answer generation."
-      }
-    ],
-    "sourceIndexes": [
-      270
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "OpenAI ",
-        "strong": true
-      },
-      {
-        "text": "text-embedding-3-large",
-        "strong": true
-      },
-      {
-        "text": " for document and query embeddings."
-      }
-    ],
-    "sourceIndexes": [
-      271
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "ChromaDB",
-        "strong": true
-      },
-      {
-        "text": " for persistent vector storage and similarity search."
-      }
-    ],
-    "sourceIndexes": [
-      272
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "LangChain SemanticChunker",
-        "strong": true
-      },
-      {
-        "text": " for meaning-aware document splitting."
-      }
-    ],
-    "sourceIndexes": [
-      273
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "pypdf",
-        "strong": true
-      },
-      {
-        "text": " for page-level text extraction."
-      }
-    ],
-    "sourceIndexes": [
-      274
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "PyMuPDF and Pillow",
-        "strong": true
-      },
-      {
-        "text": " for PDF viewing and image-related interface functionality."
-      }
-    ],
-    "sourceIndexes": [
-      275
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "tiktoken",
-        "strong": true
-      },
-      {
-        "text": " and API usage metadata for token observability."
-      }
-    ],
-    "sourceIndexes": [
-      276
     ]
   },
   {

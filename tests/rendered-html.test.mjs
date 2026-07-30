@@ -169,14 +169,23 @@ test("work uses a route-scoped raspberry theme across index and case-study route
   assert.match(hoverBorderRule, /var\(--accent\)/);
 });
 
-test("RAG case study preserves the complete DOCX article, figures, and dedicated rendering path", async () => {
-  const [article, route, renderer, projects, css] = await Promise.all([
+test("RAG case study preserves approved article content while promoting its technology stack to the hero", async () => {
+  const [article, route, renderer, stack, projects, css] = await Promise.all([
     source("content/rag-knowledge-assistant.ts"),
     source("app/work/[slug]/page.tsx"),
     source("components/case-study-article.tsx"),
+    source("components/rag-technology-stack.tsx"),
     source("content/site.ts"),
     source("app/globals.css"),
   ]);
+  const articleBlocks =
+    article.match(
+      /export const ragCaseStudyBlocks: RagCaseStudyBlock\[\] = \[([\s\S]*?)\n\];/,
+    )?.[1] ?? "";
+  const stackData =
+    article.match(
+      /export const ragTechnologyStack = \[([\s\S]*?)\] as const satisfies/,
+    )?.[1] ?? "";
   const imagePaths = [
     "figure-01-grounded-response-interface.png",
     "figure-02-document-ingestion-workspace.png",
@@ -214,7 +223,6 @@ test("RAG case study preserves the complete DOCX article, figures, and dedicated
     "Stage 3: Rerank the retrieved chunks",
     "Stage 4: Generate the grounded answer",
     "Observability and evaluation support",
-    "Technology stack",
     "3. What Problem Does It Solve, and What Is Its Purpose?",
     "The core problem: important information is trapped inside documents",
     "It reduces manual document search",
@@ -257,6 +265,49 @@ test("RAG case study preserves the complete DOCX article, figures, and dedicated
   assert.match(route, /<CaseStudyArticle blocks=\{ragCaseStudyBlocks\} \/>/);
   assert.match(route, /\{!isRichArticle \? \(/);
   assert.match(route, /\{isRichArticle \? \([\s\S]*section--longform-case/);
+  assert.match(
+    route,
+    /\{isRichArticle \? \(\s*<RagTechnologyStack items=\{ragTechnologyStack\} \/>/,
+  );
+  assert.match(
+    route,
+    /\) : \(\s*<div className="case-meta" data-reveal>/,
+  );
+  assert.equal(stackData.match(/\n    category:/g)?.length, 4);
+  for (const category of [
+    "Application",
+    "AI Models",
+    "Retrieval & Storage",
+    "Document Processing & Observability",
+  ]) {
+    assert.equal(
+      stackData.split(`category: "${category}"`).length - 1,
+      1,
+      `Expected one hero category: ${category}`,
+    );
+  }
+  for (const technologies of [
+    "Python, Streamlit",
+    "OpenAI GPT-4.1 mini, text-embedding-3-large",
+    "ChromaDB, LangChain SemanticChunker",
+    "pypdf, PyMuPDF, Pillow, tiktoken, API usage metadata",
+  ]) {
+    assert.ok(stackData.includes(technologies), `Missing stack: ${technologies}`);
+  }
+  assert.match(stack, /<section[\s\S]*aria-labelledby="rag-technology-stack-title"/);
+  assert.match(stack, /<h2[\s\S]*Technology stack[\s\S]*<\/h2>/);
+  assert.match(stack, /<dl className="rag-technology-stack__grid">/);
+  assert.match(stack, /items\.map\(\(item\) =>/);
+  assert.match(stack, /<dt>\{item\.category\}<\/dt>/);
+  assert.match(stack, /<dd>\{item\.technologies\}<\/dd>/);
+  assert.equal(stack.match(/<svg \{\.\.\.commonProps\}>/g)?.length, 4);
+  assert.match(stack, /"aria-hidden": true/);
+  assert.match(stack, /focusable: "false"/);
+  assert.doesNotMatch(articleBlocks, /"text": "Technology stack"/);
+  assert.doesNotMatch(articleBlocks, /The application is primarily built with:/);
+  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*26[6-9]\s*\]/);
+  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*27[0-6]\s*\]/);
+  assert.doesNotMatch(route, /#technology-stack/);
   assert.match(renderer, /<article[\s\S]*?className="longform-case"/);
   assert.match(renderer, /<figure[\s\S]*?<figcaption>/);
   assert.match(renderer, /height=\{image\.height\}/);
@@ -266,6 +317,26 @@ test("RAG case study preserves the complete DOCX article, figures, and dedicated
   assert.match(
     css,
     /@media \(max-width: 820px\)[\s\S]*?\.longform-figure--paired \.longform-figure__images\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(
+    css,
+    /\.rag-technology-stack__grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 1024px\)[\s\S]*?\.rag-technology-stack__grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 560px\)[\s\S]*?\.rag-technology-stack__grid\s*\{[\s\S]*?grid-template-columns:\s*1fr[\s\S]*?\.rag-technology-stack__item \+ \.rag-technology-stack__item\s*\{[\s\S]*?border-left:\s*0[\s\S]*?border-top:\s*1px solid var\(--line\)/,
+  );
+  assert.match(
+    css,
+    /\.rag-technology-stack__icon\s*\{[\s\S]*?color:\s*var\(--accent\)/,
+  );
+  assert.match(
+    css,
+    /\.rag-technology-stack__heading\s*\{[\s\S]*?color:\s*var\(--accent\)/,
   );
 
   let previousHeadingIndex = -1;
@@ -375,10 +446,11 @@ test("RAG case study renders a complete responsive scroll-aware outline", async 
   );
   const heroEndIndex = route.indexOf("</section>", route.indexOf("case-hero"));
 
-  assert.equal(headingBlocks.length, 41);
-  assert.equal(headingIds.length + 1, 42);
-  assert.equal(new Set(headingIds).size, 41);
+  assert.equal(headingBlocks.length, 40);
+  assert.equal(headingIds.length + 1, 41);
+  assert.equal(new Set(headingIds).size, 40);
   assert.ok(headingIds.every((id) => id.length > 0));
+  assert.ok(!headingIds.includes("technology-stack"));
   assert.match(article, /id: "overview"/);
   assert.match(article, /label: "Overview"/);
   assert.match(

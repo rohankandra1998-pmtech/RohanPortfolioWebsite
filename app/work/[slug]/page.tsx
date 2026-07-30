@@ -4,9 +4,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CaseStudyArticle } from "@/components/case-study-article";
 import { CaseStudyOutline } from "@/components/case-study-outline";
+import { RagTechnologyStack } from "@/components/rag-technology-stack";
 import {
   ragCaseStudyBlocks,
   ragCaseStudyOutline,
+  ragTechnologyStack,
 } from "@/content/rag-knowledge-assistant";
 import { getProject, projects } from "@/content/site";
 
@@ -60,24 +62,28 @@ export default async function ProjectPage({
               {project.summary}
             </p>
           ) : null}
-          <div className="case-meta" data-reveal>
-            <div>
-              <span>Timeframe</span>
-              <strong>{project.timeframe}</strong>
+          {isRichArticle ? (
+            <RagTechnologyStack items={ragTechnologyStack} />
+          ) : (
+            <div className="case-meta" data-reveal>
+              <div>
+                <span>Timeframe</span>
+                <strong>{project.timeframe}</strong>
+              </div>
+              <div>
+                <span>Organization</span>
+                <strong>{project.organization}</strong>
+              </div>
+              <div>
+                <span>Role</span>
+                <strong>{project.role}</strong>
+              </div>
+              <div>
+                <span>Team</span>
+                <strong>{project.team}</strong>
+              </div>
             </div>
-            <div>
-              <span>Organization</span>
-              <strong>{project.organization}</strong>
-            </div>
-            <div>
-              <span>Role</span>
-              <strong>{project.role}</strong>
-            </div>
-            <div>
-              <span>Team</span>
-              <strong>{project.team}</strong>
-            </div>
-          </div>
+          )}
           <div className="case-links" data-reveal>
             {project.liveUrl ? (
               <a
