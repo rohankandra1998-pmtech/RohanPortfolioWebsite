@@ -1819,9 +1819,9 @@ textarea:focus-visible {
 .rag-case-layout {
   align-items: start;
   display: grid;
-  gap: 64px;
-  grid-template-columns: 280px minmax(0, 720px);
-  justify-content: center;
+  gap: 48px;
+  grid-template-columns: 236px minmax(0, 780px);
+  justify-content: start;
   max-width: 1180px;
 }
 
@@ -1852,9 +1852,9 @@ textarea:focus-visible {
   background: var(--line);
   bottom: 16px;
   content: "";
-  left: 43px;
+  left: 12px;
   position: absolute;
-  top: 33px;
+  top: 8px;
   width: 1px;
 }
 
@@ -1864,15 +1864,6 @@ textarea:focus-visible {
 
 .rag-outline__viewport::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--accent) 18%, transparent);
-}
-
-.rag-outline__eyebrow {
-  color: var(--faint);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.11em;
-  margin: 0 0 14px 58px;
-  text-transform: uppercase;
 }
 
 .rag-outline__list {
@@ -1891,7 +1882,7 @@ textarea:focus-visible {
   display: grid;
   font-size: 0.69rem;
   gap: 0;
-  grid-template-columns: 31px 26px minmax(0, 1fr);
+  grid-template-columns: 26px minmax(0, 1fr);
   line-height: 1.28;
   padding: 5px 0;
   position: relative;
@@ -1905,15 +1896,6 @@ textarea:focus-visible {
 .rag-outline__link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-}
-
-.rag-outline__position {
-  color: var(--faint);
-  font-size: 0.61rem;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.5;
-  padding-right: 7px;
-  text-align: right;
 }
 
 .rag-outline__tick {
@@ -1983,22 +1965,18 @@ textarea:focus-visible {
   font-weight: 600;
 }
 
-.rag-outline__link--active {
+.rag-outline__item > .rag-outline__link--active {
   color: var(--accent-dark);
   font-weight: 700;
 }
 
-.rag-outline__link--active .rag-outline__position {
-  color: var(--accent);
-}
-
-.rag-outline__link--active .rag-outline__tick {
+.rag-outline__item > .rag-outline__link--active .rag-outline__tick {
   background: var(--accent);
   height: 2px;
   width: 18px;
 }
 
-.rag-outline__link--active .rag-outline__tick::after {
+.rag-outline__item > .rag-outline__link--active .rag-outline__tick::after {
   background: var(--accent);
   border-color: var(--accent);
   height: 7px;
@@ -2008,9 +1986,9 @@ textarea:focus-visible {
 
 .longform-case {
   margin-inline: auto;
-  max-width: 720px;
+  max-width: 780px;
   min-width: 0;
-  scroll-margin-top: 104px;
+  scroll-margin-top: 112px;
 }
 
 .longform-case:focus,
@@ -2038,7 +2016,7 @@ textarea:focus-visible {
 .longform-case h2,
 .longform-case h3,
 .longform-case h4 {
-  scroll-margin-top: 96px;
+  scroll-margin-top: 112px;
 }
 
 .longform-case__major-heading {
@@ -2386,7 +2364,8 @@ a.writing-row:hover {
 
   .rag-case-layout {
     gap: 36px;
-    grid-template-columns: 230px minmax(0, 680px);
+    grid-template-columns: 220px minmax(0, 720px);
+    justify-content: center;
   }
 
 }
@@ -2535,15 +2514,21 @@ a.writing-row:hover {
   }
 
   .rag-outline__viewport::before {
-    top: 46px;
+    top: 21px;
   }
 
-  .rag-outline__eyebrow {
-    margin-bottom: 9px;
+  .longform-case {
+    max-width: 720px;
+    width: 100%;
+  }
+
+  .longform-figure {
+    width: min(900px, calc(100vw - 60px));
   }
 
   .longform-figure--wide {
     transform: translateX(-50%);
+    width: min(1036px, calc(100vw - 60px));
   }
 }
 

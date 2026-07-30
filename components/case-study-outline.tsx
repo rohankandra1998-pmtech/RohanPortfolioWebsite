@@ -11,18 +11,27 @@ import type { RagCaseStudyOutlineEntry } from "@/content/rag-knowledge-assistant
 
 type OutlineNode = RagCaseStudyOutlineEntry & {
   children: OutlineNode[];
-  position: number;
 };
 
 const DESKTOP_QUERY = "(min-width: 1025px)";
-const READING_LINE = 104;
+const READING_LINE = 112;
+const ACTIVATION_TOLERANCE = 2;
+const SCROLL_KEYS = new Set([
+  "ArrowDown",
+  "ArrowUp",
+  "End",
+  "Home",
+  "PageDown",
+  "PageUp",
+  " ",
+]);
 
 function buildOutlineTree(entries: RagCaseStudyOutlineEntry[]) {
   const roots: OutlineNode[] = [];
   const stack: OutlineNode[] = [];
 
-  entries.forEach((entry, index) => {
-    const node: OutlineNode = { ...entry, children: [], position: index + 1 };
+  entries.forEach((entry) => {
+    const node: OutlineNode = { ...entry, children: [] };
 
     while (stack.length >= entry.level) stack.pop();
 
@@ -69,9 +78,6 @@ function OutlineList({
               href={`#${node.id}`}
               onClick={(event) => onNavigate(event, node.id)}
             >
-              <span className="rag-outline__position" aria-hidden="true">
-                {String(node.position).padStart(2, "0")}
-              </span>
               <span className="rag-outline__tick" aria-hidden="true" />
               <span className="rag-outline__label">{node.label}</span>
             </a>
@@ -125,8 +131,10 @@ export function CaseStudyOutline({
     const targets = entries
       .map((entry) => document.getElementById(entry.id))
       .filter((target): target is HTMLElement => Boolean(target));
+    let animationFrame = 0;
 
-    const selectActiveSection = () => {
+    const calculateActiveSection = () => {
+      animationFrame = 0;
       const nearPageBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 8;
@@ -139,24 +147,20 @@ export function CaseStudyOutline({
 
       if (pendingNavigationRef.current) {
         const pendingId = pendingNavigationRef.current;
-        const pendingTarget = document.getElementById(
-          pendingId,
-        );
+        const pendingTarget = document.getElementById(pendingId);
         const pendingTop = pendingTarget?.getBoundingClientRect().top;
-        if (
-          typeof pendingTop === "number" &&
-          Math.abs(pendingTop - READING_LINE) > 40
-        ) {
+        if (typeof pendingTop === "number" && Math.abs(pendingTop - READING_LINE) > 8) {
           return;
         }
         pendingNavigationRef.current = null;
-        setActiveId(pendingId);
-        return;
       }
 
       let current = targets[0];
       for (const target of targets) {
-        if (target.getBoundingClientRect().top <= READING_LINE) {
+        if (
+          target.getBoundingClientRect().top <=
+          READING_LINE + ACTIVATION_TOLERANCE
+        ) {
           current = target;
         } else {
           break;
@@ -165,49 +169,70 @@ export function CaseStudyOutline({
       setActiveId(current?.id ?? "overview");
     };
 
-    const observer = new IntersectionObserver(selectActiveSection, {
-      rootMargin: `-${READING_LINE}px 0px -70% 0px`,
-      threshold: 0,
-    });
-    let hashResizeObserver: ResizeObserver | undefined;
-    let hashObserverTimer: number | undefined;
-    let alignHashTarget: (() => void) | undefined;
-
-    targets.forEach((target) => observer.observe(target));
-    selectActiveSection();
-
-    const hashId = decodeURIComponent(window.location.hash.slice(1));
-    if (hashId && targets.some((target) => target.id === hashId)) {
-      const target = document.getElementById(hashId);
-      pendingNavigationRef.current = hashId;
-
-      alignHashTarget = () => {
-        target?.scrollIntoView({ behavior: "auto", block: "start" });
-        target?.focus({ preventScroll: true });
-        setActiveId(hashId);
-      };
-
-      window.requestAnimationFrame(alignHashTarget);
-      window.addEventListener("load", alignHashTarget, { once: true });
-
-      const article = document.getElementById("overview");
-      if (article) {
-        hashResizeObserver = new ResizeObserver(alignHashTarget);
-        hashResizeObserver.observe(article);
-        hashObserverTimer = window.setTimeout(
-          () => hashResizeObserver?.disconnect(),
-          1800,
-        );
+    const scheduleActiveSection = () => {
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(calculateActiveSection);
       }
+    };
+
+    const clearPendingNavigation = () => {
+      if (!pendingNavigationRef.current) return;
+      pendingNavigationRef.current = null;
+      scheduleActiveSection();
+    };
+
+    const handleScrollKey = (event: KeyboardEvent) => {
+      if (SCROLL_KEYS.has(event.key)) clearPendingNavigation();
+    };
+
+    const navigateToHash = () => {
+      const hashId = decodeURIComponent(window.location.hash.slice(1));
+      const target = targets.find(({ id }) => id === hashId);
+      if (!target) {
+        clearPendingNavigation();
+        return;
+      }
+
+      pendingNavigationRef.current = hashId;
+      setActiveId(hashId);
+      target.scrollIntoView({ behavior: "auto", block: "start" });
+      target.focus({ preventScroll: true });
+      scheduleActiveSection();
+    };
+
+    window.addEventListener("scroll", scheduleActiveSection, { passive: true });
+    window.addEventListener("resize", scheduleActiveSection);
+    window.addEventListener("scrollend", clearPendingNavigation);
+    window.addEventListener("wheel", clearPendingNavigation, { passive: true });
+    window.addEventListener("touchstart", clearPendingNavigation, {
+      passive: true,
+    });
+    window.addEventListener("pointerdown", clearPendingNavigation, {
+      passive: true,
+    });
+    window.addEventListener("keydown", handleScrollKey);
+    window.addEventListener("hashchange", navigateToHash);
+    window.addEventListener("popstate", navigateToHash);
+
+    if (window.location.hash) {
+      window.requestAnimationFrame(navigateToHash);
+      window.addEventListener("load", navigateToHash, { once: true });
+    } else {
+      calculateActiveSection();
     }
 
     return () => {
-      observer.disconnect();
-      hashResizeObserver?.disconnect();
-      if (hashObserverTimer) window.clearTimeout(hashObserverTimer);
-      if (alignHashTarget) {
-        window.removeEventListener("load", alignHashTarget);
-      }
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", scheduleActiveSection);
+      window.removeEventListener("resize", scheduleActiveSection);
+      window.removeEventListener("scrollend", clearPendingNavigation);
+      window.removeEventListener("wheel", clearPendingNavigation);
+      window.removeEventListener("touchstart", clearPendingNavigation);
+      window.removeEventListener("pointerdown", clearPendingNavigation);
+      window.removeEventListener("keydown", handleScrollKey);
+      window.removeEventListener("hashchange", navigateToHash);
+      window.removeEventListener("popstate", navigateToHash);
+      window.removeEventListener("load", navigateToHash);
     };
   }, [entries]);
 
@@ -276,9 +301,6 @@ export function CaseStudyOutline({
             <strong>{activeEntry?.label ?? "Overview"}</strong>
           </summary>
           <div className="rag-outline__viewport" ref={viewportRef}>
-            <p className="rag-outline__eyebrow" aria-hidden="true">
-              Case study map
-            </p>
             <OutlineList
               activeId={activeId}
               ancestorIds={ancestorIds}

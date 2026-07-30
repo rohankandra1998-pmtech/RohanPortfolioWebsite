@@ -367,7 +367,9 @@ test("RAG case study renders a complete responsive scroll-aware outline", async 
     css.match(/\.rag-case-layout\s*\{[\s\S]*?(?=\.longform-case\s*\{)/)?.[0] ??
     "";
   const activeRule =
-    css.match(/\.rag-outline__link--active\s*\{([^}]*)\}/)?.[1] ?? "";
+    css.match(
+      /\.rag-outline__item > \.rag-outline__link--active\s*\{([^}]*)\}/,
+    )?.[1] ?? "";
   const outlineRouteIndex = route.indexOf(
     "<CaseStudyOutline entries={ragCaseStudyOutline} />",
   );
@@ -406,8 +408,19 @@ test("RAG case study renders a complete responsive scroll-aware outline", async 
   assert.match(outline, /href=\{`#\$\{node\.id\}`\}/);
   assert.match(outline, /aria-current=\{isActive \? "location" : undefined\}/);
   assert.match(outline, /ancestorIds\.has\(node\.id\)/);
-  assert.match(outline, /new IntersectionObserver\(selectActiveSection/);
-  assert.match(outline, /rootMargin: `-\$\{READING_LINE\}px 0px -70% 0px`/);
+  assert.doesNotMatch(outline, /Case study map|rag-outline__eyebrow/);
+  assert.doesNotMatch(outline, /position: index \+ 1|rag-outline__position/);
+  assert.match(outline, /window\.addEventListener\("scroll", scheduleActiveSection/);
+  assert.match(outline, /window\.addEventListener\("resize", scheduleActiveSection/);
+  assert.match(outline, /window\.requestAnimationFrame\(calculateActiveSection\)/);
+  assert.match(
+    outline,
+    /target\.getBoundingClientRect\(\)\.top <=[\s\S]*READING_LINE \+ ACTIVATION_TOLERANCE/,
+  );
+  assert.match(outline, /nearPageBottom/);
+  assert.match(outline, /window\.addEventListener\("scrollend", clearPendingNavigation\)/);
+  assert.match(outline, /window\.addEventListener\("hashchange", navigateToHash\)/);
+  assert.match(outline, /window\.addEventListener\("popstate", navigateToHash\)/);
   assert.match(outline, /viewport\.scrollTop [+-]=/);
   assert.match(outline, /window\.history\.pushState\(null, "", `#\$\{id\}`\)/);
   assert.match(outline, /target\.focus\(\{ preventScroll: true \}\)/);
@@ -423,12 +436,18 @@ test("RAG case study renders a complete responsive scroll-aware outline", async 
   );
   assert.match(
     outlineStyles,
-    /\.rag-outline__link--active\s*\{[\s\S]*color:\s*var\(--accent-dark\)/,
+    /\.rag-outline__item > \.rag-outline__link--active\s*\{[\s\S]*color:\s*var\(--accent-dark\)/,
   );
   assert.match(
     outlineStyles,
-    /\.rag-outline__link--active \.rag-outline__tick\s*\{[\s\S]*background:\s*var\(--accent\)/,
+    /\.rag-outline__item > \.rag-outline__link--active \.rag-outline__tick\s*\{[\s\S]*background:\s*var\(--accent\)/,
   );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="work"\]\s*\{[\s\S]*?--accent:\s*#DD4F86;[\s\S]*?--accent-dark:\s*#B63A69;/,
+  );
+  assert.match(outlineStyles, /\.rag-outline__link--ancestor\s*\{[\s\S]*color:\s*var\(--muted\)/);
+  assert.doesNotMatch(outlineStyles, /\.rag-outline__eyebrow|\.rag-outline__position/);
   assert.match(
     css,
     /@media \(max-width: 1024px\)[\s\S]*?\.rag-outline-mobile__summary\s*\{[\s\S]*?display:\s*grid/,
