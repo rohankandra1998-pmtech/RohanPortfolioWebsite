@@ -3441,47 +3441,6 @@ export const ragCaseStudyBlocks: RagCaseStudyBlock[] = [
   {
     "type": "heading",
     "level": 2,
-    "text": "Purpose statement",
-    "sourceIndexes": [
-      381
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "The RAG Knowledge Assistant is designed to transform static PDF documents into a conversational, searchable, and traceable knowledge base. It uses semantic retrieval and large language models to help users find relevant information without manually searching through every document, while grounding each response in retrieved evidence and providing citations that allow the answer to be verified."
-      }
-    ],
-    "sourceIndexes": [
-      382
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "In simpler terms:"
-      }
-    ],
-    "sourceIndexes": [
-      383
-    ]
-  },
-  {
-    "type": "quote",
-    "content": [
-      {
-        "text": "The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence."
-      }
-    ],
-    "sourceIndexes": [
-      384
-    ]
-  },
-  {
-    "type": "heading",
-    "level": 2,
     "text": "One-paragraph project summary",
     "sourceIndexes": [
       386

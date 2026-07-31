@@ -169,6 +169,75 @@ test("work uses a route-scoped raspberry theme across index and case-study route
   assert.match(hoverBorderRule, /var\(--accent\)/);
 });
 
+test("RAG work card uses Figure 1 and a structured purpose treatment without changing standard cards", async () => {
+  const [card, projects, work, css] = await Promise.all([
+    source("components/project-card.tsx"),
+    source("content/site.ts"),
+    source("app/work/page.tsx"),
+    source("app/globals.css"),
+  ]);
+  const ragProject =
+    projects.match(
+      /slug: "rag-knowledge-assistant",([\s\S]*?)slug: "ur-coursebot"/,
+    )?.[1] ?? "";
+  const purposeIntroduction =
+    "The RAG Knowledge Assistant is designed to transform static PDF documents into a conversational, searchable, and traceable knowledge base. It uses semantic retrieval and large language models to help users find relevant information without manually searching through every document, while grounding each response in retrieved evidence and providing citations that allow the answer to be verified.";
+  const purposeCallout =
+    "The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence.";
+
+  assert.match(
+    projects,
+    /export type ProjectWorkCard = \{[\s\S]*?purpose\?: \{[\s\S]*?introduction: string;[\s\S]*?simpleLabel: string;[\s\S]*?callout: string;/,
+  );
+  assert.match(projects, /workCard\?: ProjectWorkCard/);
+  assert.match(
+    ragProject,
+    /workCard: \{[\s\S]*?variant: "rag-purpose"[\s\S]*?purpose: \{/,
+  );
+  assert.match(
+    ragProject,
+    /image:\s*"\/images\/projects\/rag-knowledge-assistant\/figure-01-grounded-response-interface\.png"/,
+  );
+  assert.match(
+    ragProject,
+    /imageAlt:\s*"RAG Knowledge Assistant chat interface showing a grounded response, answer evidence, and source cards"/,
+  );
+  assert.equal(projects.split(purposeIntroduction).length - 1, 1);
+  assert.equal(projects.split('"In simpler terms:"').length - 1, 1);
+  assert.equal(projects.split(purposeCallout).length - 1, 1);
+  assert.match(card, /project\.workCard\?\.image \?\? project\.image/);
+  assert.match(card, /project\.workCard\?\.imageAlt \?\? project\.imageAlt/);
+  assert.match(card, /project\.workCard\?\.purpose/);
+  assert.match(card, /project-card--\$\{cardVariant\}/);
+  assert.match(
+    card,
+    /cardVariant === "rag-purpose"[\s\S]*\? \{ objectFit: "contain" \}/,
+  );
+  assert.match(card, /className="project-card__purpose-introduction"/);
+  assert.match(card, /className="project-card__purpose-label"/);
+  assert.match(card, /<aside className="project-card__purpose-callout">/);
+  assert.match(card, /\) : \(\s*<p>\{project\.summary\}<\/p>/);
+  assert.match(card, /read case study <span aria-hidden="true">/);
+  assert.doesNotMatch(card, /figcaption/i);
+  assert.match(work, /projects\.map\(\(project, index\) =>/);
+  assert.match(
+    css,
+    /\.project-card__image\s*\{[\s\S]*?aspect-ratio:\s*16 \/ 10/,
+  );
+  assert.match(
+    css,
+    /\.project-card--rag-purpose \.project-card__image\s*\{[\s\S]*?aspect-ratio:\s*1943 \/ 932/,
+  );
+  assert.match(
+    css,
+    /\.project-card__image img\s*\{[\s\S]*?object-fit:\s*contain/,
+  );
+  assert.match(
+    css,
+    /\.project-card__purpose-callout\s*\{[\s\S]*?background:\s*var\(--accent-soft\)[\s\S]*?border-left:\s*3px solid var\(--accent\)/,
+  );
+});
+
 test("RAG case study preserves approved article content while promoting its technology stack to the hero", async () => {
   const [article, route, renderer, stack, projects, css] = await Promise.all([
     source("content/rag-knowledge-assistant.ts"),
@@ -238,7 +307,6 @@ test("RAG case study preserves approved article content while promoting its tech
     "Compliance and governance",
     "Customer or technical support",
     "Project and consulting knowledge",
-    "Purpose statement",
     "One-paragraph project summary",
   ];
   const articleText = [...article.matchAll(/"text": ("(?:\\.|[^"\\])*")/g)]
@@ -307,6 +375,14 @@ test("RAG case study preserves approved article content while promoting its tech
   assert.doesNotMatch(articleBlocks, /The application is primarily built with:/);
   assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*26[6-9]\s*\]/);
   assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*27[0-6]\s*\]/);
+  assert.doesNotMatch(articleBlocks, /"text": "Purpose statement"/);
+  assert.doesNotMatch(articleBlocks, /"text": "In simpler terms:"/);
+  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*38[1-4]\s*\]/);
+  assert.doesNotMatch(
+    articleBlocks,
+    /The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence\./,
+  );
+  assert.match(articleBlocks, /"text": "One-paragraph project summary"/);
   assert.doesNotMatch(route, /#technology-stack/);
   assert.match(renderer, /<article[\s\S]*?className="longform-case"/);
   assert.match(renderer, /<figure[\s\S]*?<figcaption>/);
@@ -386,7 +462,6 @@ test("RAG case study preserves approved article content while promoting its tech
     "Top-5 context selection",
     "The underlying problem is not information availability. The problem is information accessibility.",
     "Its purpose is to make document-based answers more grounded, explainable, and auditable.",
-    "The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence.",
     "The RAG Knowledge Assistant is a full-stack conversational Retrieval-Augmented Generation application built with Python, Streamlit, OpenAI, LangChain, and ChromaDB.",
     "traceability and trustworthiness of AI-generated answers.",
   ]) {
@@ -446,11 +521,12 @@ test("RAG case study renders a complete responsive scroll-aware outline", async 
   );
   const heroEndIndex = route.indexOf("</section>", route.indexOf("case-hero"));
 
-  assert.equal(headingBlocks.length, 40);
-  assert.equal(headingIds.length + 1, 41);
-  assert.equal(new Set(headingIds).size, 40);
+  assert.equal(headingBlocks.length, 39);
+  assert.equal(headingIds.length + 1, 40);
+  assert.equal(new Set(headingIds).size, 39);
   assert.ok(headingIds.every((id) => id.length > 0));
   assert.ok(!headingIds.includes("technology-stack"));
+  assert.ok(!headingIds.includes("purpose-statement"));
   assert.match(article, /id: "overview"/);
   assert.match(article, /label: "Overview"/);
   assert.match(

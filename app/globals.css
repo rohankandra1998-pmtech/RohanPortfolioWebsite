@@ -779,6 +779,10 @@ textarea:focus-visible {
   position: relative;
 }
 
+.project-card--rag-purpose .project-card__image {
+  aspect-ratio: 1943 / 932;
+}
+
 .project-card__image img {
   object-fit: contain;
   transition: transform 0.55s var(--ease);
@@ -796,6 +800,10 @@ textarea:focus-visible {
   transform: scale(1.025);
 }
 
+.project-card--rag-purpose .project-card__image:hover img {
+  transform: none;
+}
+
 .project-card__image:hover::after {
   border-color: color-mix(in srgb, var(--accent) 40%, transparent);
 }
@@ -803,6 +811,36 @@ textarea:focus-visible {
 .project-card > p {
   margin-bottom: 8px;
   max-width: 610px;
+}
+
+.project-card__purpose {
+  max-width: 610px;
+}
+
+.project-card__purpose-introduction {
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.project-card__purpose-label {
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin: 18px 0 9px;
+}
+
+.project-card__purpose-callout {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 16px 18px;
+}
+
+.project-card__purpose-callout p {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.58;
+  margin: 0;
 }
 
 .principles {
@@ -2900,6 +2938,14 @@ a.writing-row:hover {
 
   .project-card h3 {
     font-size: 2.35rem;
+  }
+
+  .project-card__purpose-callout {
+    padding: 14px 15px;
+  }
+
+  .project-card__purpose-callout p {
+    font-size: 0.94rem;
   }
 
   .principle {

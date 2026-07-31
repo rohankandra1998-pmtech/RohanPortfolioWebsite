@@ -31,6 +31,17 @@ export type ProjectSection = {
   media?: ProjectMedia[];
 };
 
+export type ProjectWorkCard = {
+  image?: string;
+  imageAlt?: string;
+  variant?: "standard" | "rag-purpose";
+  purpose?: {
+    introduction: string;
+    simpleLabel: string;
+    callout: string;
+  };
+};
+
 export type Project = {
   slug: string;
   title: string;
@@ -45,6 +56,7 @@ export type Project = {
   tags: string[];
   image: string;
   imageAlt: string;
+  workCard?: ProjectWorkCard;
   liveUrl?: string;
   repoUrl?: string;
   metrics: { value: string; label: string }[];
@@ -464,6 +476,20 @@ export const projects: Project[] = [
     tags: ["RAG", "Streamlit", "ChromaDB", "OpenAI"],
     image: "/images/projects/rag-live-app.png",
     imageAlt: "RAG Knowledge Assistant live application",
+    workCard: {
+      image:
+        "/images/projects/rag-knowledge-assistant/figure-01-grounded-response-interface.png",
+      imageAlt:
+        "RAG Knowledge Assistant chat interface showing a grounded response, answer evidence, and source cards",
+      variant: "rag-purpose",
+      purpose: {
+        introduction:
+          "The RAG Knowledge Assistant is designed to transform static PDF documents into a conversational, searchable, and traceable knowledge base. It uses semantic retrieval and large language models to help users find relevant information without manually searching through every document, while grounding each response in retrieved evidence and providing citations that allow the answer to be verified.",
+        simpleLabel: "In simpler terms:",
+        callout:
+          "The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence.",
+      },
+    },
     liveUrl: "https://ragknowledgeassistant.streamlit.app/",
     repoUrl:
       "https://github.com/rohankandra1998-pmtech/rag-knowledge-assistant",
