@@ -285,6 +285,161 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
   );
 });
 
+test("RAG project actions reuse an accessible icon-enhanced pair in the hero and article end", async () => {
+  const [actions, route, projects, article, css, packageJson] =
+    await Promise.all([
+      source("components/rag-project-actions.tsx"),
+      source("app/work/[slug]/page.tsx"),
+      source("content/site.ts"),
+      source("content/rag-knowledge-assistant.ts"),
+      source("app/globals.css"),
+      source("package.json"),
+    ]);
+  const richRouteStart = route.indexOf("{isRichArticle ? (");
+  const articleIndex = route.indexOf(
+    "<CaseStudyArticle blocks={ragCaseStudyBlocks} />",
+  );
+  const articleEndActionsIndex = route.indexOf(
+    'placement="article-end"',
+    articleIndex,
+  );
+  const caseNextIndex = route.indexOf(
+    '<section className="section case-next">',
+  );
+  const actionStyles =
+    css.match(
+      /\.rag-case-content\s*\{[\s\S]*?(?=\.rag-outline\s*\{)/,
+    )?.[0] ?? "";
+  const headingBlocks = [
+    ...article.matchAll(
+      /"type": "heading",\s*"level": ([234]),\s*"text": ("(?:\\.|[^"\\])*")/g,
+    ),
+  ].map((match) => JSON.parse(match[2]));
+  const headingIds = headingBlocks.map((text) =>
+    text
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/['’]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, ""),
+  );
+
+  assert.match(
+    actions,
+    /type RagProjectActionsProps = \{[\s\S]*?liveUrl\?: string;[\s\S]*?repoUrl\?: string;[\s\S]*?placement\?: "hero" \| "article-end";/,
+  );
+  assert.doesNotMatch(actions, /"use client"|usePathname|window\.location/);
+  assert.match(actions, /if \(!liveUrl && !repoUrl\) return null;/);
+  assert.match(
+    actions,
+    /<nav[\s\S]*?aria-label="RAG Knowledge Assistant project links"[\s\S]*?className=\{`rag-project-actions rag-project-actions--\$\{placement\}`\}/,
+  );
+  assert.equal(actions.split(">Try live product<").length - 1, 1);
+  assert.equal(actions.split(">View GitHub repository<").length - 1, 1);
+  assert.equal(actions.match(/target="_blank"/g)?.length, 2);
+  assert.equal(actions.match(/rel="noreferrer"/g)?.length, 2);
+  assert.match(
+    actions,
+    /aria-label="Try the RAG Knowledge Assistant live product, opens in a new tab"/,
+  );
+  assert.match(
+    actions,
+    /aria-label="View the RAG Knowledge Assistant GitHub repository, opens in a new tab"/,
+  );
+  assert.match(
+    actions,
+    /<span>Try live product<\/span>\s*<ExternalLinkIcon \/>/,
+  );
+  assert.match(
+    actions,
+    /<GitHubIcon \/>\s*<span>View GitHub repository<\/span>\s*<ExternalLinkIcon \/>/,
+  );
+  assert.equal(actions.match(/<svg/g)?.length, 2);
+  assert.equal(actions.match(/aria-hidden="true"/g)?.length, 2);
+  assert.equal(actions.match(/focusable="false"/g)?.length, 2);
+  assert.equal(actions.match(/(?:fill|stroke)="currentColor"/g)?.length, 2);
+  assert.doesNotMatch(packageJson, /lucide|heroicons|react-icons|fontawesome/i);
+
+  assert.match(route, /import \{ RagProjectActions \}/);
+  assert.equal(route.match(/<RagProjectActions/g)?.length, 2);
+  assert.match(
+    route,
+    /\{isRichArticle \? \(\s*<RagProjectActions[\s\S]*?placement="hero"[\s\S]*?\) : \(\s*<div className="case-links" data-reveal>/,
+  );
+  assert.ok(richRouteStart >= 0);
+  assert.ok(articleIndex < articleEndActionsIndex);
+  assert.ok(articleEndActionsIndex < caseNextIndex);
+  assert.match(
+    route,
+    /<div className="rag-case-content">\s*<CaseStudyArticle blocks=\{ragCaseStudyBlocks\} \/>\s*<\/div>\s*<\/div>\s*<div className="wrap rag-case-actions-row">\s*<RagProjectActions[\s\S]*?placement="article-end"/,
+  );
+  assert.match(route, /project\.slug === "ur-coursebot"[\s\S]*?"Read the post"/);
+  assert.match(route, /Open live product/);
+  assert.match(route, /View repository <span aria-hidden="true">→<\/span>/);
+  assert.match(
+    projects,
+    /liveUrl: "https:\/\/ragknowledgeassistant\.streamlit\.app\/"/,
+  );
+  assert.match(
+    projects,
+    /repoUrl:\s*"https:\/\/github\.com\/rohankandra1998-pmtech\/rag-knowledge-assistant"/,
+  );
+
+  assert.equal(headingBlocks.length, 38);
+  assert.equal(headingIds.length + 1, 39);
+  assert.equal(new Set(headingIds).size, 38);
+  assert.equal(headingBlocks.at(-1), "Project and consulting knowledge");
+  assert.match(actionStyles, /\.rag-case-content\s*\{\s*min-width:\s*0/);
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions\s*\{[\s\S]*?display:\s*flex[\s\S]*?flex-wrap:\s*wrap[\s\S]*?gap:\s*12px/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions--article-end\s*\{[\s\S]*?border-top:\s*1px solid var\(--line\)[\s\S]*?margin-top:\s*64px[\s\S]*?padding-top:\s*28px[\s\S]*?width:\s*100%/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-case-actions-row\s*\{[\s\S]*?max-width:\s*1180px/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions__link\s*\{[\s\S]*?white-space:\s*nowrap/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions__link--primary\s*\{[\s\S]*?justify-content:\s*space-between[\s\S]*?min-width:\s*190px/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions__link--secondary\s*\{[\s\S]*?justify-content:\s*flex-start[\s\S]*?min-width:\s*300px/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions__link--secondary:hover\s*\{[\s\S]*?background:\s*var\(--accent-soft\)[\s\S]*?border-color:\s*var\(--accent\)/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions__github-icon\s*\{[\s\S]*?height:\s*20px[\s\S]*?width:\s*20px/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions__external-icon\s*\{[\s\S]*?height:\s*16px[\s\S]*?width:\s*16px/,
+  );
+  assert.match(
+    actionStyles,
+    /\.rag-project-actions__link:hover \.rag-project-actions__external-icon\s*\{[\s\S]*?transform:\s*translate\(2px,\s*-2px\)/,
+  );
+  assert.doesNotMatch(actionStyles, /position:\s*(?:fixed|sticky)/);
+  assert.doesNotMatch(actionStyles, /text-overflow|line-clamp/);
+  assert.match(
+    css,
+    /@media \(max-width: 560px\)[\s\S]*?\.rag-project-actions\s*\{[\s\S]*?align-items:\s*stretch[\s\S]*?flex-direction:\s*column[\s\S]*?\.rag-project-actions \.button\s*\{[\s\S]*?width:\s*100%/,
+  );
+});
+
 test("RAG case study preserves approved article content while promoting its technology stack to the hero", async () => {
   const [article, route, renderer, stack, projects, css] = await Promise.all([
     source("content/rag-knowledge-assistant.ts"),
@@ -564,7 +719,7 @@ test("RAG case study renders a complete responsive scroll-aware outline", async 
       .replace(/^-+|-+$/g, "");
   const headingIds = headingBlocks.map(({ text }) => slugify(text));
   const outlineStyles =
-    css.match(/\.rag-case-layout\s*\{[\s\S]*?(?=\.longform-case\s*\{)/)?.[0] ??
+    css.match(/\.rag-outline\s*\{[\s\S]*?(?=\.longform-case\s*\{)/)?.[0] ??
     "";
   const activeRule =
     css.match(

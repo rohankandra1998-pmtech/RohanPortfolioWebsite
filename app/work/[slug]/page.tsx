@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CaseStudyArticle } from "@/components/case-study-article";
 import { CaseStudyOutline } from "@/components/case-study-outline";
+import { RagProjectActions } from "@/components/rag-project-actions";
 import { RagTechnologyStack } from "@/components/rag-technology-stack";
 import {
   ragCaseStudyBlocks,
@@ -84,31 +85,39 @@ export default async function ProjectPage({
               </div>
             </div>
           )}
-          <div className="case-links" data-reveal>
-            {project.liveUrl ? (
-              <a
-                className="button button--dark focus-ring"
-                href={project.liveUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {project.slug === "ur-coursebot"
-                  ? "Read the post"
-                  : "Open live product"}{" "}
-                <span aria-hidden="true">→</span>
-              </a>
-            ) : null}
-            {project.repoUrl ? (
-              <a
-                className="button button--light focus-ring"
-                href={project.repoUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                View repository <span aria-hidden="true">→</span>
-              </a>
-            ) : null}
-          </div>
+          {isRichArticle ? (
+            <RagProjectActions
+              liveUrl={project.liveUrl}
+              placement="hero"
+              repoUrl={project.repoUrl}
+            />
+          ) : (
+            <div className="case-links" data-reveal>
+              {project.liveUrl ? (
+                <a
+                  className="button button--dark focus-ring"
+                  href={project.liveUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {project.slug === "ur-coursebot"
+                    ? "Read the post"
+                    : "Open live product"}{" "}
+                  <span aria-hidden="true">→</span>
+                </a>
+              ) : null}
+              {project.repoUrl ? (
+                <a
+                  className="button button--light focus-ring"
+                  href={project.repoUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  View repository <span aria-hidden="true">→</span>
+                </a>
+              ) : null}
+            </div>
+          )}
         </div>
       </section>
 
@@ -116,7 +125,16 @@ export default async function ProjectPage({
         <section className="section section--longform-case">
           <div className="wrap rag-case-layout">
             <CaseStudyOutline entries={ragCaseStudyOutline} />
-            <CaseStudyArticle blocks={ragCaseStudyBlocks} />
+            <div className="rag-case-content">
+              <CaseStudyArticle blocks={ragCaseStudyBlocks} />
+            </div>
+          </div>
+          <div className="wrap rag-case-actions-row">
+            <RagProjectActions
+              liveUrl={project.liveUrl}
+              placement="article-end"
+              repoUrl={project.repoUrl}
+            />
           </div>
         </section>
       ) : (

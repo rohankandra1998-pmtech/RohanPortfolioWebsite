@@ -1935,6 +1935,74 @@ textarea:focus-visible {
   max-width: 1180px;
 }
 
+.rag-case-content {
+  min-width: 0;
+}
+
+.rag-project-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rag-project-actions__link {
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.rag-project-actions__link--primary {
+  justify-content: space-between;
+  min-width: 190px;
+  padding-inline: 19px;
+}
+
+.rag-project-actions__link--secondary {
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  justify-content: flex-start;
+  min-width: 300px;
+  padding-inline: 18px;
+}
+
+.rag-project-actions__link--secondary
+  .rag-project-actions__external-icon {
+  margin-left: auto;
+}
+
+.rag-project-actions__link--secondary:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.rag-project-actions__github-icon {
+  flex: 0 0 auto;
+  height: 20px;
+  width: 20px;
+}
+
+.rag-project-actions__external-icon {
+  flex: 0 0 auto;
+  height: 16px;
+  transition: transform 0.25s var(--ease);
+  width: 16px;
+}
+
+.rag-project-actions__link:hover .rag-project-actions__external-icon {
+  transform: translate(2px, -2px);
+}
+
+.rag-project-actions--article-end {
+  border-top: 1px solid var(--line);
+  margin-top: 64px;
+  padding-top: 28px;
+  width: 100%;
+}
+
+.rag-case-actions-row {
+  max-width: 1180px;
+}
+
 .rag-outline {
   align-self: start;
   min-width: 0;
@@ -3205,6 +3273,20 @@ a.writing-row:hover {
 
   .case-links .button {
     justify-content: space-between;
+  }
+
+  .rag-project-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .rag-project-actions .button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .rag-project-actions__external-icon {
+    margin-left: auto;
   }
 
   .case-cover {
