@@ -31,9 +31,26 @@ export type ProjectSection = {
   media?: ProjectMedia[];
 };
 
+export type ProjectWorkCard = {
+  image?: string;
+  imageAlt?: string;
+  variant?: "standard" | "rag-purpose";
+  purpose?: {
+    introduction: string;
+    simpleLabel: string;
+    callout: string;
+  };
+};
+
+export type ProjectHomeCard = {
+  summary: string;
+};
+
 export type Project = {
   slug: string;
   title: string;
+  caseStudyTitle?: string;
+  richArticle?: "rag-knowledge-assistant";
   kicker: string;
   summary: string;
   timeframe: string;
@@ -43,6 +60,8 @@ export type Project = {
   tags: string[];
   image: string;
   imageAlt: string;
+  homeCard?: ProjectHomeCard;
+  workCard?: ProjectWorkCard;
   liveUrl?: string;
   repoUrl?: string;
   metrics: { value: string; label: string }[];
@@ -450,6 +469,8 @@ export const projects: Project[] = [
   {
     slug: "rag-knowledge-assistant",
     title: "RAG Knowledge Assistant",
+    caseStudyTitle: "Building a Conversational RAG Knowledge Assistant",
+    richArticle: "rag-knowledge-assistant",
     kicker: "Retrieval · AI UX · Observability",
     summary:
       "A conversational document assistant that ingests PDFs, retrieves and reranks relevant evidence, and answers with inline citations and transparent retrieval details.",
@@ -460,6 +481,24 @@ export const projects: Project[] = [
     tags: ["RAG", "Streamlit", "ChromaDB", "OpenAI"],
     image: "/images/projects/rag-live-app.png",
     imageAlt: "RAG Knowledge Assistant live application",
+    homeCard: {
+      summary:
+        "The RAG Knowledge Assistant is a full-stack conversational Retrieval-Augmented Generation application built with Python, Streamlit, OpenAI, LangChain, and ChromaDB. Users upload PDF documents, which are processed through page-level extraction, adjacent-page context preservation, semantic chunking, embedding generation, duplicate detection, and persistent vector storage. When a question is asked, the system rewrites context-dependent follow-ups, retrieves the ten most semantically similar chunks, reranks them using an LLM, and sends the five strongest passages to a grounded answer-generation prompt. The resulting response is limited to the uploaded document context, includes inline source citations, and can be audited through source, retrieval, reranking, response-time, and token-usage information. Its purpose is to reduce the friction of finding and interpreting knowledge contained in large document collections while improving the traceability and trustworthiness of AI-generated answers.",
+    },
+    workCard: {
+      image:
+        "/images/projects/rag-knowledge-assistant/figure-01-grounded-response-interface.png",
+      imageAlt:
+        "RAG Knowledge Assistant chat interface showing a grounded response, answer evidence, and source cards",
+      variant: "rag-purpose",
+      purpose: {
+        introduction:
+          "The RAG Knowledge Assistant is designed to transform static PDF documents into a conversational, searchable, and traceable knowledge base. It uses semantic retrieval and large language models to help users find relevant information without manually searching through every document, while grounding each response in retrieved evidence and providing citations that allow the answer to be verified.",
+        simpleLabel: "In simpler terms:",
+        callout:
+          "The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence.",
+      },
+    },
     liveUrl: "https://ragknowledgeassistant.streamlit.app/",
     repoUrl:
       "https://github.com/rohankandra1998-pmtech/rag-knowledge-assistant",

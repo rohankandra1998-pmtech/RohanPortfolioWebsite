@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 export default function WorkPage() {
   return (
     <>
-      <section className="page-head">
+      <section className="page-head page-head--work">
         <div className="wrap" data-reveal>
-          <p className="eyebrow">Selected work</p>
+          <p className="eyebrow eyebrow--dot">Selected work</p>
           <h1>Products shaped through evidence.</h1>
           <p className="page-head__lead">
             Three projects across AI quality, grounded knowledge retrieval, and
@@ -27,6 +27,7 @@ export default function WorkPage() {
         <div className="wrap project-grid project-grid--index">
           {projects.map((project, index) => (
             <ProjectCard
+              context="work"
               key={project.slug}
               priority={index === 0}
               project={project}
