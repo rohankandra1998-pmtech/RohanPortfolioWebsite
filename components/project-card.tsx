@@ -2,17 +2,24 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/content/site";
 
+export type ProjectCardContext = "home" | "work";
+
 export function ProjectCard({
   project,
   priority = false,
+  context,
 }: {
   project: Project;
   priority?: boolean;
+  context: ProjectCardContext;
 }) {
   const cardImage = project.workCard?.image ?? project.image;
   const cardImageAlt = project.workCard?.imageAlt ?? project.imageAlt;
   const cardVariant = project.workCard?.variant;
-  const purpose = project.workCard?.purpose;
+  const homeSummary =
+    context === "home" ? project.homeCard?.summary : undefined;
+  const purpose =
+    context === "work" ? project.workCard?.purpose : undefined;
 
   return (
     <article
@@ -42,7 +49,9 @@ export function ProjectCard({
           unoptimized
         />
       </Link>
-      {purpose ? (
+      {homeSummary ? (
+        <p className="project-card__home-summary">{homeSummary}</p>
+      ) : purpose ? (
         <div className="project-card__purpose">
           <p className="project-card__purpose-introduction">
             {purpose.introduction}

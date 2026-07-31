@@ -3437,28 +3437,6 @@ export const ragCaseStudyBlocks: RagCaseStudyBlock[] = [
     "sourceIndexes": [
       379
     ]
-  },
-  {
-    "type": "heading",
-    "level": 2,
-    "text": "One-paragraph project summary",
-    "sourceIndexes": [
-      386
-    ]
-  },
-  {
-    "type": "paragraph",
-    "content": [
-      {
-        "text": "The RAG Knowledge Assistant is a full-stack conversational Retrieval-Augmented Generation application built with Python, Streamlit, OpenAI, LangChain, and ChromaDB. Users upload PDF documents, which are processed through page-level extraction, adjacent-page context preservation, semantic chunking, embedding generation, duplicate detection, and persistent vector storage. When a question is asked, the system rewrites context-dependent follow-ups, retrieves the ten most semantically similar chunks, reranks them using an LLM, and sends the five strongest passages to a grounded answer-"
-      },
-      {
-        "text": "generation prompt. The resulting response is limited to the uploaded document context, includes inline source citations, and can be audited through source, retrieval, reranking, response-time, and token-usage information. Its purpose is to reduce the friction of finding and interpreting knowledge contained in large document collections while improving the traceability and trustworthiness of AI-generated answers."
-      }
-    ],
-    "sourceIndexes": [
-      387
-    ]
   }
 ];
 

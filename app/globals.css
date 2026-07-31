@@ -813,6 +813,14 @@ textarea:focus-visible {
   max-width: 610px;
 }
 
+.project-card__home-summary {
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.7;
+  margin-bottom: 8px;
+  max-width: 610px;
+}
+
 .project-card__purpose {
   max-width: 610px;
 }

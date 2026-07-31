@@ -171,6 +171,7 @@ export default function HomePage() {
           <div className="project-grid">
             {projects.map((project, index) => (
               <ProjectCard
+                context="home"
                 key={project.slug}
                 priority={index === 0}
                 project={project}

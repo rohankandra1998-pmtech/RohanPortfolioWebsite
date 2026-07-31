@@ -27,6 +27,7 @@ export default function WorkPage() {
         <div className="wrap project-grid project-grid--index">
           {projects.map((project, index) => (
             <ProjectCard
+              context="work"
               key={project.slug}
               priority={index === 0}
               project={project}
