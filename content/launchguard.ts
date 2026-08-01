@@ -2628,6 +2628,23 @@ export const launchGuardCaseStudyBlocks: CaseStudyBlock[] = [
     ]
   },
   {
+    "type": "figure",
+    "number": 16,
+    "variant": "wide",
+    "images": [
+      {
+        "src": "/images/projects/launchguard/figure-16-evaluation-lifecycle.png",
+        "alt": "Circular LaunchGuard evaluation lifecycle from prompt creation through human review, failure analysis, improvement, and retesting",
+        "width": 1672,
+        "height": 941
+      }
+    ],
+    "caption": "Figure 16 LaunchGuard turns prompt improvement into a continuous lifecycle of testing, human evaluation, failure analysis, revision, and regression testing.",
+    "sourceIndexes": [
+      1493
+    ]
+  },
+  {
     "type": "paragraph",
     "content": [
       {
@@ -2696,6 +2713,23 @@ export const launchGuardCaseStudyBlocks: CaseStudyBlock[] = [
     ],
     "sourceIndexes": [
       286
+    ]
+  },
+  {
+    "type": "figure",
+    "number": 17,
+    "variant": "wide",
+    "images": [
+      {
+        "src": "/images/projects/launchguard/figure-17-four-technical-layers.png",
+        "alt": "LaunchGuard four-layer architecture connecting the user interface, application validation, data, and AI model layers",
+        "width": 1672,
+        "height": 941
+      }
+    ],
+    "caption": "Figure 17 LaunchGuard coordinates the user interface, application logic, relational database, and AI models as four connected technical layers.",
+    "sourceIndexes": [
+      1494
     ]
   },
   {
@@ -3855,6 +3889,23 @@ export const launchGuardCaseStudyBlocks: CaseStudyBlock[] = [
     ],
     "sourceIndexes": [
       409
+    ]
+  },
+  {
+    "type": "figure",
+    "number": 18,
+    "variant": "wide",
+    "images": [
+      {
+        "src": "/images/projects/launchguard/figure-18-variable-resolution-prompt-compilation.png",
+        "alt": "LaunchGuard variable-resolution flow from prompt variables and test-case overrides to a compiled prompt with provenance",
+        "width": 1672,
+        "height": 941
+      }
+    ],
+    "caption": "Figure 18 LaunchGuard validates structured variables, resolves defaults and case-specific overrides, and records the provenance of every value used in the compiled prompt.",
+    "sourceIndexes": [
+      1495
     ]
   },
   {
@@ -7986,6 +8037,23 @@ export const launchGuardCaseStudyBlocks: CaseStudyBlock[] = [
     ]
   },
   {
+    "type": "figure",
+    "number": 19,
+    "variant": "wide",
+    "images": [
+      {
+        "src": "/images/projects/launchguard/figure-19-prompt-version-lineage.png",
+        "alt": "LaunchGuard lineage from Prompt v1 through evaluation evidence, Error Analysis, Prompt Proposal, and Prompt v2",
+        "width": 1672,
+        "height": 941
+      }
+    ],
+    "caption": "Figure 19 A new Prompt Version is created from human-grounded evaluation evidence while the source prompt and its historical results remain preserved.",
+    "sourceIndexes": [
+      1496
+    ]
+  },
+  {
     "type": "paragraph",
     "content": [
       {
@@ -8599,6 +8667,23 @@ export const launchGuardCaseStudyBlocks: CaseStudyBlock[] = [
     ],
     "sourceIndexes": [
       919
+    ]
+  },
+  {
+    "type": "figure",
+    "number": 20,
+    "variant": "wide",
+    "images": [
+      {
+        "src": "/images/projects/launchguard/figure-20-relational-evaluation-data-model.png",
+        "alt": "LaunchGuard relational evaluation data model connecting workspaces, projects, prompts, tests, outputs, reviews, reports, and proposals",
+        "width": 1672,
+        "height": 941
+      }
+    ],
+    "caption": "Figure 20 LaunchGuard’s relational model preserves explicit connections among projects, Prompt Versions, test cases, outputs, human judgments, reports, and proposed improvements.",
+    "sourceIndexes": [
+      1497
     ]
   },
   {
@@ -9491,6 +9576,23 @@ export const launchGuardCaseStudyBlocks: CaseStudyBlock[] = [
     ],
     "sourceIndexes": [
       1023
+    ]
+  },
+  {
+    "type": "figure",
+    "number": 21,
+    "variant": "wide",
+    "images": [
+      {
+        "src": "/images/projects/launchguard/figure-21-model-orchestration.png",
+        "alt": "LaunchGuard model orchestration showing separate product-output, reasoning, and test-case-generation model responsibilities",
+        "width": 1672,
+        "height": 941
+      }
+    ],
+    "caption": "Figure 21 LaunchGuard separates product simulation, evaluation reasoning, and test-case generation so that each AI model performs a clearly defined role.",
+    "sourceIndexes": [
+      1498
     ]
   },
   {
@@ -12823,6 +12925,23 @@ export const launchGuardCaseStudyBlocks: CaseStudyBlock[] = [
       1396,
       1397,
       1398
+    ]
+  },
+  {
+    "type": "figure",
+    "number": 22,
+    "variant": "wide",
+    "images": [
+      {
+        "src": "/images/projects/launchguard/figure-22-fragmented-testing-vs-launchguard.png",
+        "alt": "Comparison of fragmented AI prompt testing with LaunchGuard’s connected evaluation workflow",
+        "width": 1672,
+        "height": 941
+      }
+    ],
+    "caption": "Figure 22 LaunchGuard replaces disconnected prompt files, spreadsheets, transcripts, and reviewer notes with one traceable evaluation workflow.",
+    "sourceIndexes": [
+      1499
     ]
   },
   {

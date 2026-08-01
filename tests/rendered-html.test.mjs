@@ -423,6 +423,30 @@ test("LaunchGuard is a complete source-faithful long-form case study", async () 
   const headings = blocks.filter((block) => block.type === "heading");
   const text = JSON.stringify(blocks);
   const figureEight = figures.find((figure) => figure.number === 8);
+  const newFigurePaths = new Map([
+    [16, "/images/projects/launchguard/figure-16-evaluation-lifecycle.png"],
+    [17, "/images/projects/launchguard/figure-17-four-technical-layers.png"],
+    [
+      18,
+      "/images/projects/launchguard/figure-18-variable-resolution-prompt-compilation.png",
+    ],
+    [19, "/images/projects/launchguard/figure-19-prompt-version-lineage.png"],
+    [
+      20,
+      "/images/projects/launchguard/figure-20-relational-evaluation-data-model.png",
+    ],
+    [21, "/images/projects/launchguard/figure-21-model-orchestration.png"],
+    [
+      22,
+      "/images/projects/launchguard/figure-22-fragmented-testing-vs-launchguard.png",
+    ],
+  ]);
+  const blockIndexContaining = (sourceText) =>
+    blocks.findIndex((block) => JSON.stringify(block).includes(sourceText));
+  const figureIndex = (number) =>
+    blocks.findIndex(
+      (block) => block.type === "figure" && block.number === number,
+    );
   const exactCaptions = [
     "Figure 1 LaunchGuard’s Project Overview brings prompt management, test coverage, human review, and evaluation progress into one connected workspace.",
     "Figure 2 A LaunchGuard workspace can contain multiple AI evaluation projects, each with its own context, prompts, test cases, reviews, and improvement history.",
@@ -438,6 +462,13 @@ test("LaunchGuard is a complete source-faithful long-form case study", async () 
     "Figure 12 Every recommended prompt change is connected to human ratings, failed criteria, representative test cases, and reviewer evidence.",
     "Figure 13 The Prompt Proposal compares the current and proposed system prompts side by side and summarizes the evaluation evidence behind the revision.",
     "Figure 14 Each proposed modification identifies the exact before-and-after wording, its expected impact, and the failure evidence supporting the change.",
+    "Figure 16 LaunchGuard turns prompt improvement into a continuous lifecycle of testing, human evaluation, failure analysis, revision, and regression testing.",
+    "Figure 17 LaunchGuard coordinates the user interface, application logic, relational database, and AI models as four connected technical layers.",
+    "Figure 18 LaunchGuard validates structured variables, resolves defaults and case-specific overrides, and records the provenance of every value used in the compiled prompt.",
+    "Figure 19 A new Prompt Version is created from human-grounded evaluation evidence while the source prompt and its historical results remain preserved.",
+    "Figure 20 LaunchGuard’s relational model preserves explicit connections among projects, Prompt Versions, test cases, outputs, human judgments, reports, and proposed improvements.",
+    "Figure 21 LaunchGuard separates product simulation, evaluation reasoning, and test-case generation so that each AI model performs a clearly defined role.",
+    "Figure 22 LaunchGuard replaces disconnected prompt files, spreadsheets, transcripts, and reviewer notes with one traceable evaluation workflow.",
   ];
 
   assert.match(projects, /slug: "launchguard"[\s\S]*?richArticle: "launchguard"/);
@@ -451,13 +482,62 @@ test("LaunchGuard is a complete source-faithful long-form case study", async () 
     technologyStack.map((item) => item.category),
     ["Application", "Database & Backend", "AI & Validation", "Deployment"],
   );
-  assert.equal(figures.length, 14);
+  assert.equal(figures.length, 21);
   assert.equal(
     figures.reduce((count, figure) => count + figure.images.length, 0),
-    15,
+    22,
   );
   assert.equal(figureEight.images.length, 2);
   assert.equal(figureEight.variant, "paired");
+  assert.equal(figures.some((figure) => figure.number === 15), false);
+  assert.equal(
+    new Set(figures.map((figure) => figure.number)).size,
+    figures.length,
+  );
+  for (const [number, imagePath] of newFigurePaths) {
+    const figure = figures.find((candidate) => candidate.number === number);
+    assert.ok(figure, `Missing Figure ${number}`);
+    assert.equal(figure.variant, "wide");
+    assert.equal(figure.images.length, 1);
+    assert.equal(figure.images[0].src, imagePath);
+  }
+  assert.equal(
+    figureIndex(16),
+    blockIndexContaining(
+      "LaunchGuard supports this loop through four connected technical layers:",
+    ) - 1,
+  );
+  assert.equal(
+    figureIndex(17),
+    blockIndexContaining(
+      "These layers work together so that every generated response can be traced back",
+    ) - 1,
+  );
+  assert.equal(
+    figureIndex(18),
+    blockIndexContaining(
+      "Variable provenance is stored with the generated output.",
+    ) - 1,
+  );
+  assert.equal(
+    figureIndex(19),
+    blockIndexContaining("Prompt Version 2 keeps references to:") - 1,
+  );
+  assert.equal(
+    figureIndex(20),
+    blockIndexContaining("The central relationship is:") - 1,
+  );
+  assert.equal(
+    figureIndex(21),
+    blockIndexContaining("The current model configuration supports three roles.") -
+      1,
+  );
+  assert.equal(
+    figureIndex(22),
+    blockIndexContaining(
+      "Each tool may contain one part of the truth, but the relationships between them are lost.",
+    ) - 1,
+  );
   assert.equal(headings.length, 130);
   assert.ok(headings.some((heading) => heading.level === 5));
   assert.ok(blocks.some((block) => block.type === "table"));
