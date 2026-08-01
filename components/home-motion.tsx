@@ -18,7 +18,7 @@ export function HomeMotion({ children }: { children: React.ReactNode }) {
 
       if (reduceMotion) {
         gsap.set(
-          "[data-home-intro], [data-home-float], [data-home-word], .home-work-card .project-card",
+          "[data-home-intro], [data-home-experience], [data-home-word], .home-work-card .project-card",
           { clearProps: "all" },
         );
         return;
@@ -31,29 +31,18 @@ export function HomeMotion({ children }: { children: React.ReactNode }) {
           duration: 0.9,
           stagger: 0.08,
           y: 32,
-        })
-        .from(
-          "[data-home-float]",
-          {
-            autoAlpha: 0,
-            duration: 1.05,
-            rotate: 2.5,
-            scale: 0.88,
-            y: 48,
-          },
-          0.18,
-        );
+        });
 
-      gsap.to("[data-home-float]", {
-        ease: "none",
-        rotate: -1.5,
+      gsap.from("[data-home-experience]", {
+        autoAlpha: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        stagger: 0.12,
         scrollTrigger: {
-          end: "bottom top",
-          scrub: 0.8,
-          start: "top top",
-          trigger: ".home-hero",
+          start: "top 74%",
+          trigger: ".home-experience",
         },
-        yPercent: -12,
+        y: 42,
       });
 
       const wordSection = document.querySelector("[data-home-word-section]");

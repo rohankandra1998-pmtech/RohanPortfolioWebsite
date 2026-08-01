@@ -55,15 +55,33 @@ export default function HomePage() {
               <h1 data-home-intro>Hey! I’m Rohan.</h1>
               <h2 data-home-intro>
                 {statementStart}
-                <span aria-hidden="true" className="home-inline-image">
-                  <Image
-                    alt=""
-                    fill
-                    priority
-                    sizes="(max-width: 560px) 72px, 132px"
-                    src="/images/projects/launchguard-overview.webp"
-                    unoptimized
-                  />
+                <span aria-hidden="true" className="home-inline-system-mark">
+                  <svg fill="none" viewBox="0 0 160 56">
+                    <circle cx="10" cy="10" fill="currentColor" r="4" />
+                    <circle cx="10" cy="28" fill="currentColor" r="4" />
+                    <circle cx="10" cy="46" fill="currentColor" r="4" />
+                    <path
+                      d="M16 10c25 0 26 18 52 18M16 28h52M16 46c25 0 26-18 52-18"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeWidth="3"
+                    />
+                    <circle
+                      cx="76"
+                      cy="28"
+                      fill="var(--home-mint)"
+                      r="9"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                    />
+                    <path
+                      d="M86 28h58m0 0-12-10m12 10-12 10"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="3"
+                    />
+                  </svg>
                 </span>{" "}
                 {statementMarker}
                 {statementEnd}
@@ -85,46 +103,6 @@ export default function HomePage() {
                   More about me <span aria-hidden="true">→</span>
                 </Link>
               </div>
-            </div>
-
-            <figure className="home-hero__visual" data-home-float>
-              <div className="home-hero__visual-frame">
-                <Image
-                  alt={projects[0].imageAlt}
-                  fill
-                  priority
-                  sizes="(max-width: 820px) 88vw, 34vw"
-                  src={projects[0].image}
-                  unoptimized
-                />
-              </div>
-              <figcaption>
-                <span>{projects[0].title}</span>
-                <span>{projects[0].kicker}</span>
-              </figcaption>
-            </figure>
-
-            <div className="home-hero__quick-links" data-home-intro>
-              <a
-                className="home-quick-link focus-ring"
-                href={projects[0].liveUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <span>Explore</span>
-                <strong>LaunchGuard</strong>
-                <b aria-hidden="true">↗</b>
-              </a>
-              <a
-                className="home-quick-link focus-ring"
-                href={projects[1].liveUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <span>Try the</span>
-                <strong>RAG Assistant</strong>
-                <b aria-hidden="true">↗</b>
-              </a>
             </div>
           </div>
         </section>
@@ -216,18 +194,26 @@ export default function HomePage() {
 
         <section className="home-experience">
           <div className="home-wrap home-experience__inner">
-            <div>
+            <div className="home-experience__heading" data-home-experience>
               <p className="home-kicker">The path so far</p>
               <h2>Experience</h2>
             </div>
-            <div>
-              <p>
-                Product discovery, AI workflows, enterprise analytics,
-                stakeholder alignment, and an enduring habit of making the
-                complicated clear.
+            <div className="home-experience__proof" data-home-experience>
+              <p className="home-experience__summary">
+                <strong>4+ years</strong>
+                <span>
+                  {" "}
+                  across product management, AI, analytics, and consulting,
+                  shipping 0-to-1 products for early-stage teams and modernizing
+                  enterprise systems across healthcare, supply chain, utilities,
+                  and insurance.
+                </span>
               </p>
-              <Link className="home-button home-button--cream focus-ring" href="/experience">
-                Experience <span aria-hidden="true">↗</span>
+              <Link
+                className="home-button home-button--ink focus-ring"
+                href="/experience"
+              >
+                Explore my experience <span aria-hidden="true">↗</span>
               </Link>
             </div>
           </div>
