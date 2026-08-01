@@ -14,29 +14,6 @@ export const metadata: Metadata = {
     "Portfolio of Rohan Singh Kandra: AI product evaluation, RAG systems, product discovery, analytics, and technical product management.",
 };
 
-const currentCards = [
-  {
-    eyebrow: "Building",
-    title: "LaunchGuard",
-    body: "Turning AI evaluation evidence into clearer failure patterns and better prompt versions.",
-  },
-  {
-    eyebrow: "Completed",
-    title: "STEM MBA · ’26",
-    body: "Product management, strategy, and analytics at Simon Business School.",
-  },
-  {
-    eyebrow: "Recently",
-    title: "Vivify Solutions",
-    body: "Product discovery, MVP definition, workflow automation, and cross-functional delivery.",
-  },
-  {
-    eyebrow: "Based",
-    title: "San Francisco Bay Area",
-    body: "Exploring product roles where AI, trust, data, and useful workflows meet.",
-  },
-];
-
 export default function HomePage() {
   return (
     <>
@@ -125,23 +102,6 @@ export default function HomePage() {
               unoptimized
             />
           </figure>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap">
-          <p className="eyebrow">What I’m up to right now</p>
-          <h2>Currently</h2>
-          <div className="now-grid">
-            {currentCards.map((card) => (
-              <article className="now-card" data-reveal key={card.title}>
-                <p>{card.eyebrow}</p>
-                <h3>{card.title}</h3>
-                <div className="now-card__rule" />
-                <p>{card.body}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
