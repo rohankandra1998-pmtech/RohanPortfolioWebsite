@@ -5,17 +5,16 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 async function source(path) {
-  return readFile(new URL(path, root), "utf8");
+  return (await readFile(new URL(path, root), "utf8")).replace(/\r\n/g, "\n");
 }
 
-test("portfolio includes every public route and project case study", async () => {
-  const [home, about, experience, work, thoughts, contact, projects] =
+test("portfolio includes every remaining public route and project case study", async () => {
+  const [home, about, experience, work, contact, projects] =
     await Promise.all([
       source("app/page.tsx"),
       source("app/about/page.tsx"),
       source("app/experience/page.tsx"),
       source("app/work/page.tsx"),
-      source("app/thoughts/page.tsx"),
       source("app/contact/page.tsx"),
       source("content/site.ts"),
     ]);
@@ -24,11 +23,27 @@ test("portfolio includes every public route and project case study", async () =>
   assert.match(about, /Curiosity is how I move from ambiguity to action/);
   assert.match(experience, /Education & Certifications/);
   assert.match(work, /Products shaped through evidence/);
-  assert.match(thoughts, /Notes to self/);
   assert.match(contact, /Say hi/);
   assert.match(projects, /slug: "launchguard"/);
   assert.match(projects, /slug: "rag-knowledge-assistant"/);
   assert.match(projects, /slug: "ur-coursebot"/);
+});
+
+test("shared navigation and sitemap exclude the removed route", async () => {
+  const [site, sitemap] = await Promise.all([
+    source("content/site.ts"),
+    source("app/sitemap.ts"),
+  ]);
+  const navigation =
+    site.match(/export const navigation = \[([\s\S]*?)\n\];/)?.[1] ?? "";
+
+  assert.deepEqual(
+    [...navigation.matchAll(/label: "([^"]+)"/g)].map((match) => match[1]),
+    ["Home", "About", "Experience", "Work", "Contact"],
+  );
+  assert.doesNotMatch(navigation, /Thoughts|\/thoughts/);
+  assert.doesNotMatch(sitemap, /\/thoughts/);
+  await assert.rejects(access(new URL("app/thoughts/page.tsx", root)));
 });
 
 test("metadata, accessibility, and privacy safeguards are present", async () => {
@@ -167,6 +182,139 @@ test("work uses a route-scoped raspberry theme across index and case-study route
   assert.match(work, /className="eyebrow eyebrow--dot"/);
   assert.doesNotMatch(css, /rgba\(63,\s*125,\s*104,\s*0\.4\)/);
   assert.match(hoverBorderRule, /var\(--accent\)/);
+});
+
+test("contact uses a dedicated purple theme and preserves accessible mailto contact paths", async () => {
+  const [shell, css, contactPage, contactForm, site] = await Promise.all([
+    source("components/site-shell.tsx"),
+    source("app/globals.css"),
+    source("app/contact/page.tsx"),
+    source("components/contact-form.tsx"),
+    source("content/site.ts"),
+  ]);
+
+  assert.match(shell, /pathname === "\/contact"\s*\?\s*"contact"/);
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\]\s*\{[\s\S]*?--accent:\s*#8C5AB8;[\s\S]*?--accent-dark:\s*#69408E;[\s\S]*?--accent-soft:\s*#F1E8F8;/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\] \.brand__logo,[\s\S]*?visibility:\s*hidden/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\] \.brand__logo-mask,[\s\S]*?background-color:\s*var\(--accent\)/,
+  );
+
+  for (const className of [
+    "contact-page",
+    "contact-content",
+    "wrap contact-grid",
+    "contact-main",
+    "contact-hero",
+    "contact-aside",
+    "contact-visual",
+    "contact-actions",
+    "signature contact-signature",
+  ]) {
+    assert.ok(contactPage.includes(`className="${className}"`), `Missing ${className}`);
+  }
+
+  assert.doesNotMatch(
+    contactPage,
+    /Open to product and AI product conversations\.|contact\.location|contact-location/,
+  );
+  assert.match(contactPage, /href=\{`mailto:\$\{contact\.email\}`\}/);
+  assert.match(contactPage, /socials\.slice\(0,\s*2\)\.map/);
+  assert.match(site, /label: "LinkedIn"/);
+  assert.match(site, /label: "GitHub"/);
+  assert.match(contactPage, /— Rohan/);
+
+  assert.match(
+    contactForm,
+    /<div className="contact-note-wrap" data-reveal>[\s\S]*?<form className="contact-form contact-note" onSubmit=\{submit\}>/,
+  );
+  assert.match(
+    contactForm,
+    /aria-hidden="true" className="contact-note__tape"/,
+  );
+  assert.match(
+    contactForm,
+    /aria-hidden="true" className="contact-note__pin"/,
+  );
+  assert.match(contactForm, /name="name"[\s\S]*?placeholder="Jane Doe"[\s\S]*?required/);
+  assert.match(
+    contactForm,
+    /name="email"[\s\S]*?placeholder="you@example\.com"[\s\S]*?required[\s\S]*?type="email"/,
+  );
+  assert.match(
+    contactForm,
+    /name="message"[\s\S]*?placeholder="Tell me who you are and what you're building\. :\)"[\s\S]*?required/,
+  );
+  assert.match(
+    contactForm,
+    /<button className="button button--contact focus-ring" type="submit">[\s\S]*?Send message/,
+  );
+  assert.match(
+    contactForm,
+    /<svg[\s\S]*?className="button--contact__send"[\s\S]*?focusable="false"[\s\S]*?stroke="currentColor"/,
+  );
+  assert.match(
+    contactForm,
+    /<svg[\s\S]*?aria-hidden="true"[\s\S]*?className="contact-note__pencil"[\s\S]*?focusable="false"[\s\S]*?viewBox="0 0 90 250"/,
+  );
+  assert.doesNotMatch(contactForm, /↗/);
+  assert.match(
+    contactForm,
+    /This opens your email app\. Nothing is stored on this website\./,
+  );
+  assert.match(contactForm, /event\.preventDefault\(\)/);
+  assert.match(contactForm, /Portfolio hello from \$\{name \|\| "a visitor"\}/);
+  assert.match(contactForm, /`\$\{message\}\\n\\nFrom: \$\{name\}\\nReply to: \$\{email\}`/);
+  assert.match(
+    contactForm,
+    /window\.location\.href = `mailto:\$\{contact\.email\}\?subject=\$\{subject\}&body=\$\{body\}`/,
+  );
+
+  assert.match(
+    contactPage,
+    /<div aria-hidden="true" className="contact-visual">[\s\S]*?className="contact-visual__logo"/,
+  );
+  assert.match(
+    css,
+    /\.contact-visual__logo\s*\{[\s\S]*?background-color:\s*var\(--accent\)[\s\S]*?mask:\s*url\("\/images\/branding\/rohan-logo\.png"\)/,
+  );
+  assert.match(
+    contactPage,
+    /className="contact-direct__icon"[\s\S]*?<ContactIcon label="Email" \/>/,
+  );
+  assert.match(contactPage, /<ContactIcon label=\{link\.label\} \/>/);
+  assert.match(
+    contactPage,
+    /className="contact-direct__arrow"[\s\S]*?focusable="false"[\s\S]*?stroke="currentColor"/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\]\s*\{[\s\S]*?--contact-paper:[\s\S]*?--contact-tape:[\s\S]*?--contact-icon-tile:/,
+  );
+  assert.match(
+    css,
+    /\.contact-note\s*\{[\s\S]*?border-radius:\s*7px;[\s\S]*?overflow:\s*hidden;[\s\S]*?position:\s*relative;/,
+  );
+  assert.match(
+    css,
+    /\.contact-note__tape\s*\{[\s\S]*?pointer-events:\s*none;/,
+  );
+  assert.match(
+    css,
+    /\.contact-note__pencil\s*\{[\s\S]*?pointer-events:\s*none;/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width:\s*560px\)[\s\S]*?\.contact-note\s*\{[\s\S]*?padding:\s*50px 24px 26px;/,
+  );
+  assert.doesNotMatch(contactPage, /Luisa|Rosa/);
 });
 
 test("LaunchGuard and RAG cards use project-specific purpose content with a shared presentation", async () => {

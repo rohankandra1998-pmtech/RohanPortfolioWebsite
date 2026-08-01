@@ -3,7 +3,7 @@
 ## Primary content file
 
 Edit `content/site.ts` for contact details, navigation, social links,
-experience, education, principles, skills, projects, and writing entries. The
+experience, education, principles, skills, and projects. The
 exported TypeScript types make omissions visible during `npx tsc --noEmit`.
 
 ### Common changes
@@ -11,7 +11,6 @@ exported TypeScript types make omissions visible during `npx tsc --noEmit`.
 - Profile or contact: update `contact` and `socials`.
 - Career history: update `experiences`; preserve reverse chronology.
 - Project card and case study: update the matching item in `projects`.
-- Draft writing status: update `writing`.
 - Homepage current-focus cards: edit `currentCards` in `app/page.tsx`.
 
 ## Project case studies

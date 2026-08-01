@@ -14,7 +14,7 @@ Validated July 26, 2026.
 
 ## Route inspection
 
-The in-app browser rendered Home, About, Experience, Work, Thoughts, Contact,
+The in-app browser rendered Home, About, Experience, Work, Contact,
 all three case studies, and the custom not-found path. Each valid route had the
 expected page title and `h1`; no application error overlay remained after the
 static-image correction.
