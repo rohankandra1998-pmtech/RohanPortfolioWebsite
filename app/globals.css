@@ -779,7 +779,7 @@ textarea:focus-visible {
   position: relative;
 }
 
-.project-card--rag-purpose .project-card__image {
+.project-card--purpose .project-card__image {
   aspect-ratio: 1943 / 932;
 }
 
@@ -800,7 +800,7 @@ textarea:focus-visible {
   transform: scale(1.025);
 }
 
-.project-card--rag-purpose .project-card__image:hover img {
+.project-card--purpose .project-card__image:hover img {
   transform: none;
 }
 

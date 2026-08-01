@@ -42,7 +42,7 @@ export function ProjectCard({
           sizes="(max-width: 768px) 100vw, 50vw"
           src={cardImage}
           style={
-            cardVariant === "rag-purpose"
+            cardVariant === "purpose"
               ? { objectFit: "contain" }
               : undefined
           }

@@ -169,7 +169,7 @@ test("work uses a route-scoped raspberry theme across index and case-study route
   assert.match(hoverBorderRule, /var\(--accent\)/);
 });
 
-test("RAG cards use explicit page contexts, structured content, and the shared Figure 1 preview", async () => {
+test("LaunchGuard and RAG cards use project-specific purpose content with a shared presentation", async () => {
   const [card, projects, home, work, css] = await Promise.all([
     source("components/project-card.tsx"),
     source("content/site.ts"),
@@ -177,6 +177,10 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
     source("app/work/page.tsx"),
     source("app/globals.css"),
   ]);
+  const launchGuardProject =
+    projects.match(
+      /slug: "launchguard",([\s\S]*?)slug: "rag-knowledge-assistant"/,
+    )?.[1] ?? "";
   const ragProject =
     projects.match(
       /slug: "rag-knowledge-assistant",([\s\S]*?)slug: "ur-coursebot"/,
@@ -189,6 +193,10 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
     "The RAG Knowledge Assistant is a full-stack conversational Retrieval-Augmented Generation application built with Python, Streamlit, OpenAI, LangChain, and ChromaDB. Users upload PDF documents, which are processed through page-level extraction, adjacent-page context preservation, semantic chunking, embedding generation, duplicate detection, and persistent vector storage. When a question is asked, the system rewrites context-dependent follow-ups, retrieves the ten most semantically similar chunks, reranks them using an LLM, and sends the five strongest passages to a grounded answer-generation prompt. The resulting response is limited to the uploaded document context, includes inline source citations, and can be audited through source, retrieval, reranking, response-time, and token-usage information. Its purpose is to reduce the friction of finding and interpreting knowledge contained in large document collections while improving the traceability and trustworthiness of AI-generated answers.";
   const genericSummary =
     "A conversational document assistant that ingests PDFs, retrieves and reranks relevant evidence, and answers with inline citations and transparent retrieval details.";
+  const launchGuardIntroduction =
+    "LaunchGuard is a human-centered AI evaluation workspace that helps teams test prompts across realistic and difficult scenarios, review outputs against explicit Good, Average, and Bad criteria, identify recurring failure patterns, and create evidence-based improvements. It brings versioned prompts, reusable Golden Datasets, model execution, human review, Error Analysis, Prompt Proposals, and evaluation history into one traceable workflow, helping teams determine whether an AI feature is reliable enough to release and understand exactly why each prompt change was made.";
+  const launchGuardCallout =
+    "LaunchGuard helps teams move beyond checking whether a few AI responses “look good.” It provides a repeatable way to test an AI prompt, understand where and why it fails, improve it using human-confirmed evidence, and retest the new version against the same benchmark.";
 
   assert.match(
     projects,
@@ -205,8 +213,20 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
   assert.equal(projects.split(genericSummary).length - 1, 1);
   assert.ok(ragProject.includes(technicalSummary));
   assert.match(
+    launchGuardProject,
+    /workCard: \{[\s\S]*?variant: "purpose"[\s\S]*?purpose: \{/,
+  );
+  assert.match(
+    launchGuardProject,
+    /image:\s*"\/images\/projects\/launchguard-golden-dataset\.png"/,
+  );
+  assert.match(
+    launchGuardProject,
+    /imageAlt:\s*"LaunchGuard Golden Dataset human-review workspace"/,
+  );
+  assert.match(
     ragProject,
-    /workCard: \{[\s\S]*?variant: "rag-purpose"[\s\S]*?purpose: \{/,
+    /workCard: \{[\s\S]*?variant: "purpose"[\s\S]*?purpose: \{/,
   );
   assert.match(
     ragProject,
@@ -216,8 +236,10 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
     ragProject,
     /imageAlt:\s*"RAG Knowledge Assistant chat interface showing a grounded response, answer evidence, and source cards"/,
   );
+  assert.equal(projects.split(launchGuardIntroduction).length - 1, 1);
+  assert.equal(projects.split(launchGuardCallout).length - 1, 1);
   assert.equal(projects.split(purposeIntroduction).length - 1, 1);
-  assert.equal(projects.split('"In simpler terms:"').length - 1, 1);
+  assert.equal(projects.split('"In simpler terms:"').length - 1, 2);
   assert.equal(projects.split(purposeCallout).length - 1, 1);
   assert.match(
     card,
@@ -241,7 +263,7 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
   assert.match(card, /project-card--\$\{cardVariant\}/);
   assert.match(
     card,
-    /cardVariant === "rag-purpose"[\s\S]*\? \{ objectFit: "contain" \}/,
+    /cardVariant === "purpose"[\s\S]*\? \{ objectFit: "contain" \}/,
   );
   assert.match(card, /className="project-card__purpose-introduction"/);
   assert.match(card, /className="project-card__purpose-label"/);
@@ -263,7 +285,7 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
   );
   assert.match(
     css,
-    /\.project-card--rag-purpose \.project-card__image\s*\{[\s\S]*?aspect-ratio:\s*1943 \/ 932/,
+    /\.project-card--purpose \.project-card__image\s*\{[\s\S]*?aspect-ratio:\s*1943 \/ 932/,
   );
   assert.match(
     css,
