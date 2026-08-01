@@ -209,10 +209,10 @@ test("contact uses a dedicated purple theme and preserves accessible mailto cont
 
   for (const className of [
     "contact-page",
-    "page-head page-head--contact contact-hero",
-    "wrap contact-hero__inner",
     "contact-content",
     "wrap contact-grid",
+    "contact-main",
+    "contact-hero",
     "contact-aside",
     "contact-visual",
     "contact-actions",
@@ -231,7 +231,18 @@ test("contact uses a dedicated purple theme and preserves accessible mailto cont
   assert.match(site, /label: "GitHub"/);
   assert.match(contactPage, /— Rohan/);
 
-  assert.match(contactForm, /<form className="contact-form" onSubmit=\{submit\}>/);
+  assert.match(
+    contactForm,
+    /<div className="contact-note-wrap" data-reveal>[\s\S]*?<form className="contact-form contact-note" onSubmit=\{submit\}>/,
+  );
+  assert.match(
+    contactForm,
+    /aria-hidden="true" className="contact-note__tape"/,
+  );
+  assert.match(
+    contactForm,
+    /aria-hidden="true" className="contact-note__pin"/,
+  );
   assert.match(contactForm, /name="name"[\s\S]*?placeholder="Jane Doe"[\s\S]*?required/);
   assert.match(
     contactForm,
@@ -245,18 +256,15 @@ test("contact uses a dedicated purple theme and preserves accessible mailto cont
     contactForm,
     /<button className="button button--contact focus-ring" type="submit">[\s\S]*?Send message/,
   );
-  assert.match(contactForm, /<svg[\s\S]*?className="button--contact__arrow"/);
-  assert.match(contactForm, /aria-hidden="true"/);
-  assert.match(contactForm, /focusable="false"/);
-  assert.match(contactForm, /stroke="currentColor"/);
-  assert.doesNotMatch(contactForm, /↗/);
   assert.match(
-    css,
-    /\.button--contact:hover\s*\{[\s\S]*?background:\s*var\(--accent\);[\s\S]*?border-color:\s*var\(--accent\);[\s\S]*?color:\s*white;/,
+    contactForm,
+    /<svg[\s\S]*?className="button--contact__send"[\s\S]*?focusable="false"[\s\S]*?stroke="currentColor"/,
   );
-  const contactButtonHover =
-    css.match(/\.button--contact:hover\s*\{([\s\S]*?)\}/)?.[1] ?? "";
-  assert.doesNotMatch(contactButtonHover, /var\(--accent-dark\)/);
+  assert.match(
+    contactForm,
+    /<svg[\s\S]*?aria-hidden="true"[\s\S]*?className="contact-note__pencil"[\s\S]*?focusable="false"[\s\S]*?viewBox="0 0 90 250"/,
+  );
+  assert.doesNotMatch(contactForm, /↗/);
   assert.match(
     contactForm,
     /This opens your email app\. Nothing is stored on this website\./,
@@ -276,6 +284,35 @@ test("contact uses a dedicated purple theme and preserves accessible mailto cont
   assert.match(
     css,
     /\.contact-visual__logo\s*\{[\s\S]*?background-color:\s*var\(--accent\)[\s\S]*?mask:\s*url\("\/images\/branding\/rohan-logo\.png"\)/,
+  );
+  assert.match(
+    contactPage,
+    /className="contact-direct__icon"[\s\S]*?<ContactIcon label="Email" \/>/,
+  );
+  assert.match(contactPage, /<ContactIcon label=\{link\.label\} \/>/);
+  assert.match(
+    contactPage,
+    /className="contact-direct__arrow"[\s\S]*?focusable="false"[\s\S]*?stroke="currentColor"/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\]\s*\{[\s\S]*?--contact-paper:[\s\S]*?--contact-tape:[\s\S]*?--contact-icon-tile:/,
+  );
+  assert.match(
+    css,
+    /\.contact-note\s*\{[\s\S]*?border-radius:\s*7px;[\s\S]*?overflow:\s*hidden;[\s\S]*?position:\s*relative;/,
+  );
+  assert.match(
+    css,
+    /\.contact-note__tape\s*\{[\s\S]*?pointer-events:\s*none;/,
+  );
+  assert.match(
+    css,
+    /\.contact-note__pencil\s*\{[\s\S]*?pointer-events:\s*none;/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width:\s*560px\)[\s\S]*?\.contact-note\s*\{[\s\S]*?padding:\s*50px 24px 26px;/,
   );
   assert.doesNotMatch(contactPage, /Luisa|Rosa/);
 });
