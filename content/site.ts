@@ -34,6 +34,7 @@ export type ProjectSection = {
 export type ProjectWorkCard = {
   image?: string;
   imageAlt?: string;
+  imageAspectRatio?: string;
   variant?: "standard" | "purpose";
   purpose?: {
     introduction: string;
@@ -392,8 +393,11 @@ export const projects: Project[] = [
     image: "/images/projects/launchguard-golden-dataset.png",
     imageAlt: "LaunchGuard Golden Dataset human-review workspace",
     workCard: {
-      image: "/images/projects/launchguard-golden-dataset.png",
-      imageAlt: "LaunchGuard Golden Dataset human-review workspace",
+      image:
+        "/images/projects/launchguard/figure-01-project-overview.png",
+      imageAlt:
+        "LaunchGuard Project Overview showing prompt management, test coverage, review status, and evaluation progress",
+      imageAspectRatio: "1194 / 852",
       variant: "purpose",
       purpose: {
         introduction:

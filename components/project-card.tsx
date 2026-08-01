@@ -34,6 +34,11 @@ export function ProjectCard({
         aria-label={`Read ${project.title} case study`}
         className="project-card__image focus-ring"
         href={`/work/${project.slug}`}
+        style={
+          project.workCard?.imageAspectRatio
+            ? { aspectRatio: project.workCard.imageAspectRatio }
+            : undefined
+        }
       >
         <Image
           alt={cardImageAlt}

@@ -200,7 +200,7 @@ test("LaunchGuard and RAG cards use project-specific purpose content with a shar
 
   assert.match(
     projects,
-    /export type ProjectWorkCard = \{[\s\S]*?purpose\?: \{[\s\S]*?introduction: string;[\s\S]*?simpleLabel: string;[\s\S]*?callout: string;/,
+    /export type ProjectWorkCard = \{[\s\S]*?imageAspectRatio\?: string;[\s\S]*?purpose\?: \{[\s\S]*?introduction: string;[\s\S]*?simpleLabel: string;[\s\S]*?callout: string;/,
   );
   assert.match(
     projects,
@@ -218,12 +218,17 @@ test("LaunchGuard and RAG cards use project-specific purpose content with a shar
   );
   assert.match(
     launchGuardProject,
-    /image:\s*"\/images\/projects\/launchguard-golden-dataset\.png"/,
+    /workCard: \{[\s\S]*?image:\s*"\/images\/projects\/launchguard\/figure-01-project-overview\.png"/,
+  );
+  assert.doesNotMatch(
+    launchGuardProject.match(/workCard: \{([\s\S]*?)\n    \},/)?.[1] ?? "",
+    /\/images\/projects\/launchguard-golden-dataset\.png/,
   );
   assert.match(
     launchGuardProject,
-    /imageAlt:\s*"LaunchGuard Golden Dataset human-review workspace"/,
+    /imageAlt:\s*"LaunchGuard Project Overview showing prompt management, test coverage, review status, and evaluation progress"/,
   );
+  assert.match(launchGuardProject, /imageAspectRatio: "1194 \/ 852"/);
   assert.match(
     ragProject,
     /workCard: \{[\s\S]*?variant: "purpose"[\s\S]*?purpose: \{/,
@@ -265,6 +270,10 @@ test("LaunchGuard and RAG cards use project-specific purpose content with a shar
     card,
     /cardVariant === "purpose"[\s\S]*\? \{ objectFit: "contain" \}/,
   );
+  assert.match(
+    card,
+    /project\.workCard\?\.imageAspectRatio[\s\S]*\? \{ aspectRatio: project\.workCard\.imageAspectRatio \}/,
+  );
   assert.match(card, /className="project-card__purpose-introduction"/);
   assert.match(card, /className="project-card__purpose-label"/);
   assert.match(card, /<aside className="project-card__purpose-callout">/);
@@ -286,6 +295,12 @@ test("LaunchGuard and RAG cards use project-specific purpose content with a shar
   assert.match(
     css,
     /\.project-card--purpose \.project-card__image\s*\{[\s\S]*?aspect-ratio:\s*1943 \/ 932/,
+  );
+  await access(
+    new URL(
+      "public/images/projects/launchguard/figure-01-project-overview.png",
+      root,
+    ),
   );
   assert.match(
     css,
