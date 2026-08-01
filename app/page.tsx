@@ -40,27 +40,8 @@ const currentCards = [
 export default function HomePage() {
   return (
     <>
-      <section className="hero">
+      <section className="hero hero--home">
         <div className="hero__canvas" aria-hidden="true">
-          <span className="data-chip data-chip--one">
-            <small>discovery interviews</small>
-            <strong>25+</strong>
-          </span>
-          <span className="data-chip data-chip--two">
-            <small>survey signals</small>
-            <strong>500+</strong>
-          </span>
-          <span className="data-code data-code--one">
-            evidence = review(outputs)
-            <br />
-            patterns = analyze(failures)
-            <br />
-            prompt = improve(patterns)
-          </span>
-          <span className="data-chip data-chip--three">
-            <small>acceptance criteria</small>
-            <strong>150+</strong>
-          </span>
           <span className="data-line data-line--one" />
           <span className="data-line data-line--two" />
         </div>
