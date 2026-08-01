@@ -241,7 +241,22 @@ test("contact uses a dedicated purple theme and preserves accessible mailto cont
     contactForm,
     /name="message"[\s\S]*?placeholder="Tell me who you are and what you're building\. :\)"[\s\S]*?required/,
   );
-  assert.match(contactForm, /type="submit"[\s\S]*?Send message/);
+  assert.match(
+    contactForm,
+    /<button className="button button--contact focus-ring" type="submit">[\s\S]*?Send message/,
+  );
+  assert.match(contactForm, /<svg[\s\S]*?className="button--contact__arrow"/);
+  assert.match(contactForm, /aria-hidden="true"/);
+  assert.match(contactForm, /focusable="false"/);
+  assert.match(contactForm, /stroke="currentColor"/);
+  assert.doesNotMatch(contactForm, /↗/);
+  assert.match(
+    css,
+    /\.button--contact:hover\s*\{[\s\S]*?background:\s*var\(--accent\);[\s\S]*?border-color:\s*var\(--accent\);[\s\S]*?color:\s*white;/,
+  );
+  const contactButtonHover =
+    css.match(/\.button--contact:hover\s*\{([\s\S]*?)\}/)?.[1] ?? "";
+  assert.doesNotMatch(contactButtonHover, /var\(--accent-dark\)/);
   assert.match(
     contactForm,
     /This opens your email app\. Nothing is stored on this website\./,

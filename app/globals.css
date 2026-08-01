@@ -2541,26 +2541,37 @@ textarea:focus-visible {
 }
 
 .button--contact {
+  align-items: center;
   background: transparent;
-  border-color: var(--accent);
-  color: var(--accent-dark);
-  gap: 14px;
-  min-height: 52px;
-  padding-inline: 24px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 500;
+  gap: 10px;
+  justify-content: center;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  min-height: 54px;
+  min-width: 196px;
+  padding: 0 24px;
+  width: fit-content;
 }
 
 .button--contact__arrow {
+  flex: 0 0 auto;
+  height: 12px;
   transition: transform 0.25s var(--ease);
+  width: 12px;
 }
 
 .button--contact:hover {
-  background: var(--accent-dark);
-  border-color: var(--accent-dark);
+  background: var(--accent);
+  border-color: var(--accent);
   color: white;
 }
 
 .button--contact:hover .button--contact__arrow {
-  transform: translate(3px, -3px);
+  transform: translate(2px, -2px);
 }
 
 .button--contact:active {

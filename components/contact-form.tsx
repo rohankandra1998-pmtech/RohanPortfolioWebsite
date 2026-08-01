@@ -57,10 +57,22 @@ export function ContactForm() {
         />
       </label>
       <button className="button button--contact focus-ring" type="submit">
-        Send message{" "}
-        <span aria-hidden="true" className="button--contact__arrow">
-          ↗
-        </span>
+        Send message
+        <svg
+          aria-hidden="true"
+          className="button--contact__arrow"
+          focusable="false"
+          viewBox="0 0 12 12"
+        >
+          <path
+            d="M3 9 9 3M4 3h5v5"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.4"
+          />
+        </svg>
       </button>
       <p className="form-note">
         This opens your email app. Nothing is stored on this website.
