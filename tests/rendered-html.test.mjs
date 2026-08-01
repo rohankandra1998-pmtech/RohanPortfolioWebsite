@@ -285,550 +285,233 @@ test("RAG cards use explicit page contexts, structured content, and the shared F
   );
 });
 
-test("RAG project actions reuse an accessible icon-enhanced pair in the hero and article end", async () => {
-  const [actions, route, projects, article, css, packageJson] =
+test("rich case studies share reusable article, outline, stack, and action components", async () => {
+  const [route, registry, renderer, outline, actions, stack, rag, projects, css] =
     await Promise.all([
-      source("components/rag-project-actions.tsx"),
       source("app/work/[slug]/page.tsx"),
-      source("content/site.ts"),
+      source("content/rich-articles.ts"),
+      source("components/case-study-article.tsx"),
+      source("components/case-study-outline.tsx"),
+      source("components/rag-project-actions.tsx"),
+      source("components/rag-technology-stack.tsx"),
       source("content/rag-knowledge-assistant.ts"),
+      source("content/site.ts"),
       source("app/globals.css"),
-      source("package.json"),
     ]);
-  const richRouteStart = route.indexOf("{isRichArticle ? (");
-  const articleIndex = route.indexOf(
-    "<CaseStudyArticle blocks={ragCaseStudyBlocks} />",
-  );
-  const articleEndActionsIndex = route.indexOf(
-    'placement="article-end"',
-    articleIndex,
-  );
-  const caseNextIndex = route.indexOf(
-    '<section className="section case-next">',
-  );
-  const actionStyles =
-    css.match(
-      /\.rag-case-content\s*\{[\s\S]*?(?=\.rag-outline\s*\{)/,
-    )?.[0] ?? "";
-  const headingBlocks = [
-    ...article.matchAll(
-      /"type": "heading",\s*"level": ([234]),\s*"text": ("(?:\\.|[^"\\])*")/g,
-    ),
-  ].map((match) => JSON.parse(match[2]));
-  const headingIds = headingBlocks.map((text) =>
-    text
-      .normalize("NFKD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/&/g, " and ")
-      .replace(/['’]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, ""),
+
+  assert.match(route, /richArticles\[project\.richArticle\]/);
+  assert.match(route, /<CaseStudyArticle[\s\S]*blocks=\{richArticle\.blocks\}/);
+  assert.match(route, /<CaseStudyOutline[\s\S]*entries=\{richArticle\.outline\}/);
+  assert.match(route, /<TechnologyStack[\s\S]*items=\{richArticle\.technologyStack\}/);
+  assert.equal(route.match(/<ProjectActions/g)?.length, 2);
+  assert.match(route, /placement="hero"/);
+  assert.match(route, /placement="article-end"/);
+
+  assert.match(registry, /"rag-knowledge-assistant": \{/);
+  assert.match(registry, /launchguard: \{/);
+  assert.match(registry, /blocks: ragCaseStudyBlocks/);
+  assert.match(registry, /blocks: launchGuardCaseStudyBlocks/);
+  assert.match(registry, /RAG Knowledge Assistant case study outline/);
+  assert.match(registry, /LaunchGuard case study outline/);
+  assert.match(registry, /Open LaunchGuard live product, opens in a new tab/);
+  assert.match(registry, /View LaunchGuard GitHub repository, opens in a new tab/);
+  assert.doesNotMatch(
+    registry.match(/launchguard: \{([\s\S]*?)\n  \},\n\} as const/)?.[1] ?? "",
+    /Try the RAG|RAG Knowledge Assistant project links/,
   );
 
-  assert.match(
-    actions,
-    /type RagProjectActionsProps = \{[\s\S]*?liveUrl\?: string;[\s\S]*?repoUrl\?: string;[\s\S]*?placement\?: "hero" \| "article-end";/,
-  );
-  assert.doesNotMatch(actions, /"use client"|usePathname|window\.location/);
-  assert.match(actions, /if \(!liveUrl && !repoUrl\) return null;/);
-  assert.match(
-    actions,
-    /<nav[\s\S]*?aria-label="RAG Knowledge Assistant project links"[\s\S]*?className=\{`rag-project-actions rag-project-actions--\$\{placement\}`\}/,
-  );
-  assert.equal(actions.split(">Try live product<").length - 1, 1);
-  assert.equal(actions.split(">View GitHub repository<").length - 1, 1);
+  assert.match(actions, /projectName: string/);
+  assert.match(actions, /liveLabel: string/);
+  assert.match(actions, /repoLabel: string/);
+  assert.match(actions, /aria-label=\{\`\$\{projectName\} project links\`\}/);
   assert.equal(actions.match(/target="_blank"/g)?.length, 2);
   assert.equal(actions.match(/rel="noreferrer"/g)?.length, 2);
-  assert.match(
-    actions,
-    /aria-label="Try the RAG Knowledge Assistant live product, opens in a new tab"/,
-  );
-  assert.match(
-    actions,
-    /aria-label="View the RAG Knowledge Assistant GitHub repository, opens in a new tab"/,
-  );
-  assert.match(
-    actions,
-    /<span>Try live product<\/span>\s*<ExternalLinkIcon \/>/,
-  );
-  assert.match(
-    actions,
-    /<GitHubIcon \/>\s*<span>View GitHub repository<\/span>\s*<ExternalLinkIcon \/>/,
-  );
-  assert.equal(actions.match(/<svg/g)?.length, 2);
-  assert.equal(actions.match(/aria-hidden="true"/g)?.length, 2);
-  assert.equal(actions.match(/focusable="false"/g)?.length, 2);
-  assert.equal(actions.match(/(?:fill|stroke)="currentColor"/g)?.length, 2);
-  assert.doesNotMatch(packageJson, /lucide|heroicons|react-icons|fontawesome/i);
+  assert.match(stack, /items: readonly TechnologyStackItem\[\]/);
+  assert.match(stack, /const headingId = \`\$\{id\}-title\`/);
 
-  assert.match(route, /import \{ RagProjectActions \}/);
-  assert.equal(route.match(/<RagProjectActions/g)?.length, 2);
-  assert.match(
-    route,
-    /\{isRichArticle \? \(\s*<RagProjectActions[\s\S]*?placement="hero"[\s\S]*?\) : \(\s*<div className="case-links" data-reveal>/,
-  );
-  assert.ok(richRouteStart >= 0);
-  assert.ok(articleIndex < articleEndActionsIndex);
-  assert.ok(articleEndActionsIndex < caseNextIndex);
-  assert.match(
-    route,
-    /<div className="rag-case-content">\s*<CaseStudyArticle blocks=\{ragCaseStudyBlocks\} \/>\s*<\/div>\s*<\/div>\s*<div className="wrap rag-case-actions-row">\s*<RagProjectActions[\s\S]*?placement="article-end"/,
-  );
-  assert.match(route, /project\.slug === "ur-coursebot"[\s\S]*?"Read the post"/);
-  assert.match(route, /Open live product/);
-  assert.match(route, /View repository <span aria-hidden="true">→<\/span>/);
-  assert.match(
-    projects,
-    /liveUrl: "https:\/\/ragknowledgeassistant\.streamlit\.app\/"/,
-  );
-  assert.match(
-    projects,
-    /repoUrl:\s*"https:\/\/github\.com\/rohankandra1998-pmtech\/rag-knowledge-assistant"/,
-  );
+  assert.match(renderer, /CaseStudyBlock/);
+  assert.match(renderer, /createCaseStudyHeadingId\(block\.text, occurrence\)/);
+  assert.match(renderer, /block\.level === 4/);
+  assert.match(renderer, /<h5 id=\{id\}/);
+  assert.match(renderer, /block\.type === "table"/);
+  assert.match(renderer, /<thead>/);
+  assert.match(renderer, /scope="col"/);
+  assert.match(renderer, /className="longform-case__table-wrap"/);
+  assert.match(renderer, /block\.type === "sequence"/);
+  assert.match(renderer, /block\.type === "code"/);
+  assert.match(renderer, /<figure/);
 
-  assert.equal(headingBlocks.length, 38);
-  assert.equal(headingIds.length + 1, 39);
-  assert.equal(new Set(headingIds).size, 38);
-  assert.equal(headingBlocks.at(-1), "Project and consulting knowledge");
-  assert.match(actionStyles, /\.rag-case-content\s*\{\s*min-width:\s*0/);
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions\s*\{[\s\S]*?display:\s*flex[\s\S]*?flex-wrap:\s*wrap[\s\S]*?gap:\s*12px/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions--article-end\s*\{[\s\S]*?border-top:\s*1px solid var\(--line\)[\s\S]*?margin-top:\s*64px[\s\S]*?padding-top:\s*28px[\s\S]*?width:\s*100%/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-case-actions-row\s*\{[\s\S]*?max-width:\s*1180px/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions__link\s*\{[\s\S]*?white-space:\s*nowrap/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions__link--primary\s*\{[\s\S]*?justify-content:\s*space-between[\s\S]*?min-width:\s*190px/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions__link--secondary\s*\{[\s\S]*?justify-content:\s*flex-start[\s\S]*?min-width:\s*300px/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions__link--secondary:hover\s*\{[\s\S]*?background:\s*var\(--accent-soft\)[\s\S]*?border-color:\s*var\(--accent\)/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions__github-icon\s*\{[\s\S]*?height:\s*20px[\s\S]*?width:\s*20px/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions__external-icon\s*\{[\s\S]*?height:\s*16px[\s\S]*?width:\s*16px/,
-  );
-  assert.match(
-    actionStyles,
-    /\.rag-project-actions__link:hover \.rag-project-actions__external-icon\s*\{[\s\S]*?transform:\s*translate\(2px,\s*-2px\)/,
-  );
-  assert.doesNotMatch(actionStyles, /position:\s*(?:fixed|sticky)/);
-  assert.doesNotMatch(actionStyles, /text-overflow|line-clamp/);
-  assert.match(
-    css,
-    /@media \(max-width: 560px\)[\s\S]*?\.rag-project-actions\s*\{[\s\S]*?align-items:\s*stretch[\s\S]*?flex-direction:\s*column[\s\S]*?\.rag-project-actions \.button\s*\{[\s\S]*?width:\s*100%/,
-  );
-});
+  assert.match(outline, /type \{ CaseStudyOutlineEntry \}/);
+  assert.match(outline, /ariaLabel: string/);
+  assert.match(outline, /aria-label=\{ariaLabel\}/);
+  assert.match(outline, /aria-current=\{isActive \? "location" : undefined\}/);
+  assert.match(outline, /ancestorIds\.has\(node\.id\)/);
+  assert.match(outline, /window\.addEventListener\("scroll", scheduleActiveSection/);
+  assert.match(outline, /viewport\.scrollTop [+-]=/);
+  assert.match(outline, /target\.focus\(\{ preventScroll: true \}\)/);
 
-test("RAG case study preserves approved article content while promoting its technology stack to the hero", async () => {
-  const [article, route, renderer, stack, projects, css] = await Promise.all([
-    source("content/rag-knowledge-assistant.ts"),
-    source("app/work/[slug]/page.tsx"),
-    source("components/case-study-article.tsx"),
-    source("components/rag-technology-stack.tsx"),
-    source("content/site.ts"),
-    source("app/globals.css"),
-  ]);
-  const articleBlocks =
-    article.match(
-      /export const ragCaseStudyBlocks: RagCaseStudyBlock\[\] = \[([\s\S]*?)\n\];/,
-    )?.[1] ?? "";
-  const stackData =
-    article.match(
-      /export const ragTechnologyStack = \[([\s\S]*?)\] as const satisfies/,
-    )?.[1] ?? "";
-  const imagePaths = [
-    "figure-01-grounded-response-interface.png",
-    "figure-02-document-ingestion-workspace.png",
-    "figure-03-source-grounded-response.png",
-    "figure-04a-evidence-passage-modal.png",
-    "figure-04b-original-pdf-page-preview.png",
-    "figure-05-conversational-query-handling.png",
-    "figure-06-observability-panel.png",
-    "figure-07-overall-rag-system-architecture.png",
-    "figure-08-document-ingestion-pipeline.png",
-    "figure-09-question-answering-pipeline.png",
-    "figure-10-two-stage-retrieval-reranking.png",
-  ];
-  const headings = [
-    "1. What Does the RAG Knowledge Assistant Do?",
-    "It turns a collection of PDFs into a conversational knowledge base",
-    "It produces answers grounded in uploaded documents",
-    "It provides traceable source citations",
-    "It supports follow-up questions",
-    "It offers document-management capabilities",
-    "It exposes what happens behind the answer",
-    "2. How Does the RAG Knowledge Assistant Work?",
-    "Pipeline A: Document ingestion",
-    "Step 1: The user uploads PDF documents",
-    "Step 2: Text is extracted page by page",
-    "Step 3: Adjacent-page context is added",
-    "Step 4: The document is divided using semantic chunking",
-    "Step 5: A fallback splitter protects the ingestion process",
-    "Step 6: Each chunk is converted into an embedding",
-    "Step 7: Chunks and metadata are stored in ChromaDB",
-    "Step 8: SHA-256 hashing prevents duplicates",
-    "Pipeline B: Question answering",
-    "Stage 1: Rewrite the question",
-    "Stage 2: Retrieve the ten most similar chunks",
-    "Stage 3: Rerank the retrieved chunks",
-    "Stage 4: Generate the grounded answer",
-    "Observability and evaluation support",
-    "3. What Problem Does It Solve, and What Is Its Purpose?",
-    "The core problem: important information is trapped inside documents",
-    "It reduces manual document search",
-    "It addresses the weaknesses of traditional keyword search",
-    "It reduces ungrounded AI answers",
-    "It supports conversational knowledge discovery",
-    "It improves trust through transparency",
-    "Its broader purpose",
-    "Potential organizational use cases",
-    "Human resources",
-    "Employee onboarding",
-    "Operations and standard procedures",
-    "Compliance and governance",
-    "Customer or technical support",
-    "Project and consulting knowledge",
-  ];
-  const articleText = [...article.matchAll(/"text": ("(?:\\.|[^"\\])*")/g)]
-    .map((match) => JSON.parse(match[1]))
-    .join("");
-
-  assert.match(
-    projects,
-    /caseStudyTitle: "Building a Conversational RAG Knowledge Assistant"/,
-  );
+  assert.match(rag, /createCaseStudyOutline\(ragCaseStudyBlocks\)/);
+  assert.equal(rag.match(/"type": "figure"/g)?.length, 10);
   assert.match(projects, /richArticle: "rag-knowledge-assistant"/);
-  assert.match(
-    projects,
-    /https:\/\/ragknowledgeassistant\.streamlit\.app\//,
-  );
+  assert.match(projects, /https:\/\/ragknowledgeassistant\.streamlit\.app\//);
   assert.match(
     projects,
     /https:\/\/github\.com\/rohankandra1998-pmtech\/rag-knowledge-assistant/,
   );
+  assert.match(css, /\.rag-outline__item--level-4/);
+  assert.match(css, /\.longform-case h5/);
+  assert.match(css, /\.longform-case__table-wrap/);
+  assert.match(css, /overflow-x:\s*auto/);
+});
+
+test("LaunchGuard is a complete source-faithful long-form case study", async () => {
+  const [launchguard, registry, projects, renderer, css] = await Promise.all([
+    source("content/launchguard.ts"),
+    source("content/rich-articles.ts"),
+    source("content/site.ts"),
+    source("components/case-study-article.tsx"),
+    source("app/globals.css"),
+  ]);
+  const blocksJson =
+    launchguard.match(
+      /export const launchGuardCaseStudyBlocks: CaseStudyBlock\[\] = ([\s\S]*?);\n\nexport const launchGuardCaseStudyOutline/,
+    )?.[1] ?? "[]";
+  const stackJson =
+    launchguard.match(
+      /export const launchGuardTechnologyStack =\s*([\s\S]*?) as const satisfies/,
+    )?.[1] ?? "[]";
+  const blocks = JSON.parse(blocksJson);
+  const technologyStack = JSON.parse(stackJson);
+  const figures = blocks.filter((block) => block.type === "figure");
+  const headings = blocks.filter((block) => block.type === "heading");
+  const text = JSON.stringify(blocks);
+  const figureEight = figures.find((figure) => figure.number === 8);
+  const exactCaptions = [
+    "Figure 1 LaunchGuard’s Project Overview brings prompt management, test coverage, human review, and evaluation progress into one connected workspace.",
+    "Figure 2 A LaunchGuard workspace can contain multiple AI evaluation projects, each with its own context, prompts, test cases, reviews, and improvement history.",
+    "Figure 3 Prompt Versions preserve earlier system prompts and their evaluation history instead of overwriting the instructions that produced previous results.",
+    "Figure 4 The variable-aware Prompt Builder connects structured variable definitions to placeholders inside a versioned system prompt.",
+    "Figure 5 The Final Prompt Preview shows the exact compiled system instruction after defaults and test-specific variable values are resolved.",
+    "Figure 6 Evaluation Criteria translate broad quality goals into explicit Good, Average, and Bad standards that reviewers can apply consistently",
+    "Figure 7 The Golden Dataset combines realistic, edge, ambiguous, missing-context, adversarial, and tone-sensitive cases into a reusable evaluation benchmark.",
+    "Figure 8 LaunchGuard proposes distinct test cases with case types and testing rationales, while the user decides which suggestions become part of the benchmark.",
+    "Figure 9 The review workspace keeps the user input, generated response, Prompt Version, model, and runtime variable context available during evaluation.",
+    "Figure 10 Reviewers score each output separately across every criterion and record qualitative evidence explaining what succeeded or failed.",
+    "Figure 11 Error Analysis consolidates human-confirmed failures into severity-ranked behavioral patterns and distinguishes observed behavior from its likely cause.",
+    "Figure 12 Every recommended prompt change is connected to human ratings, failed criteria, representative test cases, and reviewer evidence.",
+    "Figure 13 The Prompt Proposal compares the current and proposed system prompts side by side and summarizes the evaluation evidence behind the revision.",
+    "Figure 14 Each proposed modification identifies the exact before-and-after wording, its expected impact, and the failure evidence supporting the change.",
+  ];
+
+  assert.match(projects, /slug: "launchguard"[\s\S]*?richArticle: "launchguard"/);
   assert.match(
-    route,
-    /project\.richArticle === "rag-knowledge-assistant"/,
+    projects,
+    /LaunchGuard: A Human-Centered System for Testing, Evaluating, and Improving AI Prompts/,
   );
-  assert.match(route, /<CaseStudyArticle blocks=\{ragCaseStudyBlocks\} \/>/);
-  assert.match(route, /\{!isRichArticle \? \(/);
-  assert.match(route, /\{isRichArticle \? \([\s\S]*section--longform-case/);
-  assert.match(
-    route,
-    /\{isRichArticle \? \(\s*<RagTechnologyStack items=\{ragTechnologyStack\} \/>/,
+  assert.match(registry, /launchguard: \{[\s\S]*?blocks: launchGuardCaseStudyBlocks/);
+  assert.equal(technologyStack.length, 4);
+  assert.deepEqual(
+    technologyStack.map((item) => item.category),
+    ["Application", "Database & Backend", "AI & Validation", "Deployment"],
   );
-  assert.match(
-    route,
-    /\) : \(\s*<div className="case-meta" data-reveal>/,
+  assert.equal(figures.length, 14);
+  assert.equal(
+    figures.reduce((count, figure) => count + figure.images.length, 0),
+    15,
   );
-  assert.equal(stackData.match(/\n    category:/g)?.length, 4);
-  for (const category of [
-    "Application",
-    "AI Models",
-    "Retrieval & Storage",
-    "Document Processing & Observability",
+  assert.equal(figureEight.images.length, 2);
+  assert.equal(figureEight.variant, "paired");
+  assert.equal(headings.length, 130);
+  assert.ok(headings.some((heading) => heading.level === 5));
+  assert.ok(blocks.some((block) => block.type === "table"));
+  assert.ok(blocks.some((block) => block.type === "code"));
+  assert.ok(blocks.some((block) => block.type === "sequence"));
+  assert.equal(
+    blocks.find((block) => block.type === "table")?.headers.join("|"),
+    "Criterion|Rating",
+  );
+  assert.deepEqual(
+    blocks.find((block) => block.type === "table")?.rows,
+    [
+      ["Policy Compliance", "Bad"],
+      ["Clarity", "Good"],
+      ["Tone", "Good"],
+      ["Capability Transparency", "Bad"],
+    ],
+  );
+  assert.deepEqual(
+    figures.map((figure) => figure.caption),
+    exactCaptions,
+  );
+
+  for (const sourceText of [
+    "Building an AI feature is relatively easy. Making that feature reliable enough to release is much harder.",
+    "Step 6: A human reviews each generated response",
+    "Database-Level Consistency Protections",
+    "LaunchGuard turns prompt engineering from an informal writing exercise into a traceable, testable, and continuously improving product-development process.",
+    "{{refund_policy}}",
+    "OPENAI_PRODUCT_MODEL = gpt-4.1",
+    "The Core Purpose of LaunchGuard",
   ]) {
-    assert.equal(
-      stackData.split(`category: "${category}"`).length - 1,
-      1,
-      `Expected one hero category: ${category}`,
+    assert.ok(
+      text.includes(sourceText),
+      "Missing exact source text: " + sourceText,
     );
   }
-  for (const technologies of [
-    "Python, Streamlit",
-    "OpenAI GPT-4.1 mini, text-embedding-3-large",
-    "ChromaDB, LangChain SemanticChunker",
-    "pypdf, PyMuPDF, Pillow, tiktoken, API usage metadata",
-  ]) {
-    assert.ok(stackData.includes(technologies), `Missing stack: ${technologies}`);
+
+  for (const imagePath of figures.flatMap((figure) =>
+    figure.images.map((image) => image.src),
+  )) {
+    await access(new URL("public" + imagePath, root));
+    assert.equal(text.split(imagePath).length - 1, 1);
   }
-  assert.match(stack, /<section[\s\S]*aria-labelledby="rag-technology-stack-title"/);
-  assert.match(stack, /<h2[\s\S]*Technology stack[\s\S]*<\/h2>/);
-  assert.match(stack, /<dl className="rag-technology-stack__grid">/);
-  assert.match(stack, /items\.map\(\(item\) =>/);
-  assert.match(stack, /<dt>\{item\.category\}<\/dt>/);
-  assert.match(stack, /<dd>\{item\.technologies\}<\/dd>/);
-  assert.equal(stack.match(/<svg \{\.\.\.commonProps\}>/g)?.length, 4);
-  assert.match(stack, /"aria-hidden": true/);
-  assert.match(stack, /focusable: "false"/);
-  assert.doesNotMatch(articleBlocks, /"text": "Technology stack"/);
-  assert.doesNotMatch(articleBlocks, /The application is primarily built with:/);
-  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*26[6-9]\s*\]/);
-  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*27[0-6]\s*\]/);
-  assert.doesNotMatch(articleBlocks, /"text": "Purpose statement"/);
-  assert.doesNotMatch(articleBlocks, /"text": "In simpler terms:"/);
-  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*38[1-4]\s*\]/);
-  assert.doesNotMatch(
-    articleBlocks,
-    /The application helps people ask questions of their documents and receive answers that are not only easy to understand, but also supported by identifiable source evidence\./,
-  );
-  const technicalSummary =
-    "The RAG Knowledge Assistant is a full-stack conversational Retrieval-Augmented Generation application built with Python, Streamlit, OpenAI, LangChain, and ChromaDB. Users upload PDF documents, which are processed through page-level extraction, adjacent-page context preservation, semantic chunking, embedding generation, duplicate detection, and persistent vector storage. When a question is asked, the system rewrites context-dependent follow-ups, retrieves the ten most semantically similar chunks, reranks them using an LLM, and sends the five strongest passages to a grounded answer-generation prompt. The resulting response is limited to the uploaded document context, includes inline source citations, and can be audited through source, retrieval, reranking, response-time, and token-usage information. Its purpose is to reduce the friction of finding and interpreting knowledge contained in large document collections while improving the traceability and trustworthiness of AI-generated answers.";
-  assert.doesNotMatch(articleBlocks, /"text": "One-paragraph project summary"/);
-  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*386\s*\]/);
-  assert.doesNotMatch(articleBlocks, /"sourceIndexes": \[\s*387\s*\]/);
-  assert.ok(!articleText.includes(technicalSummary));
-  assert.equal(projects.split(technicalSummary).length - 1, 1);
-  assert.match(
-    articleBlocks,
-    /"text": "Project and consulting knowledge"[\s\S]*?"text": "Teams could ask questions across project documentation, requirements, delivery playbooks, lessons learned, and technical reference material\."[\s\S]*?"sourceIndexes": \[\s*379\s*\]\s*\}\s*$/,
-  );
-  assert.doesNotMatch(route, /#technology-stack/);
-  assert.match(renderer, /<article[\s\S]*?className="longform-case"/);
-  assert.match(renderer, /<figure[\s\S]*?<figcaption>/);
-  assert.match(renderer, /height=\{image\.height\}/);
-  assert.match(renderer, /width=\{image\.width\}/);
-  assert.match(css, /\.longform-figure__image img\s*\{[\s\S]*?height:\s*auto/);
-  assert.match(css, /\.longform-figure__image img\s*\{[\s\S]*?object-fit:\s*contain/);
+
+  assert.match(launchguard, /paragraphCount": 1493/);
+  assert.match(launchguard, /nonEmptyParagraphCount": 1475/);
+  assert.match(launchguard, /imageCount": 15/);
+  assert.match(launchguard, /figureCount": 14/);
+  assert.match(launchguard, /tableCount": 1/);
+  assert.match(renderer, /<h5 id=\{id\}/);
+  assert.match(renderer, /<table>/);
+  assert.match(css, /\.longform-figure--paired/);
   assert.match(
     css,
     /@media \(max-width: 820px\)[\s\S]*?\.longform-figure--paired \.longform-figure__images\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
   );
-  assert.match(
-    css,
-    /\.rag-technology-stack__grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/,
-  );
-  assert.match(
-    css,
-    /@media \(max-width: 1024px\)[\s\S]*?\.rag-technology-stack__grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/,
-  );
-  assert.match(
-    css,
-    /@media \(max-width: 560px\)[\s\S]*?\.rag-technology-stack__grid\s*\{[\s\S]*?grid-template-columns:\s*1fr[\s\S]*?\.rag-technology-stack__item \+ \.rag-technology-stack__item\s*\{[\s\S]*?border-left:\s*0[\s\S]*?border-top:\s*1px solid var\(--line\)/,
-  );
-  assert.match(
-    css,
-    /\.rag-technology-stack__icon\s*\{[\s\S]*?color:\s*var\(--accent\)/,
-  );
-  assert.match(
-    css,
-    /\.rag-technology-stack__heading\s*\{[\s\S]*?color:\s*var\(--accent\)/,
-  );
-
-  let previousHeadingIndex = -1;
-  for (const heading of headings) {
-    const headingIndex = article.indexOf(heading);
-    assert.ok(headingIndex > previousHeadingIndex, `Heading out of order: ${heading}`);
-    previousHeadingIndex = headingIndex;
-  }
-
-  for (const imagePath of imagePaths) {
-    await access(
-      new URL(
-        `public/images/projects/rag-knowledge-assistant/${imagePath}`,
-        root,
-      ),
-    );
-    assert.equal(
-      article.split(imagePath).length - 1,
-      1,
-      `Expected one article reference for ${imagePath}`,
-    );
-  }
-
-  assert.match(article, /imageCount:\s*11/);
-  assert.match(article, /figureCount:\s*10/);
-  assert.equal(article.match(/"type": "figure"/g)?.length, 10);
-  assert.equal(article.match(/"caption": "Figure/g)?.length, 10);
-
-  const figureFour =
-    article.match(
-      /"number": 4,[\s\S]*?"caption": "Figure 4 Evidence verification flow:[\s\S]*?"sourceIndexes": \[[\s\S]*?\]/,
-    )?.[0] ?? "";
-  assert.equal(figureFour.match(/"src":/g)?.length, 2);
-  assert.equal(figureFour.match(/"caption":/g)?.length, 1);
-
-  for (const exactSourceText of [
-    "Organizations do not usually suffer from a lack of information.",
-    "I don’t know based on the uploaded documents.",
-    "runtime_sessions/<session_id>/",
-    "The system retains up to 4,000 characters of adjacent-page context on either side.",
-    "a target chunk size of 1,400 characters",
-    "a 180-character overlap",
-    "text-embedding-3-large",
-    "The application uses a persistent ChromaDB collection called rag_docs.",
-    "similarity = 1 - distance",
-    "Top-10 vector retrieval",
-    "Top-5 context selection",
-    "The underlying problem is not information availability. The problem is information accessibility.",
-    "Its purpose is to make document-based answers more grounded, explainable, and auditable.",
-  ]) {
-    assert.ok(
-      articleText.includes(exactSourceText) || article.includes(exactSourceText),
-      `Missing exact source text: ${exactSourceText}`,
-    );
-  }
-
-  for (const oldSection of [
-    "A useful answer needs visible evidence.",
-    "From PDF pages to grounded conversation",
-    "Sources are inspectable, not decorative.",
-    "A demo that is honest about persistence.",
-  ]) {
-    assert.ok(projects.includes(oldSection));
-    assert.ok(!article.includes(oldSection));
-  }
 });
 
-test("RAG case study renders a complete responsive scroll-aware outline", async () => {
-  const [article, route, renderer, outline, projects, css] = await Promise.all([
-    source("content/rag-knowledge-assistant.ts"),
-    source("app/work/[slug]/page.tsx"),
-    source("components/case-study-article.tsx"),
+test("LaunchGuard outline is generated from every source heading at the matching depth", async () => {
+  const [launchguard, shared, outline, route] = await Promise.all([
+    source("content/launchguard.ts"),
+    source("content/case-study.ts"),
     source("components/case-study-outline.tsx"),
-    source("content/site.ts"),
-    source("app/globals.css"),
+    source("app/work/[slug]/page.tsx"),
   ]);
-  const headingBlocks = [
-    ...article.matchAll(
-      /"type": "heading",\s*"level": ([234]),\s*"text": ("(?:\\.|[^"\\])*")/g,
-    ),
-  ].map((match) => ({
-    level: Number(match[1]),
-    text: JSON.parse(match[2]),
-  }));
-  const slugify = (text) =>
-    text
-      .normalize("NFKD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/&/g, " and ")
-      .replace(/['’]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  const headingIds = headingBlocks.map(({ text }) => slugify(text));
-  const outlineStyles =
-    css.match(/\.rag-outline\s*\{[\s\S]*?(?=\.longform-case\s*\{)/)?.[0] ??
-    "";
-  const activeRule =
-    css.match(
-      /\.rag-outline__item > \.rag-outline__link--active\s*\{([^}]*)\}/,
-    )?.[1] ?? "";
-  const outlineRouteIndex = route.indexOf(
-    "<CaseStudyOutline entries={ragCaseStudyOutline} />",
-  );
-  const heroEndIndex = route.indexOf("</section>", route.indexOf("case-hero"));
+  const blocksJson =
+    launchguard.match(
+      /export const launchGuardCaseStudyBlocks: CaseStudyBlock\[\] = ([\s\S]*?);\n\nexport const launchGuardCaseStudyOutline/,
+    )?.[1] ?? "[]";
+  const blocks = JSON.parse(blocksJson);
+  const headings = blocks.filter((block) => block.type === "heading");
 
-  assert.equal(headingBlocks.length, 38);
-  assert.equal(headingIds.length + 1, 39);
-  assert.equal(new Set(headingIds).size, 38);
-  assert.ok(headingIds.every((id) => id.length > 0));
-  assert.ok(!headingIds.includes("technology-stack"));
-  assert.ok(!headingIds.includes("purpose-statement"));
-  assert.ok(!headingIds.includes("one-paragraph-project-summary"));
-  assert.equal(
-    headingIds.at(-1),
-    "project-and-consulting-knowledge",
+  assert.equal(headings.length, 130);
+  assert.equal(headings[0].text, "1. What Does LaunchGuard Do?");
+  assert.equal(headings.at(-1).text, "The Core Purpose of LaunchGuard");
+  assert.deepEqual(
+    [...new Set(headings.map((heading) => heading.level))],
+    [2, 3, 4, 5],
   );
-  assert.match(article, /id: "overview"/);
-  assert.match(article, /label: "Overview"/);
+  assert.match(launchguard, /createCaseStudyOutline\(launchGuardCaseStudyBlocks\)/);
+  assert.match(shared, /label: "Overview"/);
+  assert.match(shared, /const level = \(block\.level - 1\) as 1 \| 2 \| 3 \| 4/);
+  assert.match(shared, /createCaseStudyHeadingId\(block\.text, occurrence\)/);
   assert.match(
-    article,
-    /for \(const block of ragCaseStudyBlocks\)[\s\S]*block\.type !== "heading"[\s\S]*createRagCaseStudyHeadingId\(block\.text\)/,
+    shared,
+    /occurrence > 1 \? \x60\$\{baseId\}-\$\{occurrence\}\x60 : baseId/,
   );
-  assert.match(
-    article,
-    /entries\.push\(\{[\s\S]*?id,[\s\S]*?label: block\.text,[\s\S]*?level,[\s\S]*?ancestorIds,[\s\S]*?\}\);/,
-  );
-  assert.equal(
-    headingBlocks.at(-1)?.text,
-    "Project and consulting knowledge",
-  );
-  assert.match(
-    article,
-    /export function createRagCaseStudyHeadingId\(text: string\)/,
-  );
-  assert.match(
-    renderer,
-    /id=\{createRagCaseStudyHeadingId\(block\.text\)\}/,
-  );
-  assert.match(renderer, /id="overview"/);
-  assert.match(route, /<CaseStudyOutline entries=\{ragCaseStudyOutline\} \/>/);
-  assert.ok(
-    outlineRouteIndex > heroEndIndex,
-    "Expected the outline after the complete project hero",
-  );
-  assert.equal(projects.match(/richArticle: "rag-knowledge-assistant"/g)?.length, 1);
-  assert.match(
-    outline,
-    /<nav aria-label="RAG case study outline">/,
-  );
-  assert.match(outline, /<ol className="rag-outline__list">/);
-  assert.match(outline, /href=\{`#\$\{node\.id\}`\}/);
-  assert.match(outline, /aria-current=\{isActive \? "location" : undefined\}/);
-  assert.match(outline, /ancestorIds\.has\(node\.id\)/);
-  assert.doesNotMatch(outline, /Case study map|rag-outline__eyebrow/);
-  assert.doesNotMatch(outline, /position: index \+ 1|rag-outline__position/);
-  assert.match(outline, /window\.addEventListener\("scroll", scheduleActiveSection/);
-  assert.match(outline, /window\.addEventListener\("resize", scheduleActiveSection/);
-  assert.match(outline, /window\.requestAnimationFrame\(calculateActiveSection\)/);
-  assert.match(
-    outline,
-    /target\.getBoundingClientRect\(\)\.top <=[\s\S]*READING_LINE \+ ACTIVATION_TOLERANCE/,
-  );
-  assert.match(outline, /nearPageBottom/);
-  assert.match(outline, /window\.addEventListener\("scrollend", clearPendingNavigation\)/);
-  assert.match(outline, /window\.addEventListener\("hashchange", navigateToHash\)/);
-  assert.match(outline, /window\.addEventListener\("popstate", navigateToHash\)/);
-  assert.match(outline, /viewport\.scrollTop [+-]=/);
-  assert.match(outline, /window\.history\.pushState\(null, "", `#\$\{id\}`\)/);
-  assert.match(outline, /target\.focus\(\{ preventScroll: true \}\)/);
-  assert.match(outline, /prefers-reduced-motion: reduce/);
-  assert.match(outline, /detailsRef\.current\.open = false/);
-  assert.match(outline, /<details[\s\S]*className="rag-outline-mobile"/);
-  assert.match(outline, /<summary className="rag-outline-mobile__summary">/);
-
-  assert.match(outlineStyles, /\.rag-outline\s*\{[\s\S]*position:\s*sticky/);
-  assert.match(
-    outlineStyles,
-    /\.rag-outline__viewport\s*\{[\s\S]*max-height:\s*calc\(100vh - 116px\)[\s\S]*overflow-y:\s*auto/,
-  );
-  assert.match(
-    outlineStyles,
-    /\.rag-outline__item > \.rag-outline__link--active\s*\{[\s\S]*color:\s*var\(--accent-dark\)/,
-  );
-  assert.match(
-    outlineStyles,
-    /\.rag-outline__item > \.rag-outline__link--active \.rag-outline__tick\s*\{[\s\S]*background:\s*var\(--accent\)/,
-  );
-  assert.match(
-    css,
-    /\.site-shell\[data-page-theme="work"\]\s*\{[\s\S]*?--accent:\s*#DD4F86;[\s\S]*?--accent-dark:\s*#B63A69;/,
-  );
-  assert.match(outlineStyles, /\.rag-outline__link--ancestor\s*\{[\s\S]*color:\s*var\(--muted\)/);
-  assert.doesNotMatch(outlineStyles, /\.rag-outline__eyebrow|\.rag-outline__position/);
-  assert.match(
-    css,
-    /@media \(max-width: 1024px\)[\s\S]*?\.rag-outline-mobile__summary\s*\{[\s\S]*?display:\s*grid/,
-  );
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
-
-  assert.doesNotMatch(activeRule, /background:\s*(?:white|#fff)/i);
-  assert.doesNotMatch(activeRule, /box-shadow/i);
-  assert.doesNotMatch(activeRule, /border-radius/i);
-  assert.doesNotMatch(outlineStyles, /text-overflow:\s*ellipsis/i);
-  assert.doesNotMatch(outlineStyles, /white-space:\s*nowrap/i);
+  assert.match(outline, /rag-outline__item--level-\$\{node\.level\}/);
+  assert.match(outline, /activeEntry\?\.ancestorIds/);
+  assert.match(route, /ariaLabel=\{richArticle\.outlineAriaLabel\}/);
 });
 
 test("experience renders the editorial timeline with semantic accomplishments and skills", async () => {

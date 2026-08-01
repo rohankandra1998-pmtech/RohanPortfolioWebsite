@@ -4,13 +4,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CaseStudyArticle } from "@/components/case-study-article";
 import { CaseStudyOutline } from "@/components/case-study-outline";
-import { RagProjectActions } from "@/components/rag-project-actions";
-import { RagTechnologyStack } from "@/components/rag-technology-stack";
-import {
-  ragCaseStudyBlocks,
-  ragCaseStudyOutline,
-  ragTechnologyStack,
-} from "@/content/rag-knowledge-assistant";
+import { ProjectActions } from "@/components/rag-project-actions";
+import { TechnologyStack } from "@/components/rag-technology-stack";
+import { richArticles } from "@/content/rich-articles";
 import { getProject, projects } from "@/content/site";
 
 export function generateStaticParams() {
@@ -46,25 +42,31 @@ export default async function ProjectPage({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
-  const isRichArticle = project.richArticle === "rag-knowledge-assistant";
+  const richArticle = project.richArticle
+    ? richArticles[project.richArticle]
+    : undefined;
 
   return (
     <>
       <section
-        className={`case-hero ${isRichArticle ? "case-hero--longform" : ""}`}
+        className={`case-hero ${richArticle ? "case-hero--longform" : ""}`}
       >
         <div className="wrap">
           <p className="eyebrow" data-reveal>
             {project.kicker}
           </p>
           <h1 data-reveal>{project.caseStudyTitle ?? project.title}</h1>
-          {!isRichArticle ? (
+          {!richArticle ? (
             <p className="case-hero__summary" data-reveal>
               {project.summary}
             </p>
           ) : null}
-          {isRichArticle ? (
-            <RagTechnologyStack items={ragTechnologyStack} />
+          {richArticle ? (
+            <TechnologyStack
+              id={richArticle.technologyStackId}
+              items={richArticle.technologyStack}
+              testId={`${richArticle.testId}-technology-stack`}
+            />
           ) : (
             <div className="case-meta" data-reveal>
               <div>
@@ -85,10 +87,12 @@ export default async function ProjectPage({
               </div>
             </div>
           )}
-          {isRichArticle ? (
-            <RagProjectActions
+          {richArticle ? (
+            <ProjectActions
+              {...richArticle.actions}
               liveUrl={project.liveUrl}
               placement="hero"
+              projectName={richArticle.projectName}
               repoUrl={project.repoUrl}
             />
           ) : (
@@ -121,18 +125,27 @@ export default async function ProjectPage({
         </div>
       </section>
 
-      {isRichArticle ? (
+      {richArticle ? (
         <section className="section section--longform-case">
           <div className="wrap rag-case-layout">
-            <CaseStudyOutline entries={ragCaseStudyOutline} />
+            <CaseStudyOutline
+              ariaLabel={richArticle.outlineAriaLabel}
+              entries={richArticle.outline}
+              testId={`${richArticle.testId}-case-study-outline`}
+            />
             <div className="rag-case-content">
-              <CaseStudyArticle blocks={ragCaseStudyBlocks} />
+              <CaseStudyArticle
+                blocks={richArticle.blocks}
+                testId={`${richArticle.testId}-rich-article`}
+              />
             </div>
           </div>
           <div className="wrap rag-case-actions-row">
-            <RagProjectActions
+            <ProjectActions
+              {...richArticle.actions}
               liveUrl={project.liveUrl}
               placement="article-end"
+              projectName={richArticle.projectName}
               repoUrl={project.repoUrl}
             />
           </div>

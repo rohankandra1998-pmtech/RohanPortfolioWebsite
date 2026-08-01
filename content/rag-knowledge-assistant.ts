@@ -1,79 +1,18 @@
-export type RichTextSegment = {
-  text: string;
-  strong?: boolean;
-  emphasis?: boolean;
-};
+import {
+  createCaseStudyHeadingId,
+  createCaseStudyOutline,
+  type CaseStudyBlock,
+  type CaseStudyOutlineEntry,
+  type RichTextSegment,
+  type TechnologyStackItem,
+} from "@/content/case-study";
 
-export type RagCaseStudyBlock =
-  | {
-      type: "paragraph";
-      content: RichTextSegment[];
-      sourceIndexes: number[];
-    }
-  | {
-      type: "heading";
-      level: 2 | 3 | 4;
-      text: string;
-      sourceIndexes: number[];
-    }
-  | {
-      type: "list";
-      ordered: boolean;
-      items: RichTextSegment[][];
-      sourceIndexes: number[];
-    }
-  | {
-      type: "quote";
-      content: RichTextSegment[];
-      sourceIndexes: number[];
-    }
-  | {
-      type: "code";
-      text: string;
-      sourceIndexes: number[];
-    }
-  | {
-      type: "sequence";
-      items: string[];
-      sourceIndexes: number[];
-    }
-  | {
-      type: "figure";
-      number: number;
-      variant: "standard" | "paired" | "portrait" | "wide";
-      images: {
-        src: string;
-        alt: string;
-        width: number;
-        height: number;
-      }[];
-      caption: string;
-      sourceIndexes: number[];
-    };
+export type RagCaseStudyBlock = CaseStudyBlock;
+export type RagCaseStudyOutlineEntry = CaseStudyOutlineEntry;
+export type RagTechnologyStackItem = TechnologyStackItem;
+export type { RichTextSegment };
 
-export type RagCaseStudyOutlineEntry = {
-  id: string;
-  label: string;
-  level: 1 | 2 | 3;
-  ancestorIds: string[];
-};
-
-export type RagTechnologyStackItem = {
-  category: string;
-  technologies: string;
-  icon: "application" | "ai" | "storage" | "document";
-};
-
-export function createRagCaseStudyHeadingId(text: string) {
-  return text
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/&/g, " and ")
-    .replace(/['’]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
+export const createRagCaseStudyHeadingId = createCaseStudyHeadingId;
 
 export const ragCaseStudyTitle =
   "Building a Conversational RAG Knowledge Assistant";
@@ -3440,38 +3379,5 @@ export const ragCaseStudyBlocks: RagCaseStudyBlock[] = [
   }
 ];
 
-export const ragCaseStudyOutline: RagCaseStudyOutlineEntry[] = (() => {
-  const entries: RagCaseStudyOutlineEntry[] = [
-    {
-      id: "overview",
-      label: "Overview",
-      level: 1,
-      ancestorIds: [],
-    },
-  ];
-  const ancestors = new Map<number, string>();
-
-  for (const block of ragCaseStudyBlocks) {
-    if (block.type !== "heading") continue;
-
-    const level = (block.level - 1) as 1 | 2 | 3;
-    const id = createRagCaseStudyHeadingId(block.text);
-    const ancestorIds = Array.from({ length: level - 1 }, (_, index) =>
-      ancestors.get(index + 1),
-    ).filter((ancestorId): ancestorId is string => Boolean(ancestorId));
-
-    entries.push({
-      id,
-      label: block.text,
-      level,
-      ancestorIds,
-    });
-    ancestors.set(level, id);
-
-    for (const ancestorLevel of [...ancestors.keys()]) {
-      if (ancestorLevel > level) ancestors.delete(ancestorLevel);
-    }
-  }
-
-  return entries;
-})();
+export const ragCaseStudyOutline: RagCaseStudyOutlineEntry[] =
+  createCaseStudyOutline(ragCaseStudyBlocks);

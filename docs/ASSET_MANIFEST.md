@@ -19,6 +19,21 @@
 | `images/projects/launchguard-golden-dataset.png` | Verified LaunchGuard repository/live-product capture | LaunchGuard card, cover, and review workflow | No credentials or private data |
 | `images/projects/launchguard-overview.webp` | Verified LaunchGuard repository asset | Case-study product overview | Public project imagery |
 | `images/projects/launchguard-prompt-diff.png` | Verified LaunchGuard repository/live-product capture | Prompt comparison walkthrough | Public project imagery |
+| `images/projects/launchguard/figure-01-project-overview.png` | Supplied LaunchGuard case-study DOCX | Figure 1 project overview | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-02-workspace-projects.png` | Supplied LaunchGuard case-study DOCX | Figure 2 workspace projects | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-03-prompt-versions.png` | Supplied LaunchGuard case-study DOCX | Figure 3 prompt versions | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-04-prompt-builder.png` | Supplied LaunchGuard case-study DOCX | Figure 4 variable-aware Prompt Builder | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-05-final-prompt-preview.png` | Supplied LaunchGuard case-study DOCX | Figure 5 final prompt preview | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-06-evaluation-criteria.png` | Supplied LaunchGuard case-study DOCX | Figure 6 evaluation criteria | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-07-golden-dataset.png` | Supplied LaunchGuard case-study DOCX | Figure 7 Golden Dataset | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-08a-starter-set-generation.png` | Supplied LaunchGuard case-study DOCX | First screenshot in Figure 8 starter-set generation group | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-08b-starter-set-review.png` | Supplied LaunchGuard case-study DOCX | Second screenshot in Figure 8 starter-set review group | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-09-review-workspace.png` | Supplied LaunchGuard case-study DOCX | Figure 9 review workspace | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-10-criterion-ratings.png` | Supplied LaunchGuard case-study DOCX | Figure 10 criterion ratings | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-11-error-analysis.png` | Supplied LaunchGuard case-study DOCX | Figure 11 Error Analysis | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-12-recommendations-and-evidence.png` | Supplied LaunchGuard case-study DOCX | Figure 12 recommendations and evidence | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-13-prompt-proposal-comparison.png` | Supplied LaunchGuard case-study DOCX | Figure 13 Prompt Proposal comparison | Original embedded PNG; uncropped |
+| `images/projects/launchguard/figure-14-change-annotations.png` | Supplied LaunchGuard case-study DOCX | Figure 14 prompt change annotations | Original embedded PNG; uncropped |
 | `images/projects/rag-live-app.png` | Live Streamlit application capture | RAG card and cover | Empty public session |
 | `images/projects/rag-sources.png` | Verified RAG repository asset | Citation/source walkthrough | Public project imagery |
 | `images/projects/rag-observability.png` | Verified RAG repository asset | Retrieval observability walkthrough | Public project imagery |

@@ -50,7 +50,7 @@ export type Project = {
   slug: string;
   title: string;
   caseStudyTitle?: string;
-  richArticle?: "rag-knowledge-assistant";
+  richArticle?: RichArticleKey;
   kicker: string;
   summary: string;
   timeframe: string;
@@ -378,6 +378,9 @@ export const projects: Project[] = [
   {
     slug: "launchguard",
     title: "LaunchGuard",
+    caseStudyTitle:
+      "LaunchGuard: A Human-Centered System for Testing, Evaluating, and Improving AI Prompts",
+    richArticle: "launchguard",
     kicker: "AI evaluation · Product strategy · Full-stack build",
     summary:
       "An open collaborative workspace that turns prompt testing, human review, failure analysis, and prompt improvement into one evidence-backed loop.",
@@ -681,3 +684,4 @@ export const writing = [
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
 }
+import type { RichArticleKey } from "@/content/rich-articles";
