@@ -7,9 +7,9 @@ import {
   useRef,
   useState,
 } from "react";
-import type { RagCaseStudyOutlineEntry } from "@/content/rag-knowledge-assistant";
+import type { CaseStudyOutlineEntry } from "@/content/case-study";
 
-type OutlineNode = RagCaseStudyOutlineEntry & {
+type OutlineNode = CaseStudyOutlineEntry & {
   children: OutlineNode[];
 };
 
@@ -26,7 +26,7 @@ const SCROLL_KEYS = new Set([
   " ",
 ]);
 
-function buildOutlineTree(entries: RagCaseStudyOutlineEntry[]) {
+function buildOutlineTree(entries: CaseStudyOutlineEntry[]) {
   const roots: OutlineNode[] = [];
   const stack: OutlineNode[] = [];
 
@@ -97,9 +97,13 @@ function OutlineList({
 }
 
 export function CaseStudyOutline({
+  ariaLabel,
   entries,
+  testId,
 }: {
-  entries: RagCaseStudyOutlineEntry[];
+  ariaLabel: string;
+  entries: CaseStudyOutlineEntry[];
+  testId?: string;
 }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const pendingNavigationRef = useRef<string | null>(null);
@@ -288,8 +292,8 @@ export function CaseStudyOutline({
   };
 
   return (
-    <aside className="rag-outline" data-testid="rag-case-study-outline">
-      <nav aria-label="RAG case study outline">
+    <aside className="rag-outline" data-testid={testId}>
+      <nav aria-label={ariaLabel}>
         <details
           className="rag-outline-mobile"
           onToggle={handleToggle}

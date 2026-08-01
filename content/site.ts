@@ -34,7 +34,8 @@ export type ProjectSection = {
 export type ProjectWorkCard = {
   image?: string;
   imageAlt?: string;
-  variant?: "standard" | "rag-purpose";
+  imageAspectRatio?: string;
+  variant?: "standard" | "purpose";
   purpose?: {
     introduction: string;
     simpleLabel: string;
@@ -50,7 +51,7 @@ export type Project = {
   slug: string;
   title: string;
   caseStudyTitle?: string;
-  richArticle?: "rag-knowledge-assistant";
+  richArticle?: RichArticleKey;
   kicker: string;
   summary: string;
   timeframe: string;
@@ -378,6 +379,9 @@ export const projects: Project[] = [
   {
     slug: "launchguard",
     title: "LaunchGuard",
+    caseStudyTitle:
+      "LaunchGuard: A Human-Centered System for Testing, Evaluating, and Improving AI Prompts",
+    richArticle: "launchguard",
     kicker: "AI evaluation · Product strategy · Full-stack build",
     summary:
       "An open collaborative workspace that turns prompt testing, human review, failure analysis, and prompt improvement into one evidence-backed loop.",
@@ -388,6 +392,21 @@ export const projects: Project[] = [
     tags: ["AI evaluation", "Human review", "Prompt tooling", "Next.js"],
     image: "/images/projects/launchguard-golden-dataset.png",
     imageAlt: "LaunchGuard Golden Dataset human-review workspace",
+    workCard: {
+      image:
+        "/images/projects/launchguard/figure-01-project-overview.png",
+      imageAlt:
+        "LaunchGuard Project Overview showing prompt management, test coverage, review status, and evaluation progress",
+      imageAspectRatio: "1194 / 852",
+      variant: "purpose",
+      purpose: {
+        introduction:
+          "LaunchGuard is a human-centered AI evaluation workspace that helps teams test prompts across realistic and difficult scenarios, review outputs against explicit Good, Average, and Bad criteria, identify recurring failure patterns, and create evidence-based improvements. It brings versioned prompts, reusable Golden Datasets, model execution, human review, Error Analysis, Prompt Proposals, and evaluation history into one traceable workflow, helping teams determine whether an AI feature is reliable enough to release and understand exactly why each prompt change was made.",
+        simpleLabel: "In simpler terms:",
+        callout:
+          "LaunchGuard helps teams move beyond checking whether a few AI responses “look good.” It provides a repeatable way to test an AI prompt, understand where and why it fails, improve it using human-confirmed evidence, and retest the new version against the same benchmark.",
+      },
+    },
     liveUrl: "https://launchguardaievaluator.vercel.app/",
     repoUrl:
       "https://github.com/rohankandra1998-pmtech/LaunchGuard-AI-Evaluator",
@@ -490,7 +509,7 @@ export const projects: Project[] = [
         "/images/projects/rag-knowledge-assistant/figure-01-grounded-response-interface.png",
       imageAlt:
         "RAG Knowledge Assistant chat interface showing a grounded response, answer evidence, and source cards",
-      variant: "rag-purpose",
+      variant: "purpose",
       purpose: {
         introduction:
           "The RAG Knowledge Assistant is designed to transform static PDF documents into a conversational, searchable, and traceable knowledge base. It uses semantic retrieval and large language models to help users find relevant information without manually searching through every document, while grounding each response in retrieved evidence and providing citations that allow the answer to be verified.",
@@ -681,3 +700,4 @@ export const writing = [
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
 }
+import type { RichArticleKey } from "@/content/rich-articles";

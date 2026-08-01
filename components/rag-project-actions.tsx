@@ -1,5 +1,10 @@
-type RagProjectActionsProps = {
+type ProjectActionsProps = {
+  liveAriaLabel?: string;
+  liveLabel: string;
   liveUrl?: string;
+  projectName: string;
+  repoAriaLabel?: string;
+  repoLabel: string;
   repoUrl?: string;
   placement?: "hero" | "article-end";
 };
@@ -40,41 +45,52 @@ function ExternalLinkIcon() {
   );
 }
 
-export function RagProjectActions({
+export function ProjectActions({
+  liveAriaLabel,
+  liveLabel,
   liveUrl,
+  projectName,
+  repoAriaLabel,
+  repoLabel,
   repoUrl,
   placement = "hero",
-}: RagProjectActionsProps) {
+}: ProjectActionsProps) {
   if (!liveUrl && !repoUrl) return null;
 
   return (
     <nav
-      aria-label="RAG Knowledge Assistant project links"
+      aria-label={`${projectName} project links`}
       className={`rag-project-actions rag-project-actions--${placement}`}
       data-reveal
     >
       {liveUrl ? (
         <a
-          aria-label="Try the RAG Knowledge Assistant live product, opens in a new tab"
+          aria-label={
+            liveAriaLabel ??
+            `${liveLabel} for ${projectName}, opens in a new tab`
+          }
           className="button button--dark focus-ring rag-project-actions__link rag-project-actions__link--primary"
           href={liveUrl}
           rel="noreferrer"
           target="_blank"
         >
-          <span>Try live product</span>
+          <span>{liveLabel}</span>
           <ExternalLinkIcon />
         </a>
       ) : null}
       {repoUrl ? (
         <a
-          aria-label="View the RAG Knowledge Assistant GitHub repository, opens in a new tab"
+          aria-label={
+            repoAriaLabel ??
+            `${repoLabel} for ${projectName}, opens in a new tab`
+          }
           className="button button--light focus-ring rag-project-actions__link rag-project-actions__link--secondary"
           href={repoUrl}
           rel="noreferrer"
           target="_blank"
         >
           <GitHubIcon />
-          <span>View GitHub repository</span>
+          <span>{repoLabel}</span>
           <ExternalLinkIcon />
         </a>
       ) : null}

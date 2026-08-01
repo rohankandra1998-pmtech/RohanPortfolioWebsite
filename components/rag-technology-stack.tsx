@@ -1,9 +1,9 @@
-import type { RagTechnologyStackItem } from "@/content/rag-knowledge-assistant";
+import type { TechnologyStackItem } from "@/content/case-study";
 
 function TechnologyIcon({
   icon,
 }: {
-  icon: RagTechnologyStackItem["icon"];
+  icon: TechnologyStackItem["icon"];
 }) {
   const commonProps = {
     "aria-hidden": true,
@@ -52,20 +52,26 @@ function TechnologyIcon({
   );
 }
 
-export function RagTechnologyStack({
+export function TechnologyStack({
+  id,
   items,
+  testId,
 }: {
-  items: readonly RagTechnologyStackItem[];
+  id: string;
+  items: readonly TechnologyStackItem[];
+  testId?: string;
 }) {
+  const headingId = `${id}-title`;
+
   return (
     <section
-      aria-labelledby="rag-technology-stack-title"
+      aria-labelledby={headingId}
       className="rag-technology-stack"
-      data-testid="rag-technology-stack"
+      data-testid={testId}
     >
       <h2
         className="rag-technology-stack__heading"
-        id="rag-technology-stack-title"
+        id={headingId}
       >
         Technology stack
       </h2>

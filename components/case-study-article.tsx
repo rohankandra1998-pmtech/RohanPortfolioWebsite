@@ -1,9 +1,9 @@
 import Image from "next/image";
 import type {
-  RagCaseStudyBlock,
+  CaseStudyBlock,
   RichTextSegment,
-} from "@/content/rag-knowledge-assistant";
-import { createRagCaseStudyHeadingId } from "@/content/rag-knowledge-assistant";
+} from "@/content/case-study";
+import { createCaseStudyHeadingId } from "@/content/case-study";
 
 function RichText({ content }: { content: RichTextSegment[] }) {
   return content.map((segment, index) => {
@@ -21,26 +21,36 @@ function RichText({ content }: { content: RichTextSegment[] }) {
 }
 
 export function CaseStudyArticle({
+  articleId = "overview",
   blocks,
+  testId,
 }: {
-  blocks: RagCaseStudyBlock[];
+  articleId?: string;
+  blocks: CaseStudyBlock[];
+  testId?: string;
 }) {
+  const headingCounts = new Map<string, number>();
+
   return (
     <article
       className="longform-case"
-      data-testid="rag-rich-article"
-      id="overview"
+      data-testid={testId}
+      id={articleId}
       tabIndex={-1}
     >
       {blocks.map((block) => {
         const key = `${block.type}-${block.sourceIndexes.join("-")}`;
 
         if (block.type === "heading") {
+          const occurrence = (headingCounts.get(block.text) ?? 0) + 1;
+          headingCounts.set(block.text, occurrence);
+          const id = createCaseStudyHeadingId(block.text, occurrence);
+
           if (block.level === 2) {
             return (
               <h2
                 className="longform-case__major-heading"
-                id={createRagCaseStudyHeadingId(block.text)}
+                id={id}
                 key={key}
                 tabIndex={-1}
               >
@@ -51,7 +61,7 @@ export function CaseStudyArticle({
           if (block.level === 3) {
             return (
               <h3
-                id={createRagCaseStudyHeadingId(block.text)}
+                id={id}
                 key={key}
                 tabIndex={-1}
               >
@@ -59,14 +69,17 @@ export function CaseStudyArticle({
               </h3>
             );
           }
+          if (block.level === 4) {
+            return (
+              <h4 id={id} key={key} tabIndex={-1}>
+                {block.text}
+              </h4>
+            );
+          }
           return (
-            <h4
-              id={createRagCaseStudyHeadingId(block.text)}
-              key={key}
-              tabIndex={-1}
-            >
+            <h5 id={id} key={key} tabIndex={-1}>
               {block.text}
-            </h4>
+            </h5>
           );
         }
 
@@ -110,9 +123,38 @@ export function CaseStudyArticle({
         if (block.type === "sequence") {
           return (
             <div className="longform-case__sequence" key={key}>
-              {block.items.map((item) => (
-                <code key={item}>{item}</code>
+              {block.items.map((item, index) => (
+                <code key={`${key}-${index}`}>{item}</code>
               ))}
+            </div>
+          );
+        }
+
+        if (block.type === "table") {
+          return (
+            <div className="longform-case__table-wrap" key={key}>
+              <table>
+                <thead>
+                  <tr>
+                    {block.headers.map((header) => (
+                      <th key={header} scope="col">
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row, rowIndex) => (
+                    <tr key={`${key}-${rowIndex}`}>
+                      {row.map((cell, cellIndex) => (
+                        <td key={`${key}-${rowIndex}-${cellIndex}`}>
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           );
         }
