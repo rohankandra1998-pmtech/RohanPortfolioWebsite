@@ -184,6 +184,87 @@ test("work uses a route-scoped raspberry theme across index and case-study route
   assert.match(hoverBorderRule, /var\(--accent\)/);
 });
 
+test("contact uses a dedicated purple theme and preserves accessible mailto contact paths", async () => {
+  const [shell, css, contactPage, contactForm, site] = await Promise.all([
+    source("components/site-shell.tsx"),
+    source("app/globals.css"),
+    source("app/contact/page.tsx"),
+    source("components/contact-form.tsx"),
+    source("content/site.ts"),
+  ]);
+
+  assert.match(shell, /pathname === "\/contact"\s*\?\s*"contact"/);
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\]\s*\{[\s\S]*?--accent:\s*#8C5AB8;[\s\S]*?--accent-dark:\s*#69408E;[\s\S]*?--accent-soft:\s*#F1E8F8;/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\] \.brand__logo,[\s\S]*?visibility:\s*hidden/,
+  );
+  assert.match(
+    css,
+    /\.site-shell\[data-page-theme="contact"\] \.brand__logo-mask,[\s\S]*?background-color:\s*var\(--accent\)/,
+  );
+
+  for (const className of [
+    "contact-page",
+    "page-head page-head--contact contact-hero",
+    "wrap contact-hero__inner",
+    "contact-content",
+    "wrap contact-grid",
+    "contact-aside",
+    "contact-visual",
+    "contact-actions",
+    "signature contact-signature",
+  ]) {
+    assert.ok(contactPage.includes(`className="${className}"`), `Missing ${className}`);
+  }
+
+  assert.doesNotMatch(
+    contactPage,
+    /Open to product and AI product conversations\.|contact\.location|contact-location/,
+  );
+  assert.match(contactPage, /href=\{`mailto:\$\{contact\.email\}`\}/);
+  assert.match(contactPage, /socials\.slice\(0,\s*2\)\.map/);
+  assert.match(site, /label: "LinkedIn"/);
+  assert.match(site, /label: "GitHub"/);
+  assert.match(contactPage, /— Rohan/);
+
+  assert.match(contactForm, /<form className="contact-form" onSubmit=\{submit\}>/);
+  assert.match(contactForm, /name="name"[\s\S]*?placeholder="Jane Doe"[\s\S]*?required/);
+  assert.match(
+    contactForm,
+    /name="email"[\s\S]*?placeholder="you@example\.com"[\s\S]*?required[\s\S]*?type="email"/,
+  );
+  assert.match(
+    contactForm,
+    /name="message"[\s\S]*?placeholder="Tell me who you are and what you're building\. :\)"[\s\S]*?required/,
+  );
+  assert.match(contactForm, /type="submit"[\s\S]*?Send message/);
+  assert.match(
+    contactForm,
+    /This opens your email app\. Nothing is stored on this website\./,
+  );
+  assert.match(contactForm, /event\.preventDefault\(\)/);
+  assert.match(contactForm, /Portfolio hello from \$\{name \|\| "a visitor"\}/);
+  assert.match(contactForm, /`\$\{message\}\\n\\nFrom: \$\{name\}\\nReply to: \$\{email\}`/);
+  assert.match(
+    contactForm,
+    /window\.location\.href = `mailto:\$\{contact\.email\}\?subject=\$\{subject\}&body=\$\{body\}`/,
+  );
+
+  assert.match(
+    contactPage,
+    /<div aria-hidden="true" className="contact-visual">[\s\S]*?className="contact-visual__logo"/,
+  );
+  assert.match(
+    css,
+    /\.contact-visual__logo\s*\{[\s\S]*?background-color:\s*var\(--accent\)[\s\S]*?mask:\s*url\("\/images\/branding\/rohan-logo\.png"\)/,
+  );
+  assert.doesNotMatch(contactPage, /Luisa|Rosa/);
+});
+
 test("LaunchGuard and RAG cards use project-specific purpose content with a shared presentation", async () => {
   const [card, projects, home, work, css] = await Promise.all([
     source("components/project-card.tsx"),

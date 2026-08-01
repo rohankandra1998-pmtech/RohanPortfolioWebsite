@@ -57,7 +57,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       ? "experience"
       : pathname === "/work" || pathname.startsWith("/work/")
         ? "work"
-        : "default";
+        : pathname === "/contact"
+          ? "contact"
+          : "default";
 
   useEffect(() => {
     const nodes = Array.from(
