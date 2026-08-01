@@ -242,11 +242,6 @@ export default function HomePage() {
               ))}
             </div>
 
-            <p className="home-principles__link">
-              <Link className="home-text-link focus-ring" href="/thoughts">
-                read more thoughts <span aria-hidden="true">↗</span>
-              </Link>
-            </p>
           </div>
         </section>
 

@@ -99,7 +99,6 @@ export const navigation = [
   { label: "About", href: "/about" },
   { label: "Experience", href: "/experience" },
   { label: "Work", href: "/work" },
-  { label: "Thoughts", href: "/thoughts" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -671,29 +670,6 @@ export const projects: Project[] = [
         ],
       },
     ],
-  },
-];
-
-export const writing = [
-  {
-    status: "Published",
-    title: "Reinventing UR CourseBot 2.0",
-    summary:
-      "A short field note on professor interviews, personas, JTBD, prioritization, SmartSync, ethical AI protocols, and the product roadmap.",
-    href:
-      "https://www.linkedin.com/feed/update/urn:li:activity:7323049408026021890/",
-  },
-  {
-    status: "Draft",
-    title: "Why AI evaluation needs a product workflow",
-    summary:
-      "Notes from building LaunchGuard: evidence history, version identity, stale artifacts, and human judgment.",
-  },
-  {
-    status: "In progress",
-    title: "Showing the work in a RAG product",
-    summary:
-      "A practical look at citations, retrieval scores, reranking, and honest demo persistence.",
   },
 ];
 

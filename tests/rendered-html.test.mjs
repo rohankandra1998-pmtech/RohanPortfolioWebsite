@@ -5,17 +5,16 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 async function source(path) {
-  return readFile(new URL(path, root), "utf8");
+  return (await readFile(new URL(path, root), "utf8")).replace(/\r\n/g, "\n");
 }
 
-test("portfolio includes every public route and project case study", async () => {
-  const [home, about, experience, work, thoughts, contact, projects] =
+test("portfolio includes every remaining public route and project case study", async () => {
+  const [home, about, experience, work, contact, projects] =
     await Promise.all([
       source("app/page.tsx"),
       source("app/about/page.tsx"),
       source("app/experience/page.tsx"),
       source("app/work/page.tsx"),
-      source("app/thoughts/page.tsx"),
       source("app/contact/page.tsx"),
       source("content/site.ts"),
     ]);
@@ -24,11 +23,27 @@ test("portfolio includes every public route and project case study", async () =>
   assert.match(about, /Curiosity is how I move from ambiguity to action/);
   assert.match(experience, /Education & Certifications/);
   assert.match(work, /Products shaped through evidence/);
-  assert.match(thoughts, /Notes to self/);
   assert.match(contact, /Say hi/);
   assert.match(projects, /slug: "launchguard"/);
   assert.match(projects, /slug: "rag-knowledge-assistant"/);
   assert.match(projects, /slug: "ur-coursebot"/);
+});
+
+test("shared navigation and sitemap exclude the removed route", async () => {
+  const [site, sitemap] = await Promise.all([
+    source("content/site.ts"),
+    source("app/sitemap.ts"),
+  ]);
+  const navigation =
+    site.match(/export const navigation = \[([\s\S]*?)\n\];/)?.[1] ?? "";
+
+  assert.deepEqual(
+    [...navigation.matchAll(/label: "([^"]+)"/g)].map((match) => match[1]),
+    ["Home", "About", "Experience", "Work", "Contact"],
+  );
+  assert.doesNotMatch(navigation, /Thoughts|\/thoughts/);
+  assert.doesNotMatch(sitemap, /\/thoughts/);
+  await assert.rejects(access(new URL("app/thoughts/page.tsx", root)));
 });
 
 test("metadata, accessibility, and privacy safeguards are present", async () => {

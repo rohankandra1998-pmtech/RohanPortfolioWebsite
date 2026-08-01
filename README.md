@@ -15,7 +15,6 @@ implementation.
 - `/work/launchguard` — AI evaluation and prompt-improvement case study
 - `/work/rag-knowledge-assistant` — cited document-retrieval case study
 - `/work/ur-coursebot` — education-product discovery case study
-- `/thoughts` — clearly labeled drafts and works in progress
 - `/contact` — mail-app contact form and verified social links
 
 ## Local development

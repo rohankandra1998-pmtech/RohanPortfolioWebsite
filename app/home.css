@@ -685,10 +685,6 @@
   display: none;
 }
 
-.home-principles__link {
-  text-align: right;
-}
-
 .home-connect {
   background: var(--home-mint);
   border-top: 1px solid var(--home-rule);

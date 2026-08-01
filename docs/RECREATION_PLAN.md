@@ -7,7 +7,6 @@
 | `/` | `/` | Close recreation of the editorial hero, profile preview, current cards, selected work, principles, and contact invitation. |
 | `/about` | `/about` | Same page-head and portrait-led narrative structure, adapted to Rohan's consulting-to-product story. |
 | `/experience` | `/experience` | Same editorial timeline, selected work, education, and recognition rhythm. |
-| `/thoughts` | `/thoughts` | Same compact notes index; includes one real CourseBot post and clearly labeled drafts. |
 | `/contact` | `/contact` | Same concise contact page; the form opens the visitor's email client and stores nothing. |
 | — | `/work` | Added because the brief requires a dedicated selected-work index. |
 | — | `/work/launchguard` | Added long-form case study. |
@@ -59,7 +58,6 @@
 - Work: LaunchGuard, RAG Knowledge Assistant, and UR CourseBot 2.0.
 - Experience: Vivify, PwC, VNB Consulting Services, and DXC Technology.
 - Principles: start from evidence, make systems legible, design for action, bridge disciplines, build trust, and keep learning.
-- Thoughts: the real CourseBot LinkedIn post plus explicitly labeled future drafts.
 
 ## Asset plan
 
