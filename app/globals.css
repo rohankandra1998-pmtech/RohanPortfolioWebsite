@@ -28,6 +28,12 @@
   --accent-soft: #FBE7DC;
 }
 
+.site-shell[data-page-theme="about"] {
+  --accent: #2F86B8;
+  --accent-dark: #246A91;
+  --accent-soft: #E6F2F8;
+}
+
 .site-shell[data-page-theme="work"] {
   --accent: #DD4F86;
   --accent-dark: #B63A69;
@@ -221,12 +227,14 @@ textarea:focus-visible {
   position: absolute;
 }
 
+.site-shell[data-page-theme="about"] .brand__logo,
 .site-shell[data-page-theme="contact"] .brand__logo,
 .site-shell[data-page-theme="experience"] .brand__logo,
 .site-shell[data-page-theme="work"] .brand__logo {
   visibility: hidden;
 }
 
+.site-shell[data-page-theme="about"] .brand__logo-mask,
 .site-shell[data-page-theme="contact"] .brand__logo-mask,
 .site-shell[data-page-theme="experience"] .brand__logo-mask,
 .site-shell[data-page-theme="work"] .brand__logo-mask {
@@ -684,6 +692,14 @@ textarea:focus-visible {
 .arrow-link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+.site-shell[data-page-theme="about"] .arrow-link {
+  color: var(--accent-dark);
+}
+
+.site-shell[data-page-theme="about"] .arrow-link::after {
+  background: var(--accent);
 }
 
 .now-grid {

@@ -53,13 +53,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const pageTheme =
-    pathname === "/experience"
-      ? "experience"
-      : pathname === "/work" || pathname.startsWith("/work/")
-        ? "work"
-        : pathname === "/contact"
-          ? "contact"
-          : "default";
+    pathname === "/about"
+      ? "about"
+      : pathname === "/experience"
+        ? "experience"
+        : pathname === "/work" || pathname.startsWith("/work/")
+          ? "work"
+          : pathname === "/contact"
+            ? "contact"
+            : "default";
 
   useEffect(() => {
     const nodes = Array.from(

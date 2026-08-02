@@ -15,7 +15,7 @@ export default function AboutPage() {
       <section className="page-head">
         <div className="wrap page-head__grid">
           <div data-reveal>
-            <p className="eyebrow">About</p>
+            <p className="eyebrow eyebrow--dot">About</p>
             <h1>Curiosity is how I move from ambiguity to action.</h1>
             <p className="page-head__lead">
               I’m most useful when the system is complicated, the evidence is
